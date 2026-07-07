@@ -3,408 +3,705 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WhatsApp Bug Menu</title>
-    <!-- Font Awesome Icons -->
+    <title>Top Up Game — Premium Store</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        /* ---------- RESET & BASE ---------- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #0b0d15; color: #fff; min-height: 100vh; overflow-x: hidden; position: relative; }
+        #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        .overlay-gradient { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background: radial-gradient(circle at 20% 30%, rgba(88,0,255,0.15) 0%, rgba(0,0,0,0.85) 90%); pointer-events: none; }
+        .content { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; padding: 20px 24px 60px; }
+
+        /* ---------- HEADER ---------- */
+        header { display: flex; align-items: center; justify-content: space-between; padding: 18px 0 30px; flex-wrap: wrap; gap: 16px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .logo { display: flex; align-items: center; gap: 12px; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 1.8rem; letter-spacing: 2px; background: linear-gradient(135deg, #a855f7, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .logo i { font-size: 2rem; -webkit-text-fill-color: initial; color: #a855f7; filter: drop-shadow(0 0 12px rgba(168,85,247,0.5)); }
+        .nav-links { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+        .nav-links a, .nav-links button { color: rgba(255,255,255,0.7); text-decoration: none; transition: 0.3s; letter-spacing: 0.3px; background: none; border: none; font-family: 'Inter', sans-serif; font-size: 0.95rem; cursor: pointer; padding: 6px 0; position: relative; }
+        .nav-links a::after, .nav-links button::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: linear-gradient(90deg, #a855f7, #6366f1); transition: 0.3s; }
+        .nav-links a:hover, .nav-links button:hover { color: #fff; }
+        .nav-links a:hover::after, .nav-links button:hover::after { width: 100%; }
+        .btn-login-google { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); padding: 8px 22px; border-radius: 40px; color: #fff; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: 0.3s; backdrop-filter: blur(4px); display: inline-flex; align-items: center; gap: 10px; }
+        .btn-login-google i { color: #ea4335; font-size: 1.1rem; }
+        .btn-login-google:hover { background: rgba(168,85,247,0.15); border-color: #a855f7; box-shadow: 0 0 20px rgba(168,85,247,0.15); }
+        .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #a855f7, #6366f1); display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; }
+
+        /* ---------- HERO ---------- */
+        .hero { margin: 40px 0 48px; text-align: center; }
+        .hero h1 { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 2.6rem; letter-spacing: 1px; line-height: 1.2; }
+        .hero h1 span { background: linear-gradient(135deg, #c084fc, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero p { color: rgba(255,255,255,0.6); font-size: 1.1rem; margin-top: 10px; }
+
+        /* ---------- SECTION LABEL ---------- */
+        .section-label { display: flex; align-items: center; gap: 12px; margin: 48px 0 20px; font-family: 'Orbitron', sans-serif; font-weight: 600; font-size: 1.3rem; letter-spacing: 0.5px; }
+        .section-label i { color: #a855f7; font-size: 1.6rem; }
+
+        /* ---------- GAME GRID (hanya ML & FF) ---------- */
+        .game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 18px; max-width: 400px; margin: 0 auto; }
+        .game-card { background: rgba(255,255,255,0.04); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; padding: 24px 12px; text-align: center; transition: 0.35s ease; cursor: default; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+        .game-card:hover { transform: translateY(-6px) scale(1.02); border-color: rgba(168,85,247,0.3); background: rgba(168,85,247,0.08); box-shadow: 0 12px 48px rgba(168,85,247,0.15); }
+        .game-card img { width: 56px; height: 56px; object-fit: contain; border-radius: 16px; margin-bottom: 10px; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5)); }
+        .game-card .name { font-weight: 600; font-size: 0.95rem; margin-top: 4px; }
+        .game-card .badge { font-size: 0.7rem; background: rgba(168,85,247,0.2); color: #c084fc; padding: 2px 14px; border-radius: 40px; display: inline-block; margin-top: 6px; font-weight: 600; }
+
+        /* ---------- NOMINAL (general) ---------- */
+        .nominal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 14px; margin-top: 8px; }
+        .nominal-item { background: rgba(255,255,255,0.04); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 16px 8px; text-align: center; transition: 0.3s; cursor: default; font-weight: 600; }
+        .nominal-item:hover { background: rgba(168,85,247,0.12); border-color: #a855f7; transform: scale(1.04); box-shadow: 0 0 30px rgba(168,85,247,0.1); }
+        .nominal-item .price { font-size: 1.3rem; font-weight: 700; color: #fff; }
+        .nominal-item .price small { font-size: 0.7rem; font-weight: 400; color: rgba(255,255,255,0.5); margin-left: 2px; }
+        .nominal-item .label { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 4px; }
+        .nominal-item .discount { font-size: 0.7rem; background: #ef4444; color: #fff; padding: 1px 12px; border-radius: 40px; display: inline-block; margin-top: 6px; font-weight: 700; }
+
+        /* ---------- PAYMENT GRID (utama) ---------- */
+        .payment-grid { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 8px; }
+        .payment-item { background: rgba(255,255,255,0.04); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.06); border-radius: 60px; padding: 10px 28px; display: flex; align-items: center; gap: 12px; transition: 0.3s; cursor: pointer; font-weight: 500; position: relative; }
+        .payment-item:hover { background: rgba(168,85,247,0.1); border-color: #a855f7; box-shadow: 0 0 24px rgba(168,85,247,0.08); transform: translateY(-2px); }
+        .payment-item.active { background: rgba(168,85,247,0.15); border-color: #a855f7; box-shadow: 0 0 24px rgba(168,85,247,0.15); }
+        .payment-item i { font-size: 1.5rem; color: #c084fc; width: 28px; text-align: center; }
+        .payment-item .pay-name { font-size: 0.95rem; }
+        .payment-item .pay-badge { font-size: 0.6rem; background: rgba(52,211,153,0.2); color: #34d399; padding: 2px 12px; border-radius: 40px; font-weight: 700; text-transform: uppercase; }
+        .payment-item .check-mark { display: none; margin-left: 6px; color: #34d399; font-size: 1rem; }
+        .payment-item.active .check-mark { display: inline-block; }
+
+        /* ---------- TAB ---------- */
+        .tab-container { margin: 56px 0 32px; background: rgba(255,255,255,0.03); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.06); border-radius: 28px; padding: 24px 28px 32px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+        .tab-buttons { display: flex; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 12px; margin-bottom: 28px; flex-wrap: wrap; }
+        .tab-btn { background: transparent; border: none; color: rgba(255,255,255,0.5); font-family: 'Inter', sans-serif; font-weight: 600; font-size: 1rem; padding: 8px 24px; border-radius: 40px; cursor: pointer; transition: 0.3s; }
+        .tab-btn i { margin-right: 8px; }
+        .tab-btn:hover { color: #fff; background: rgba(255,255,255,0.04); }
+        .tab-btn.active { color: #fff; background: rgba(168,85,247,0.15); box-shadow: inset 0 0 0 1px rgba(168,85,247,0.3); }
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ---------- FORM ML (INPUT DIKECILKAN) ---------- */
+        .ml-form { display: flex; flex-direction: column; gap: 20px; }
+        .ml-form .input-row { display: flex; flex-wrap: wrap; gap: 14px; }
+        .ml-form .input-group { 
+            flex: 1 1 150px; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            background: rgba(255,255,255,0.04); 
+            border: 1px solid rgba(255,255,255,0.06); 
+            border-radius: 40px; 
+            padding: 2px 12px 2px 10px; 
+            transition: 0.3s; 
+        }
+        .ml-form .input-group:focus-within { 
+            border-color: #a855f7; 
+            background: rgba(168,85,247,0.06); 
+            box-shadow: 0 0 20px rgba(168,85,247,0.05); 
+        }
+        .ml-form .input-group i { 
+            color: #818cf8; 
+            font-size: 0.9rem; 
+            width: 18px; 
+            text-align: center; 
+        }
+        .ml-form .input-group input { 
+            background: transparent; 
+            border: none; 
+            padding: 8px 0; 
+            width: 100%; 
+            font-size: 0.85rem; 
+            color: #fff; 
+            outline: none; 
+            font-family: 'Inter', sans-serif; 
+        }
+        .ml-form .input-group input::placeholder { 
+            color: rgba(255,255,255,0.3); 
+            font-size: 0.8rem; 
         }
 
-        body {
-            background: #0b141a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 16px;
-        }
+        .diamond-options { margin-top: 4px; }
+        .diamond-options .label { font-weight: 500; color: rgba(255,255,255,0.6); margin-bottom: 10px; display: block; font-size: 0.9rem; }
+        .diamond-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; }
+        .diamond-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 12px 6px; text-align: center; cursor: pointer; transition: 0.25s; font-weight: 500; }
+        .diamond-item:hover { background: rgba(168,85,247,0.08); border-color: rgba(168,85,247,0.3); }
+        .diamond-item.active { background: rgba(168,85,247,0.15); border-color: #a855f7; box-shadow: 0 0 24px rgba(168,85,247,0.1); }
+        .diamond-item .amount { font-size: 1.1rem; font-weight: 700; color: #fff; }
+        .diamond-item .price-tag { font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-top: 4px; }
 
-        .card {
-            max-width: 420px;
-            width: 100%;
-            background: #1e2a32;
-            border-radius: 28px;
-            padding: 24px 20px 32px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-            border: 1px solid #2a3b47;
-            transition: all 0.2s;
+        .btn-topup-ml { 
+            background: linear-gradient(135deg, #7c3aed, #4f46e5); 
+            border: none; 
+            padding: 12px 36px; 
+            border-radius: 60px; 
+            font-weight: 700; 
+            font-size: 1rem; 
+            color: #fff; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 10px; 
+            box-shadow: 0 8px 32px rgba(124,58,237,0.3); 
+            font-family: 'Inter', sans-serif; 
+            letter-spacing: 0.5px; 
+            align-self: flex-start; 
+            margin-top: 6px; 
         }
+        .btn-topup-ml:hover { transform: scale(1.04); box-shadow: 0 12px 48px rgba(124,58,237,0.45); background: linear-gradient(135deg, #8b5cf6, #6366f1); }
 
-        /* Header */
-        .header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding-bottom: 18px;
-            border-bottom: 2px solid #2a3b47;
-        }
+        /* ---------- PAYMENT OVERLAY ---------- */
+        .payment-overlay, .history-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(12px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; animation: fadeInOverlay 0.4s ease; }
+        .payment-overlay.open, .history-overlay.open { display: flex; }
+        @keyframes fadeInOverlay { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
-        .header i {
-            font-size: 28px;
-            color: #25d366;
-        }
+        .payment-card, .history-card { background: rgba(20,22,36,0.95); border: 1px solid rgba(255,255,255,0.08); border-radius: 32px; max-width: 620px; width: 100%; padding: 36px 32px; box-shadow: 0 30px 80px rgba(0,0,0,0.6); position: relative; max-height: 90vh; overflow-y: auto; }
+        .payment-card .close-btn, .history-card .close-btn { position: absolute; top: 16px; right: 20px; background: rgba(255,255,255,0.05); border: none; color: rgba(255,255,255,0.4); font-size: 1.4rem; cursor: pointer; transition: 0.3s; border-radius: 40px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+        .payment-card .close-btn:hover, .history-card .close-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
 
-        .header h1 {
-            font-size: 22px;
-            font-weight: 700;
-            color: #e9edef;
-            letter-spacing: -0.3px;
-        }
+        .pay-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .pay-header i { font-size: 2rem; color: #a855f7; }
+        .pay-header h2 { font-family: 'Orbitron', sans-serif; font-weight: 600; font-size: 1.4rem; letter-spacing: 0.5px; }
 
-        .header .badge {
-            margin-left: auto;
-            background: #25d366;
-            color: #0b141a;
-            font-size: 11px;
-            font-weight: 700;
-            padding: 4px 12px;
-            border-radius: 20px;
-            text-transform: uppercase;
-        }
+        .pay-detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.95rem; }
+        .pay-detail-row .label { color: rgba(255,255,255,0.5); }
+        .pay-detail-row .value { font-weight: 500; color: #fff; }
+        .pay-detail-row .value.highlight { color: #c084fc; font-weight: 700; }
 
-        /* Menu item */
-        .menu-item {
-            background: #23333e;
-            border-radius: 16px;
-            padding: 16px 18px;
-            margin-top: 18px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            border: 1px solid #2f424f;
-            transition: 0.2s;
-            cursor: default;
-        }
+        .pay-total { display: flex; justify-content: space-between; padding: 18px 0 10px; font-size: 1.3rem; font-weight: 700; border-top: 2px solid rgba(168,85,247,0.2); margin-top: 6px; }
+        .pay-total .total-label { color: rgba(255,255,255,0.6); }
+        .pay-total .total-value { color: #a855f7; font-size: 1.6rem; }
 
-        .menu-item .icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 14px;
-            background: #2a3b47;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            color: #25d366;
-            flex-shrink: 0;
-        }
+        .pay-method-section { margin: 24px 0 12px; }
+        .pay-method-section .label { font-weight: 500; color: rgba(255,255,255,0.5); display: block; margin-bottom: 10px; font-size: 0.9rem; }
+        .pay-method-options { display: flex; flex-wrap: wrap; gap: 10px; }
+        .pay-method-options .method-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 40px; padding: 8px 20px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: 0.3s; font-size: 0.9rem; }
+        .pay-method-options .method-item:hover { background: rgba(168,85,247,0.08); border-color: rgba(168,85,247,0.3); }
+        .pay-method-options .method-item.active { background: rgba(168,85,247,0.15); border-color: #a855f7; }
+        .pay-method-options .method-item i { color: #c084fc; }
 
-        .menu-item .info {
-            flex: 1;
-        }
-        .menu-item .info h3 {
-            font-size: 17px;
-            font-weight: 600;
-            color: #e9edef;
-        }
-        .menu-item .info p {
-            font-size: 13px;
-            color: #a0b4c3;
-            margin-top: 2px;
-        }
+        #paymentNumberContainer { margin-top: 14px; padding: 14px 16px; background: rgba(168,85,247,0.08); border-radius: 12px; border: 1px solid rgba(168,85,247,0.15); display: none; align-items: center; flex-wrap: wrap; gap: 12px; }
+        #paymentNumberContainer .label { color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+        #paymentNumberContainer .number { color: #c084fc; font-weight: 700; font-size: 1.1rem; letter-spacing: 0.5px; background: rgba(0,0,0,0.2); padding: 4px 12px; border-radius: 40px; }
+        .action-btn { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 6px 16px; border-radius: 40px; font-size: 0.8rem; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 6px; font-family: 'Inter', sans-serif; }
+        .action-btn:hover { background: rgba(168,85,247,0.2); border-color: #a855f7; }
+        .action-btn i { font-size: 0.9rem; }
 
-        .menu-item .toggle {
-            width: 48px;
-            height: 28px;
-            background: #3a4c5a;
-            border-radius: 40px;
-            position: relative;
-            cursor: pointer;
-            transition: 0.25s;
-            flex-shrink: 0;
-            border: none;
-            outline: none;
-        }
-        .menu-item .toggle.active {
-            background: #25d366;
-        }
-        .menu-item .toggle::after {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 22px;
-            height: 22px;
-            background: white;
-            border-radius: 50%;
-            transition: 0.25s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-        .menu-item .toggle.active::after {
-            left: 23px;
-        }
+        .btn-confirm-payment { background: linear-gradient(135deg, #10b981, #059669); border: none; padding: 16px 0; border-radius: 60px; font-weight: 700; font-size: 1.1rem; color: #fff; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; margin-top: 16px; box-shadow: 0 8px 32px rgba(16,185,129,0.3); font-family: 'Inter', sans-serif; }
+        .btn-confirm-payment:hover { transform: scale(1.02); box-shadow: 0 12px 48px rgba(16,185,129,0.45); background: linear-gradient(135deg, #34d399, #10b981); }
 
-        /* Efek lag (hanya animasi) */
-        .lag-effect {
-            margin-top: 22px;
-            padding: 16px;
-            background: #1a2933;
-            border-radius: 16px;
-            border: 1px dashed #3a5a6a;
-            text-align: center;
-            color: #8aa3b5;
-            font-size: 14px;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
+        /* ---------- HISTORY ---------- */
+        .history-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 16px 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .history-item .left { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+        .history-item .left .game-name { font-weight: 600; color: #fff; }
+        .history-item .left .detail { font-size: 0.85rem; color: rgba(255,255,255,0.5); }
+        .history-item .right { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+        .history-item .right .price { font-weight: 700; color: #c084fc; font-size: 1.1rem; }
+        .history-item .right .status { font-size: 0.75rem; padding: 2px 12px; border-radius: 40px; display: inline-block; cursor: pointer; transition: 0.2s; border: none; font-family: 'Inter', sans-serif; font-weight: 600; }
+        .status-success { background: rgba(52,211,153,0.2); color: #34d399; }
+        .status-pending { background: rgba(251,191,36,0.2); color: #fbbf24; }
+        .status-failed { background: rgba(239,68,68,0.2); color: #ef4444; }
+        .status-success:hover, .status-pending:hover, .status-failed:hover { opacity: 0.7; }
 
-        .lag-effect i {
-            font-size: 20px;
-            color: #ffb74d;
-        }
+        .history-empty { text-align: center; padding: 40px 0; color: rgba(255,255,255,0.4); }
+        .history-empty i { font-size: 3rem; display: block; margin-bottom: 16px; color: rgba(168,85,247,0.3); }
 
-        .lag-effect .spinner {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            border: 3px solid #2a4a5a;
-            border-top-color: #25d366;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            visibility: hidden;
-        }
+        /* ---------- FOOTER ---------- */
+        footer { border-top: 1px solid rgba(255,255,255,0.05); padding: 28px 0 16px; margin-top: 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 0.85rem; color: rgba(255,255,255,0.35); }
+        footer .socials { display: flex; gap: 18px; }
+        footer .socials a { color: rgba(255,255,255,0.3); transition: 0.3s; font-size: 1.2rem; }
+        footer .socials a:hover { color: #a855f7; transform: translateY(-2px); }
 
-        .lag-effect .spinner.show {
-            visibility: visible;
+        /* ---------- RESPONSIVE ---------- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.8rem; }
+            .tab-container { padding: 18px 16px 24px; }
+            .ml-form .input-row { flex-direction: column; gap: 10px; }
+            .ml-form .input-group { flex: 1 1 100%; }
+            .btn-topup-ml { width: 100%; justify-content: center; }
+            .nav-links { gap: 12px; font-size: 0.8rem; }
+            .logo { font-size: 1.4rem; }
+            .game-grid { max-width: 300px; }
+            .nominal-grid { grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); }
+            .payment-grid { gap: 10px; }
+            .payment-item { padding: 8px 18px; font-size: 0.85rem; }
+            .payment-card, .history-card { padding: 28px 18px; }
+            .pay-total { font-size: 1.1rem; }
+            .pay-total .total-value { font-size: 1.3rem; }
+            #paymentNumberContainer { flex-direction: column; align-items: flex-start; }
+            .history-item { flex-direction: column; align-items: flex-start; }
+            .history-item .right { text-align: left; width: 100%; align-items: flex-start; }
         }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Tombol fake crash */
-        .fake-btn {
-            margin-top: 16px;
-            width: 100%;
-            padding: 14px;
-            background: #d32f2f;
-            border: none;
-            border-radius: 40px;
-            color: white;
-            font-weight: 700;
-            font-size: 16px;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            transition: 0.2s;
-            box-shadow: 0 6px 0 #881c1c;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .fake-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 #881c1c;
-        }
-
-        .fake-btn i {
-            font-size: 18px;
-        }
-
-        /* Notifikasi toast */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(80px);
-            background: #1e2a32;
-            color: #e9edef;
-            padding: 14px 24px;
-            border-radius: 40px;
-            border-left: 6px solid #25d366;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            font-size: 14px;
-            font-weight: 500;
-            opacity: 0;
-            transition: 0.35s ease;
-            pointer-events: none;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border: 1px solid #2a3b47;
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .toast i {
-            color: #25d366;
-        }
-
-        /* footer */
-        .footer {
-            margin-top: 24px;
-            text-align: center;
-            font-size: 12px;
-            color: #5f7a8a;
-            border-top: 1px solid #1f313b;
-            padding-top: 18px;
-        }
-
-        .footer a {
-            color: #25d366;
-            text-decoration: none;
-        }
-
-        /* Responsive */
         @media (max-width: 480px) {
-            .card { padding: 18px 14px 24px; }
-            .header h1 { font-size: 19px; }
-            .menu-item { padding: 14px; }
+            header { flex-direction: column; align-items: stretch; gap: 12px; }
+            .nav-links { justify-content: center; }
+            .hero h1 { font-size: 1.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <!-- Header -->
-        <div class="header">
-            <i class="fab fa-whatsapp"></i>
-            <h1>Bug Menu</h1>
-            <span class="badge">v2.0</span>
-        </div>
+    <canvas id="particle-canvas"></canvas>
+    <div class="overlay-gradient"></div>
 
-        <!-- Menu item: Lag Crasher -->
-        <div class="menu-item" id="lagItem">
-            <div class="icon"><i class="fas fa-bolt"></i></div>
-            <div class="info">
-                <h3>Lag Crasher</h3>
-                <p>Android &amp; iPhone · Force logout</p>
+    <!-- KONTEN UTAMA -->
+    <div class="content" id="mainContent">
+
+        <!-- HEADER -->
+        <header>
+            <div class="logo">
+                <i class="fas fa-gamepad"></i>
+                <span>TopUp<span style="-webkit-text-fill-color:initial;color:#818cf8;">.</span>Pro</span>
             </div>
-            <button class="toggle" id="toggleBtn" aria-label="Toggle Lag Crasher"></button>
+            <div class="nav-links">
+                <a href="#">Beranda</a>
+                <a href="#" id="historyLink">History</a>
+                <button id="googleLoginBtn" class="btn-login-google"><i class="fab fa-google"></i> Login dengan Google</button>
+                <span id="userProfile" style="display:none; align-items:center; gap:10px;">
+                    <span class="user-avatar" id="userAvatar">R</span>
+                    <span id="userName" style="font-weight:500;">User</span>
+                </span>
+            </div>
+        </header>
+
+        <!-- HERO -->
+        <div class="hero">
+            <h1>Top Up <span>Game</span> Favoritmu</h1>
+            <p>Murah, cepat, dan aman. Nikmati berbagai pilihan game & metode pembayaran.</p>
         </div>
 
-        <!-- Area efek lag (hanya animasi) -->
-        <div class="lag-effect" id="lagEffect">
-            <i class="fas fa-circle-exclamation"></i>
-            <span>Status: <strong id="statusText">Nonaktif</strong></span>
-            <span class="spinner" id="spinner"></span>
+        <!-- GAME GRID (hanya ML dan FF) -->
+        <div class="section-label"><i class="fas fa-joystick"></i><span>Pilih Game</span></div>
+        <div class="game-grid">
+            <div class="game-card">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%237c3aed' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='60' font-size='40' text-anchor='middle' fill='%23fff' font-family='Arial'%3EML%3C/text%3E%3C/svg%3E" alt="ML" />
+                <div class="name">Mobile Legends</div>
+                <div class="badge">Populer</div>
+            </div>
+            <div class="game-card">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23f97316' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='60' font-size='36' text-anchor='middle' fill='%23fff' font-family='Arial'%3EFF%3C/text%3E%3C/svg%3E" alt="FF" />
+                <div class="name">Free Fire</div>
+                <div class="badge">🔥 Hot</div>
+            </div>
         </div>
 
-        <!-- Tombol "Aktifkan" (hanya simulasi) -->
-        <button class="fake-btn" id="activateBtn">
-            <i class="fas fa-skull"></i> Aktifkan Lag Crasher
-        </button>
+        <!-- NOMINAL TOP UP -->
+        <div class="section-label" style="margin-top:56px;"><i class="fas fa-coins"></i><span>Nominal Top Up</span></div>
+        <div class="nominal-grid">
+            <div class="nominal-item"><div class="price">Rp 10.000 <small>+5%</small></div><div class="label">50 Diamond</div><div class="discount">-10%</div></div>
+            <div class="nominal-item"><div class="price">Rp 25.000 <small>+8%</small></div><div class="label">140 Diamond</div><div class="discount">-15%</div></div>
+            <div class="nominal-item"><div class="price">Rp 50.000 <small>+12%</small></div><div class="label">300 Diamond</div><div class="discount" style="background:#f59e0b;">Best</div></div>
+            <div class="nominal-item"><div class="price">Rp 100.000 <small>+18%</small></div><div class="label">650 Diamond</div><div class="discount">-25%</div></div>
+            <div class="nominal-item"><div class="price">Rp 200.000 <small>+25%</small></div><div class="label">1400 Diamond</div><div class="discount" style="background:#8b5cf6;">VIP</div></div>
+        </div>
 
-        <!-- Footer -->
-        <div class="footer">
-            ⚠️ Hanya simulasi visual · Tidak ada fungsi berbahaya · <a href="#">Pelajari lebih lanjut</a>
+        <!-- METODE PEMBAYARAN -->
+        <div class="section-label" style="margin-top:56px;"><i class="fas fa-credit-card"></i><span>Metode Pembayaran</span></div>
+        <div class="payment-grid" id="paymentGrid">
+            <div class="payment-item active" data-method="QRIS"><i class="fas fa-qrcode"></i><span class="pay-name">QRIS</span><span class="pay-badge">Instant</span><span class="check-mark"><i class="fas fa-check-circle"></i></span></div>
+            <div class="payment-item" data-method="OVO"><i class="fas fa-mobile-alt"></i><span class="pay-name">OVO</span><span class="pay-badge">Populer</span><span class="check-mark"><i class="fas fa-check-circle"></i></span></div>
+            <div class="payment-item" data-method="DANA"><i class="fas fa-wallet"></i><span class="pay-name">DANA</span><span class="pay-badge">Cashback</span><span class="check-mark"><i class="fas fa-check-circle"></i></span></div>
+            <div class="payment-item" data-method="GoPay"><i class="fas fa-credit-card"></i><span class="pay-name">GoPay</span><span class="pay-badge">Promo</span><span class="check-mark"><i class="fas fa-check-circle"></i></span></div>
+            <div class="payment-item" data-method="Bank Transfer"><i class="fas fa-university"></i><span class="pay-name">Bank Transfer</span><span class="pay-badge">24 Jam</span><span class="check-mark"><i class="fas fa-check-circle"></i></span></div>
+            <div class="payment-item" data-method="Pulsa"><i class="fas fa-gift"></i><span class="pay-name">Pulsa</span><span class="pay-badge">All Ops</span><span class="check-mark"><i class="fas fa-check-circle"></i></span></div>
+        </div>
+
+        <!-- TAB MOBILE LEGENDS & FREE FIRE -->
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="ml"><i class="fas fa-gamepad"></i> Mobile Legends</button>
+                <button class="tab-btn" data-tab="ff"><i class="fas fa-fire"></i> Free Fire</button>
+            </div>
+            <div class="tab-content active" id="tab-ml">
+                <div class="ml-form">
+                    <div class="input-row">
+                        <div class="input-group"><i class="fas fa-id-card"></i><input type="text" id="uidInput" placeholder="User ID (UID)" /></div>
+                        <div class="input-group"><i class="fas fa-server"></i><input type="text" id="serverInput" placeholder="ID Server" /></div>
+                    </div>
+                    <div class="diamond-options">
+                        <span class="label"><i class="fas fa-gem" style="color:#c084fc;margin-right:8px;"></i>Pilih Diamond</span>
+                        <div class="diamond-grid" id="diamondGrid">
+                            <div class="diamond-item active" data-diamond="50" data-price="10000"><div class="amount">50</div><div class="price-tag">Rp 10.000</div></div>
+                            <div class="diamond-item" data-diamond="100" data-price="20000"><div class="amount">100</div><div class="price-tag">Rp 20.000</div></div>
+                            <div class="diamond-item" data-diamond="250" data-price="50000"><div class="amount">250</div><div class="price-tag">Rp 50.000</div></div>
+                            <div class="diamond-item" data-diamond="500" data-price="100000"><div class="amount">500</div><div class="price-tag">Rp 100.000</div></div>
+                            <div class="diamond-item" data-diamond="1000" data-price="200000"><div class="amount">1000</div><div class="price-tag">Rp 200.000</div></div>
+                        </div>
+                    </div>
+                    <button class="btn-topup-ml" id="btnTopupML"><i class="fas fa-bolt"></i> Top Up Sekarang</button>
+                </div>
+            </div>
+            <div class="tab-content" id="tab-ff">
+                <div style="padding:20px 0;text-align:center;color:rgba(255,255,255,0.4);">
+                    <i class="fas fa-fire" style="font-size:2rem;display:block;margin-bottom:10px;"></i>
+                    <p>Formulir untuk Free Fire akan segera hadir.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer>
+            <span>&copy; 2026 TopUp.Pro — All rights reserved.</span>
+            <div class="socials">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-tiktok"></i></a>
+                <a href="#"><i class="fab fa-discord"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ========== OVERLAY PEMBAYARAN ========== -->
+    <div class="payment-overlay" id="paymentOverlay">
+        <div class="payment-card">
+            <button class="close-btn" id="closePayment"><i class="fas fa-times"></i></button>
+            <div class="pay-header"><i class="fas fa-receipt"></i><h2>Ringkasan Pesanan</h2></div>
+            <div id="paymentDetails">
+                <div class="pay-detail-row"><span class="label">Game</span><span class="value" id="payGame">Mobile Legends</span></div>
+                <div class="pay-detail-row"><span class="label">User ID</span><span class="value" id="payUid">-</span></div>
+                <div class="pay-detail-row"><span class="label">Server</span><span class="value" id="payServer">-</span></div>
+                <div class="pay-detail-row"><span class="label">Diamond</span><span class="value highlight" id="payDiamond">50</span></div>
+                <div class="pay-detail-row"><span class="label">Harga</span><span class="value highlight" id="payPrice">Rp 10.000</span></div>
+            </div>
+            <div class="pay-method-section">
+                <span class="label"><i class="fas fa-credit-card" style="margin-right:8px;color:#a855f7;"></i>Pilih Metode Pembayaran</span>
+                <div class="pay-method-options" id="payMethodOptions">
+                    <div class="method-item active" data-method="QRIS"><i class="fas fa-qrcode"></i> QRIS</div>
+                    <div class="method-item" data-method="OVO"><i class="fas fa-mobile-alt"></i> OVO</div>
+                    <div class="method-item" data-method="DANA"><i class="fas fa-wallet"></i> DANA</div>
+                    <div class="method-item" data-method="GoPay"><i class="fas fa-credit-card"></i> GoPay</div>
+                    <div class="method-item" data-method="Bank Transfer"><i class="fas fa-university"></i> Bank</div>
+                    <div class="method-item" data-method="Pulsa"><i class="fas fa-gift"></i> Pulsa</div>
+                </div>
+            </div>
+            <div id="paymentNumberContainer">
+                <span class="label">Nomor Pembayaran:</span>
+                <span class="number" id="paymentNumberDisplay">085806372196</span>
+                <button id="copyNumberBtn" class="action-btn"><i class="fas fa-copy"></i> Salin</button>
+            </div>
+            <div class="pay-total"><span class="total-label">Total</span><span class="total-value" id="payTotal">Rp 10.000</span></div>
+            <button class="btn-confirm-payment" id="btnConfirmPayment"><i class="fas fa-check-circle"></i> Konfirmasi & Lanjut ke Aplikasi</button>
         </div>
     </div>
 
-    <!-- Toast notifikasi -->
-    <div class="toast" id="toast">
-        <i class="fas fa-check-circle"></i>
-        <span id="toastMessage">Fitur diaktifkan (simulasi)</span>
+    <!-- ========== OVERLAY HISTORY ========== -->
+    <div class="history-overlay" id="historyOverlay">
+        <div class="history-card">
+            <button class="close-btn" id="closeHistory"><i class="fas fa-times"></i></button>
+            <div class="pay-header"><i class="fas fa-history"></i><h2>Riwayat Transaksi</h2></div>
+            <div id="historyList">
+                <!-- Data dummy akan diisi JS -->
+            </div>
+        </div>
     </div>
 
     <script>
+        // ---------- PARTICLE (sama) ----------
         (function() {
-            const toggleBtn = document.getElementById('toggleBtn');
-            const lagEffect = document.getElementById('lagEffect');
-            const statusText = document.getElementById('statusText');
-            const spinner = document.getElementById('spinner');
-            const activateBtn = document.getElementById('activateBtn');
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toastMessage');
-
-            let isActive = false;
-
-            // Fungsi show toast
-            function showToast(msg, isError = false) {
-                toastMsg.textContent = msg;
-                toast.style.borderLeftColor = isError ? '#d32f2f' : '#25d366';
-                toast.querySelector('i').className = isError ? 'fas fa-exclamation-triangle' : 'fas fa-check-circle';
-                toast.classList.add('show');
-                clearTimeout(toast._timer);
-                toast._timer = setTimeout(() => toast.classList.remove('show'), 2800);
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            let width, height, particles = [];
+            const PARTICLE_COUNT = 140, MAX_SPEED = 0.6, CONNECT_DIST = 130, PARTICLE_SIZE = 2.2;
+            const colors = ['168, 85, 247', '99, 102, 241', '236, 72, 153', '52, 211, 153', '251, 146, 60', '139, 92, 246'];
+            function initParticles() { particles = []; for (let i=0; i<PARTICLE_COUNT; i++) particles.push({ x: Math.random()*width, y: Math.random()*height, vx: (Math.random()-0.5)*MAX_SPEED*1.8, vy: (Math.random()-0.5)*MAX_SPEED*1.8, radius: PARTICLE_SIZE*(0.6+Math.random()*0.8), color: colors[Math.floor(Math.random()*colors.length)], alpha: 0.4+Math.random()*0.5 }); }
+            function resizeCanvas() { width = window.innerWidth; height = window.innerHeight; canvas.width = width; canvas.height = height; initParticles(); }
+            function drawParticles() {
+                ctx.clearRect(0, 0, width, height);
+                for (let i=0; i<particles.length; i++) {
+                    const p = particles[i];
+                    p.x += p.vx; p.y += p.vy;
+                    if (p.x<0 || p.x>width) p.vx *= -1;
+                    if (p.y<0 || p.y>height) p.vy *= -1;
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+                    ctx.fillStyle = `rgba(${p.color}, ${p.alpha})`;
+                    ctx.fill();
+                    ctx.shadowColor = `rgba(${p.color}, 0.3)`;
+                    ctx.shadowBlur = 14; ctx.fill(); ctx.shadowBlur = 0;
+                    for (let j=i+1; j<particles.length; j++) {
+                        const q = particles[j];
+                        const dx = p.x-q.x, dy = p.y-q.y, dist = Math.sqrt(dx*dx+dy*dy);
+                        if (dist < CONNECT_DIST) {
+                            const alpha = 0.25 * (1 - dist/CONNECT_DIST);
+                            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y);
+                            ctx.strokeStyle = `rgba(168, 85, 247, ${alpha})`;
+                            ctx.lineWidth = 0.8; ctx.stroke();
+                        }
+                    }
+                }
+                requestAnimationFrame(drawParticles);
             }
-
-            // Update UI berdasarkan state
-            function updateUI(active) {
-                isActive = active;
-                toggleBtn.classList.toggle('active', active);
-                statusText.textContent = active ? 'AKTIF' : 'Nonaktif';
-                statusText.style.color = active ? '#25d366' : '#a0b4c3';
-                spinner.classList.toggle('show', active);
-                lagEffect.style.borderColor = active ? '#25d366' : '#3a5a6a';
-
-                // Efek visual tambahan: sedikit getar pada card (hanya animasi)
-                const card = document.querySelector('.card');
-                if (active) {
-                    card.style.animation = 'shake 0.3s ease 3';
-                    setTimeout(() => card.style.animation = '', 1200);
-                } else {
-                    card.style.animation = '';
-                }
-            }
-
-            // Toggle manual
-            toggleBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const newState = !isActive;
-                updateUI(newState);
-                showToast(newState ? 'Lag Crasher diaktifkan (simulasi)' : 'Lag Crasher dinonaktifkan');
-            });
-
-            // Tombol Aktifkan (efek dramatis)
-            activateBtn.addEventListener('click', function() {
-                // Animasi tombol
-                this.style.transform = 'scale(0.95)';
-                setTimeout(() => this.style.transform = '', 150);
-
-                // Jika sudah aktif, beri notif
-                if (isActive) {
-                    showToast('⚠️ Sudah aktif! (simulasi)', true);
-                    return;
-                }
-
-                // Aktifkan dengan efek "crash" palsu
-                updateUI(true);
-
-                // Tampilkan toast dengan pesan "logout" palsu
-                showToast('🔴 Perangkat akan logout... (simulasi)');
-
-                // Efek layar berkedip (hiasan)
-                document.body.style.transition = 'background 0.1s';
-                document.body.style.background = '#1a0a0a';
-                setTimeout(() => document.body.style.background = '#0b141a', 300);
-                setTimeout(() => document.body.style.background = '#1a0a0a', 600);
-                setTimeout(() => document.body.style.background = '#0b141a', 900);
-
-                // Pesan kedua setelah 2 detik
-                setTimeout(() => {
-                    showToast('✅ Logout simulasi selesai. Tidak ada yang terjadi.');
-                }, 2000);
-            });
-
-            // Inisialisasi
-            updateUI(false);
-
-            // Tambahkan keyframe shake (dinamis)
-            const styleSheet = document.createElement("style");
-            styleSheet.textContent = `
-                @keyframes shake {
-                    0%, 100% { transform: translateX(0); }
-                    25% { transform: translateX(-6px); }
-                    75% { transform: translateX(6px); }
-                }
-            `;
-            document.head.appendChild(styleSheet);
-
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+            drawParticles();
         })();
+
+        // ---------- TAB (hanya ML & FF) ----------
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                tabContents.forEach(c => c.classList.remove('active'));
+                document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+            });
+        });
+
+        // ---------- DIAMOND ----------
+        const diamondItems = document.querySelectorAll('.diamond-item');
+        diamondItems.forEach(item => {
+            item.addEventListener('click', function() {
+                diamondItems.forEach(d => d.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // ---------- METODE (grid utama) ----------
+        const paymentItems = document.querySelectorAll('.payment-item');
+        let selectedPaymentMethod = 'QRIS';
+        paymentItems.forEach(item => {
+            item.addEventListener('click', function() {
+                paymentItems.forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+                selectedPaymentMethod = this.dataset.method;
+            });
+        });
+
+        // ---------- METODE (payment overlay) ----------
+        const payMethodItems = document.querySelectorAll('.pay-method-options .method-item');
+        const paymentNumberContainer = document.getElementById('paymentNumberContainer');
+        const paymentNumberDisplay = document.getElementById('paymentNumberDisplay');
+        const PAYMENT_NUMBER = '085806372196';
+
+        function updatePaymentNumber(method) {
+            const showFor = ['OVO', 'GoPay', 'DANA'];
+            if (showFor.includes(method)) {
+                paymentNumberContainer.style.display = 'flex';
+                paymentNumberDisplay.textContent = PAYMENT_NUMBER;
+            } else {
+                paymentNumberContainer.style.display = 'none';
+            }
+        }
+
+        payMethodItems.forEach(item => {
+            item.addEventListener('click', function() {
+                payMethodItems.forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+                updatePaymentNumber(this.dataset.method);
+            });
+        });
+
+        // ---------- COPY NUMBER (diperbaiki) ----------
+        document.getElementById('copyNumberBtn').addEventListener('click', async function() {
+            const number = PAYMENT_NUMBER;
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(number);
+                    alert('Nomor ' + number + ' berhasil disalin!');
+                } else {
+                    const textarea = document.createElement('textarea');
+                    textarea.value = number;
+                    textarea.style.position = 'fixed';
+                    textarea.style.opacity = '0';
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    alert('Nomor ' + number + ' berhasil disalin!');
+                }
+            } catch (err) {
+                alert('Gagal menyalin, silakan salin manual: ' + number);
+            }
+        });
+
+        // ---------- OPEN PAYMENT ----------
+        const overlayPay = document.getElementById('paymentOverlay');
+        const closePay = document.getElementById('closePayment');
+        const btnTopup = document.getElementById('btnTopupML');
+        const payUid = document.getElementById('payUid');
+        const payServer = document.getElementById('payServer');
+        const payDiamond = document.getElementById('payDiamond');
+        const payPrice = document.getElementById('payPrice');
+        const payTotal = document.getElementById('payTotal');
+
+        function openPayment() {
+            const uid = document.getElementById('uidInput').value.trim();
+            const server = document.getElementById('serverInput').value.trim();
+            const activeDiamond = document.querySelector('.diamond-item.active');
+            const diamond = activeDiamond ? activeDiamond.dataset.diamond : '50';
+            const price = activeDiamond ? activeDiamond.dataset.price : '10000';
+            if (!uid || !server) { alert('Harap isi UID dan ID Server!'); return; }
+            payUid.textContent = uid;
+            payServer.textContent = server;
+            payDiamond.textContent = diamond + ' Diamond';
+            const priceFormatted = 'Rp ' + parseInt(price).toLocaleString();
+            payPrice.textContent = priceFormatted;
+            payTotal.textContent = priceFormatted;
+            const methodInPay = document.querySelector(`.pay-method-options .method-item[data-method="${selectedPaymentMethod}"]`);
+            if (methodInPay) {
+                payMethodItems.forEach(p => p.classList.remove('active'));
+                methodInPay.classList.add('active');
+                updatePaymentNumber(selectedPaymentMethod);
+            } else {
+                const def = document.querySelector('.pay-method-options .method-item[data-method="QRIS"]');
+                if (def) { payMethodItems.forEach(p => p.classList.remove('active')); def.classList.add('active'); updatePaymentNumber('QRIS'); }
+            }
+            overlayPay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        btnTopup.addEventListener('click', openPayment);
+        closePay.addEventListener('click', function() { overlayPay.classList.remove('open'); document.body.style.overflow = 'auto'; });
+        overlayPay.addEventListener('click', function(e) { if (e.target === overlayPay) { overlayPay.classList.remove('open'); document.body.style.overflow = 'auto'; } });
+
+        // ---------- HISTORY DATA ----------
+        let historyData = [];
+
+        function addHistory(game, uid, server, diamond, price, method, status = 'Pending') {
+            const now = new Date();
+            const timeStr = now.toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            const entry = {
+                game, uid, server, diamond, price, method,
+                status: status,
+                time: timeStr,
+                id: Date.now()
+            };
+            historyData.unshift(entry);
+            if (historyData.length > 20) historyData.pop();
+            renderHistory();
+        }
+
+        function updateStatus(id, newStatus) {
+            const item = historyData.find(h => h.id === id);
+            if (item) {
+                item.status = newStatus;
+                renderHistory();
+            }
+        }
+
+        function renderHistory() {
+            const container = document.getElementById('historyList');
+            if (historyData.length === 0) {
+                container.innerHTML = `<div class="history-empty"><i class="fas fa-receipt"></i><p>Belum ada transaksi. Yuk, top up sekarang!</p></div>`;
+                return;
+            }
+            let html = '';
+            historyData.forEach(item => {
+                let statusClass = '';
+                if (item.status === 'Sukses') statusClass = 'status-success';
+                else if (item.status === 'Pending') statusClass = 'status-pending';
+                else if (item.status === 'Gagal') statusClass = 'status-failed';
+                html += `
+                    <div class="history-item" data-id="${item.id}">
+                        <div class="left">
+                            <div class="game-name">${item.game}</div>
+                            <div class="detail">UID: ${item.uid} • Server: ${item.server} • ${item.diamond} Diamond</div>
+                            <div class="detail">Metode: ${item.method} • ${item.time}</div>
+                        </div>
+                        <div class="right">
+                            <div class="price">${item.price}</div>
+                            <button class="status ${statusClass}" data-id="${item.id}" data-status="${item.status}">${item.status}</button>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+
+            container.querySelectorAll('.status').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const id = parseInt(this.dataset.id);
+                    const current = this.dataset.status;
+                    let newStatus = '';
+                    if (current === 'Pending') newStatus = 'Sukses';
+                    else if (current === 'Sukses') newStatus = 'Gagal';
+                    else if (current === 'Gagal') newStatus = 'Pending';
+                    updateStatus(id, newStatus);
+                });
+            });
+        }
+
+        // ---------- KONFIRMASI PEMBAYARAN + REDIRECT ----------
+        document.getElementById('btnConfirmPayment').addEventListener('click', function() {
+            const selectedMethod = document.querySelector('.pay-method-options .method-item.active');
+            if (!selectedMethod) { alert('Pilih metode pembayaran!'); return; }
+            const method = selectedMethod.dataset.method;
+            const activeDiamond = document.querySelector('.diamond-item.active');
+            const diamond = activeDiamond ? activeDiamond.dataset.diamond : '50';
+            const price = activeDiamond ? activeDiamond.dataset.price : '10000';
+            const priceFormatted = 'Rp ' + parseInt(price).toLocaleString();
+            const uid = document.getElementById('uidInput').value.trim();
+            const server = document.getElementById('serverInput').value.trim();
+
+            addHistory('Mobile Legends', uid, server, diamond, priceFormatted, method, 'Pending');
+
+            if (method === 'OVO' || method === 'GoPay' || method === 'DANA') {
+                let appUrl = '', appName = '', fallbackUrl = '';
+                switch (method) {
+                    case 'OVO': appUrl = 'ovo://'; appName = 'OVO'; fallbackUrl = 'https://ovo.id'; break;
+                    case 'GoPay': appUrl = 'gopay://'; appName = 'GoPay'; fallbackUrl = 'https://gopay.co.id'; break;
+                    case 'DANA': appUrl = 'dana://'; appName = 'DANA'; fallbackUrl = 'https://dana.id'; break;
+                }
+                alert(`Membuka ${appName} untuk pembayaran ${priceFormatted} (${diamond} Diamond). Jika gagal, akan diarahkan ke situs web.`);
+                let redirected = false;
+                const fallback = () => { if (!redirected) { redirected = true; window.location.href = fallbackUrl; } };
+                window.location.href = appUrl;
+                window.addEventListener('blur', function onBlur() { redirected = true; window.removeEventListener('blur', onBlur); });
+                setTimeout(fallback, 2000);
+
+                setTimeout(() => {
+                    const lastEntry = historyData[0];
+                    if (lastEntry && lastEntry.status === 'Pending') {
+                        updateStatus(lastEntry.id, 'Sukses');
+                    }
+                }, 5000);
+
+                closePay.click();
+            } else {
+                alert(`Pembayaran dengan ${method} sebesar ${priceFormatted} (${diamond} Diamond) berhasil!`);
+                const lastEntry = historyData[0];
+                if (lastEntry && lastEntry.status === 'Pending') {
+                    updateStatus(lastEntry.id, 'Sukses');
+                }
+                closePay.click();
+            }
+        });
+
+        // ---------- BUKA HISTORY ----------
+        const historyOverlay = document.getElementById('historyOverlay');
+        const closeHistory = document.getElementById('closeHistory');
+        document.getElementById('historyLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            renderHistory();
+            historyOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        });
+        closeHistory.addEventListener('click', function() { historyOverlay.classList.remove('open'); document.body.style.overflow = 'auto'; });
+        historyOverlay.addEventListener('click', function(e) { if (e.target === historyOverlay) { historyOverlay.classList.remove('open'); document.body.style.overflow = 'auto'; } });
+
+        // ---------- GOOGLE LOGIN (simulasi) ----------
+        const googleBtn = document.getElementById('googleLoginBtn');
+        const userProfile = document.getElementById('userProfile');
+        const userName = document.getElementById('userName');
+        const userAvatar = document.getElementById('userAvatar');
+
+        googleBtn.addEventListener('click', function() {
+            const name = prompt('Masukkan nama Anda (simulasi login Google):', 'User');
+            if (name && name.trim()) {
+                const initial = name.trim().charAt(0).toUpperCase();
+                userAvatar.textContent = initial;
+                userName.textContent = name.trim();
+                googleBtn.style.display = 'none';
+                userProfile.style.display = 'flex';
+                alert('Login berhasil sebagai ' + name.trim());
+            }
+        });
+
+        // ---------- INISIALISASI ----------
+        updatePaymentNumber('QRIS');
+        // Dummy history
+        addHistory('Mobile Legends', '12345678', '1234', '100', 'Rp 20.000', 'OVO', 'Sukses');
+        addHistory('Free Fire', '11223344', '4321', '200', 'Rp 50.000', 'DANA', 'Pending');
+        console.log('TopUp Pro siap!');
     </script>
 
 </body>
