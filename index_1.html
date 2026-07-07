@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Top Up Game — Premium Store</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ---------- RESET & BASE ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0b0d15;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .overlay-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: radial-gradient(circle at 20% 30%, rgba(88, 0, 255, 0.15) 0%, rgba(0, 0, 0, 0.85) 90%);
+            pointer-events: none;
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 24px 60px;
+            transition: filter 0.3s;
+        }
+
+        /* ---------- HEADER ---------- */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 0 30px;
+            flex-wrap: wrap;
+            gap: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #a855f7, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .logo i {
+            font-size: 2rem;
+            -webkit-text-fill-color: initial;
+            color: #a855f7;
+            filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.5));
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: 0.3s;
+            letter-spacing: 0.3px;
+            position: relative;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #a855f7, #6366f1);
+            transition: 0.3s;
+        }
+        .nav-links a:hover {
+            color: #fff;
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .btn-login {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 8px 22px;
+            border-radius: 40px;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: default;
+            transition: 0.3s;
+            backdrop-filter: blur(4px);
+        }
+        .btn-login i {
+            margin-right: 8px;
+            color: #a855f7;
+        }
+        .btn-login:hover {
+            background: rgba(168, 85, 247, 0.15);
+            border-color: #a855f7;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.15);
+        }
+
+        /* ---------- HERO ---------- */
+        .hero {
+            margin: 40px 0 48px;
+            text-align: center;
+        }
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 2.6rem;
+            letter-spacing: 1px;
+            line-height: 1.2;
+        }
+        .hero h1 span {
+            background: linear-gradient(135deg, #c084fc, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.1rem;
+            margin-top: 10px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        /* ---------- SECTION LABEL ---------- */
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 48px 0 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            font-size: 1.3rem;
+            letter-spacing: 0.5px;
+        }
+        .section-label i {
+            color: #a855f7;
+            font-size: 1.6rem;
+        }
+
+        /* ---------- GAME GRID ---------- */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 18px;
+        }
+        .game-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 24px 12px;
+            text-align: center;
+            transition: 0.35s ease;
+            cursor: default;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        .game-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            border-color: rgba(168, 85, 247, 0.3);
+            background: rgba(168, 85, 247, 0.08);
+            box-shadow: 0 12px 48px rgba(168, 85, 247, 0.15);
+        }
+        .game-card img {
+            width: 56px;
+            height: 56px;
+            object-fit: contain;
+            border-radius: 16px;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+        }
+        .game-card .name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-top: 4px;
+        }
+        .game-card .badge {
+            font-size: 0.7rem;
+            background: rgba(168, 85, 247, 0.2);
+            color: #c084fc;
+            padding: 2px 14px;
+            border-radius: 40px;
+            display: inline-block;
+            margin-top: 6px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        /* ---------- NOMINAL TOP UP (general) ---------- */
+        .nominal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 14px;
+            margin-top: 8px;
+        }
+        .nominal-item {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 16px 8px;
+            text-align: center;
+            transition: 0.3s;
+            cursor: default;
+            font-weight: 600;
+        }
+        .nominal-item:hover {
+            background: rgba(168, 85, 247, 0.12);
+            border-color: #a855f7;
+            transform: scale(1.04);
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.1);
+        }
+        .nominal-item .price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        .nominal-item .price small {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.5);
+            margin-left: 2px;
+        }
+        .nominal-item .label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 4px;
+        }
+        .nominal-item .discount {
+            font-size: 0.7rem;
+            background: #ef4444;
+            color: #fff;
+            padding: 1px 12px;
+            border-radius: 40px;
+            display: inline-block;
+            margin-top: 6px;
+            font-weight: 700;
+        }
+
+        /* ---------- METODE PEMBAYARAN (grid utama) ---------- */
+        .payment-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 8px;
+        }
+        .payment-item {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 60px;
+            padding: 10px 28px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.3s;
+            cursor: pointer;
+            font-weight: 500;
+            position: relative;
+        }
+        .payment-item:hover {
+            background: rgba(168, 85, 247, 0.1);
+            border-color: #a855f7;
+            box-shadow: 0 0 24px rgba(168, 85, 247, 0.08);
+            transform: translateY(-2px);
+        }
+        .payment-item.active {
+            background: rgba(168, 85, 247, 0.15);
+            border-color: #a855f7;
+            box-shadow: 0 0 24px rgba(168, 85, 247, 0.15);
+        }
+        .payment-item i {
+            font-size: 1.5rem;
+            color: #c084fc;
+            width: 28px;
+            text-align: center;
+        }
+        .payment-item .pay-name {
+            font-size: 0.95rem;
+        }
+        .payment-item .pay-badge {
+            font-size: 0.6rem;
+            background: rgba(52, 211, 153, 0.2);
+            color: #34d399;
+            padding: 2px 12px;
+            border-radius: 40px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .payment-item .check-mark {
+            display: none;
+            margin-left: 6px;
+            color: #34d399;
+            font-size: 1rem;
+        }
+        .payment-item.active .check-mark {
+            display: inline-block;
+        }
+
+        /* ---------- TAB ---------- */
+        .tab-container {
+            margin: 56px 0 32px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 28px;
+            padding: 24px 28px 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 12px;
+            margin-bottom: 28px;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 8px 24px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+        }
+        .tab-btn i {
+            margin-right: 8px;
+        }
+        .tab-btn:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .tab-btn.active {
+            color: #fff;
+            background: rgba(168, 85, 247, 0.15);
+            box-shadow: inset 0 0 0 1px rgba(168, 85, 247, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ---------- FORM DALAM TAB (ML) ---------- */
+        .ml-form {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .ml-form .input-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .ml-form .input-group {
+            flex: 1 1 200px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 60px;
+            padding: 4px 20px 4px 16px;
+            transition: 0.3s;
+        }
+        .ml-form .input-group:focus-within {
+            border-color: #a855f7;
+            background: rgba(168, 85, 247, 0.06);
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.05);
+        }
+        .ml-form .input-group i {
+            color: #818cf8;
+            font-size: 1.2rem;
+        }
+        .ml-form .input-group input {
+            background: transparent;
+            border: none;
+            padding: 14px 0;
+            width: 100%;
+            font-size: 1rem;
+            color: #fff;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .ml-form .input-group input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .diamond-options {
+            margin-top: 4px;
+        }
+        .diamond-options .label {
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 12px;
+            display: block;
+            font-size: 0.95rem;
+        }
+        .diamond-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 12px;
+        }
+        .diamond-item {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 14px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.25s;
+            font-weight: 500;
+        }
+        .diamond-item:hover {
+            background: rgba(168, 85, 247, 0.08);
+            border-color: rgba(168, 85, 247, 0.3);
+        }
+        .diamond-item.active {
+            background: rgba(168, 85, 247, 0.15);
+            border-color: #a855f7;
+            box-shadow: 0 0 24px rgba(168, 85, 247, 0.1);
+        }
+        .diamond-item .amount {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        .diamond-item .price-tag {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 4px;
+        }
+
+        .btn-topup-ml {
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+            border: none;
+            padding: 16px 48px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #fff;
+            cursor: pointer;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 8px 32px rgba(124, 58, 237, 0.3);
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.5px;
+            align-self: flex-start;
+            margin-top: 8px;
+        }
+        .btn-topup-ml:hover {
+            transform: scale(1.04);
+            box-shadow: 0 12px 48px rgba(124, 58, 237, 0.45);
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+        }
+
+        /* ---------- HALAMAN PEMBAYARAN (OVERLAY) ---------- */
+        .payment-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeInOverlay 0.4s ease;
+        }
+        .payment-overlay.open {
+            display: flex;
+        }
+
+        @keyframes fadeInOverlay {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .payment-card {
+            background: rgba(20, 22, 36, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px;
+            max-width: 580px;
+            width: 100%;
+            padding: 36px 32px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+            position: relative;
+        }
+
+        .payment-card .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 40px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .payment-card .close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .payment-card .pay-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 28px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .payment-card .pay-header i {
+            font-size: 2rem;
+            color: #a855f7;
+        }
+        .payment-card .pay-header h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            font-size: 1.4rem;
+            letter-spacing: 0.5px;
+        }
+
+        .pay-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 0.95rem;
+        }
+        .pay-detail-row .label {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .pay-detail-row .value {
+            font-weight: 500;
+            color: #fff;
+        }
+        .pay-detail-row .value.highlight {
+            color: #c084fc;
+            font-weight: 700;
+        }
+
+        .pay-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 18px 0 10px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border-top: 2px solid rgba(168, 85, 247, 0.2);
+            margin-top: 6px;
+        }
+        .pay-total .total-label {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .pay-total .total-value {
+            color: #a855f7;
+            font-size: 1.6rem;
+        }
+
+        .pay-method-section {
+            margin: 24px 0 12px;
+        }
+        .pay-method-section .label {
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.5);
+            display: block;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        .pay-method-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .pay-method-options .method-item {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 40px;
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.9rem;
+        }
+        .pay-method-options .method-item:hover {
+            background: rgba(168, 85, 247, 0.08);
+            border-color: rgba(168, 85, 247, 0.3);
+        }
+        .pay-method-options .method-item.active {
+            background: rgba(168, 85, 247, 0.15);
+            border-color: #a855f7;
+        }
+        .pay-method-options .method-item i {
+            color: #c084fc;
+        }
+
+        /* ---------- NOMOR PEMBAYARAN ---------- */
+        #paymentNumberContainer {
+            margin-top: 14px;
+            padding: 14px 16px;
+            background: rgba(168, 85, 247, 0.08);
+            border-radius: 12px;
+            border: 1px solid rgba(168, 85, 247, 0.15);
+            display: none;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        #paymentNumberContainer .label {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+        #paymentNumberContainer .number {
+            color: #c084fc;
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            background: rgba(0,0,0,0.2);
+            padding: 4px 12px;
+            border-radius: 40px;
+        }
+        .action-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Inter', sans-serif;
+        }
+        .action-btn:hover {
+            background: rgba(168, 85, 247, 0.2);
+            border-color: #a855f7;
+        }
+        .action-btn i {
+            font-size: 0.9rem;
+        }
+        .action-btn.open-app {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: #10b981;
+        }
+        .action-btn.open-app:hover {
+            background: rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-confirm-payment {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: none;
+            padding: 16px 0;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #fff;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            margin-top: 16px;
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.3);
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-confirm-payment:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 48px rgba(16, 185, 129, 0.45);
+            background: linear-gradient(135deg, #34d399, #10b981);
+        }
+
+        /* ---------- FOOTER ---------- */
+        footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 28px 0 16px;
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.35);
+        }
+        footer .socials {
+            display: flex;
+            gap: 18px;
+        }
+        footer .socials a {
+            color: rgba(255, 255, 255, 0.3);
+            transition: 0.3s;
+            font-size: 1.2rem;
+        }
+        footer .socials a:hover {
+            color: #a855f7;
+            transform: translateY(-2px);
+        }
+
+        /* ---------- RESPONSIVE ---------- */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            .tab-container {
+                padding: 18px 16px 24px;
+            }
+            .ml-form .input-row {
+                flex-direction: column;
+            }
+            .btn-topup-ml {
+                width: 100%;
+                justify-content: center;
+            }
+            .nav-links {
+                gap: 14px;
+                font-size: 0.8rem;
+                flex-wrap: wrap;
+            }
+            .logo {
+                font-size: 1.4rem;
+            }
+            .game-grid {
+                grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            }
+            .nominal-grid {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            }
+            .payment-grid {
+                gap: 10px;
+            }
+            .payment-item {
+                padding: 8px 18px;
+                font-size: 0.85rem;
+            }
+            .payment-card {
+                padding: 28px 18px;
+            }
+            .pay-total {
+                font-size: 1.1rem;
+            }
+            .pay-total .total-value {
+                font-size: 1.3rem;
+            }
+            #paymentNumberContainer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .action-btn {
+                font-size: 0.75rem;
+                padding: 4px 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .nav-links {
+                justify-content: center;
+            }
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="particle-canvas"></canvas>
+    <div class="overlay-gradient"></div>
+
+    <!-- KONTEN UTAMA -->
+    <div class="content" id="mainContent">
+
+        <!-- HEADER -->
+        <header>
+            <div class="logo">
+                <i class="fas fa-gamepad"></i>
+                <span>TopUp<span style="-webkit-text-fill-color:initial;color:#818cf8;">.</span>Pro</span>
+            </div>
+            <div class="nav-links">
+                <a href="#">Beranda</a>
+                <a href="#">Game</a>
+                <a href="#">Promo</a>
+                <a href="#">History</a>
+                <span class="btn-login"><i class="fas fa-user-circle"></i> Masuk</span>
+            </div>
+        </header>
+
+        <!-- HERO -->
+        <div class="hero">
+            <h1>Top Up <span>Game</span> Favoritmu</h1>
+            <p>Murah, cepat, dan aman. Nikmati berbagai pilihan game & metode pembayaran.</p>
+        </div>
+
+        <!-- GAME GRID -->
+        <div class="section-label">
+            <i class="fas fa-joystick"></i>
+            <span>Pilih Game</span>
+        </div>
+        <div class="game-grid">
+            <div class="game-card">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%237c3aed' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='60' font-size='40' text-anchor='middle' fill='%23fff' font-family='Arial'%3EML%3C/text%3E%3C/svg%3E" alt="Mobile Legends" />
+                <div class="name">Mobile Legends</div>
+                <div class="badge">Populer</div>
+            </div>
+            <div class="game-card">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23f97316' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='60' font-size='36' text-anchor='middle' fill='%23fff' font-family='Arial'%3EFF%3C/text%3E%3C/svg%3E" alt="Free Fire" />
+                <div class="name">Free Fire</div>
+                <div class="badge">🔥 Hot</div>
+            </div>
+            <div class="game-card">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%233b82f6' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='60' font-size='32' text-anchor='middle' fill='%23fff' font-family='Arial'%3EPUBG%3C/text%3E%3C/svg%3E" alt="PUBG" />
+                <div class="name">PUBG Mobile</div>
+                <div class="badge">Battle</div>
+            </div>
+            <div class="game-card">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23ec4899' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='60' font-size='28' text-anchor='middle' fill='%23fff' font-family='Arial'%3EGI%3C/text%3E%3C/svg%3E" alt="Genshin" />
+                <div class="name">Genshin Impact</div>
+                <div class="badge">RPG</div>
+            </div>
+            <div class="game-card">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%238b5cf6' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='60' font-size='28' text-anchor='middle' fill='%23fff' font-family='Arial'%3ECOD%3C/text%3E%3C/svg%3E" alt="CODM" />
+                <div class="name">Call of Duty</div>
+                <div class="badge">FPS</div>
+            </div>
+        </div>
+
+        <!-- NOMINAL TOP UP (general) -->
+        <div class="section-label" style="margin-top:56px;">
+            <i class="fas fa-coins"></i>
+            <span>Nominal Top Up</span>
+        </div>
+        <div class="nominal-grid">
+            <div class="nominal-item">
+                <div class="price">Rp 10.000 <small>+5%</small></div>
+                <div class="label">50 Diamond</div>
+                <div class="discount">-10%</div>
+            </div>
+            <div class="nominal-item">
+                <div class="price">Rp 25.000 <small>+8%</small></div>
+                <div class="label">140 Diamond</div>
+                <div class="discount">-15%</div>
+            </div>
+            <div class="nominal-item">
+                <div class="price">Rp 50.000 <small>+12%</small></div>
+                <div class="label">300 Diamond</div>
+                <div class="discount" style="background:#f59e0b;">Best</div>
+            </div>
+            <div class="nominal-item">
+                <div class="price">Rp 100.000 <small>+18%</small></div>
+                <div class="label">650 Diamond</div>
+                <div class="discount">-25%</div>
+            </div>
+            <div class="nominal-item">
+                <div class="price">Rp 200.000 <small>+25%</small></div>
+                <div class="label">1400 Diamond</div>
+                <div class="discount" style="background:#8b5cf6;">VIP</div>
+            </div>
+        </div>
+
+        <!-- METODE PEMBAYARAN (pilih di sini) -->
+        <div class="section-label" style="margin-top:56px;">
+            <i class="fas fa-credit-card"></i>
+            <span>Metode Pembayaran</span>
+        </div>
+        <div class="payment-grid" id="paymentGrid">
+            <div class="payment-item active" data-method="QRIS">
+                <i class="fas fa-qrcode"></i>
+                <span class="pay-name">QRIS</span>
+                <span class="pay-badge">Instant</span>
+                <span class="check-mark"><i class="fas fa-check-circle"></i></span>
+            </div>
+            <div class="payment-item" data-method="OVO">
+                <i class="fas fa-mobile-alt"></i>
+                <span class="pay-name">OVO</span>
+                <span class="pay-badge">Populer</span>
+                <span class="check-mark"><i class="fas fa-check-circle"></i></span>
+            </div>
+            <div class="payment-item" data-method="DANA">
+                <i class="fas fa-wallet"></i>
+                <span class="pay-name">DANA</span>
+                <span class="pay-badge">Cashback</span>
+                <span class="check-mark"><i class="fas fa-check-circle"></i></span>
+            </div>
+            <div class="payment-item" data-method="GoPay">
+                <i class="fas fa-credit-card"></i>
+                <span class="pay-name">GoPay</span>
+                <span class="pay-badge">Promo</span>
+                <span class="check-mark"><i class="fas fa-check-circle"></i></span>
+            </div>
+            <div class="payment-item" data-method="Bank Transfer">
+                <i class="fas fa-university"></i>
+                <span class="pay-name">Bank Transfer</span>
+                <span class="pay-badge">24 Jam</span>
+                <span class="check-mark"><i class="fas fa-check-circle"></i></span>
+            </div>
+            <div class="payment-item" data-method="Pulsa">
+                <i class="fas fa-gift"></i>
+                <span class="pay-name">Pulsa</span>
+                <span class="pay-badge">All Ops</span>
+                <span class="check-mark"><i class="fas fa-check-circle"></i></span>
+            </div>
+        </div>
+
+        <!-- TAB KHUSUS MOBILE LEGENDS -->
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="ml"><i class="fas fa-gamepad"></i> Mobile Legends</button>
+                <button class="tab-btn" data-tab="ff"><i class="fas fa-fire"></i> Free Fire</button>
+                <button class="tab-btn" data-tab="pubg"><i class="fas fa-crosshairs"></i> PUBG</button>
+            </div>
+
+            <!-- TAB ML -->
+            <div class="tab-content active" id="tab-ml">
+                <div class="ml-form">
+                    <div class="input-row">
+                        <div class="input-group">
+                            <i class="fas fa-id-card"></i>
+                            <input type="text" id="uidInput" placeholder="User ID (UID)" />
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-server"></i>
+                            <input type="text" id="serverInput" placeholder="ID Server" />
+                        </div>
+                    </div>
+
+                    <div class="diamond-options">
+                        <span class="label"><i class="fas fa-gem" style="color:#c084fc;margin-right:8px;"></i>Pilih Diamond</span>
+                        <div class="diamond-grid" id="diamondGrid">
+                            <div class="diamond-item active" data-diamond="50" data-price="10000">
+                                <div class="amount">50</div>
+                                <div class="price-tag">Rp 10.000</div>
+                            </div>
+                            <div class="diamond-item" data-diamond="100" data-price="20000">
+                                <div class="amount">100</div>
+                                <div class="price-tag">Rp 20.000</div>
+                            </div>
+                            <div class="diamond-item" data-diamond="250" data-price="50000">
+                                <div class="amount">250</div>
+                                <div class="price-tag">Rp 50.000</div>
+                            </div>
+                            <div class="diamond-item" data-diamond="500" data-price="100000">
+                                <div class="amount">500</div>
+                                <div class="price-tag">Rp 100.000</div>
+                            </div>
+                            <div class="diamond-item" data-diamond="1000" data-price="200000">
+                                <div class="amount">1000</div>
+                                <div class="price-tag">Rp 200.000</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn-topup-ml" id="btnTopupML"><i class="fas fa-bolt"></i> Top Up Sekarang</button>
+                </div>
+            </div>
+
+            <!-- TAB FF (placeholder) -->
+            <div class="tab-content" id="tab-ff">
+                <div style="padding:20px 0;text-align:center;color:rgba(255,255,255,0.4);">
+                    <i class="fas fa-fire" style="font-size:2rem;display:block;margin-bottom:10px;"></i>
+                    <p>Formulir untuk Free Fire akan segera hadir.</p>
+                </div>
+            </div>
+
+            <!-- TAB PUBG (placeholder) -->
+            <div class="tab-content" id="tab-pubg">
+                <div style="padding:20px 0;text-align:center;color:rgba(255,255,255,0.4);">
+                    <i class="fas fa-crosshairs" style="font-size:2rem;display:block;margin-bottom:10px;"></i>
+                    <p>Formulir untuk PUBG akan segera hadir.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer>
+            <span>&copy; 2026 TopUp.Pro — All rights reserved.</span>
+            <div class="socials">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-tiktok"></i></a>
+                <a href="#"><i class="fab fa-discord"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+        </footer>
+
+    </div> <!-- end main content -->
+
+    <!-- ========== HALAMAN PEMBAYARAN (OVERLAY) ========== -->
+    <div class="payment-overlay" id="paymentOverlay">
+        <div class="payment-card">
+            <button class="close-btn" id="closePayment"><i class="fas fa-times"></i></button>
+
+            <div class="pay-header">
+                <i class="fas fa-receipt"></i>
+                <h2>Ringkasan Pesanan</h2>
+            </div>
+
+            <div id="paymentDetails">
+                <div class="pay-detail-row">
+                    <span class="label">Game</span>
+                    <span class="value" id="payGame">Mobile Legends</span>
+                </div>
+                <div class="pay-detail-row">
+                    <span class="label">User ID</span>
+                    <span class="value" id="payUid">-</span>
+                </div>
+                <div class="pay-detail-row">
+                    <span class="label">Server</span>
+                    <span class="value" id="payServer">-</span>
+                </div>
+                <div class="pay-detail-row">
+                    <span class="label">Diamond</span>
+                    <span class="value highlight" id="payDiamond">50</span>
+                </div>
+                <div class="pay-detail-row">
+                    <span class="label">Harga</span>
+                    <span class="value highlight" id="payPrice">Rp 10.000</span>
+                </div>
+            </div>
+
+            <!-- Pilihan metode pembayaran di halaman payment -->
+            <div class="pay-method-section">
+                <span class="label"><i class="fas fa-credit-card" style="margin-right:8px;color:#a855f7;"></i>Pilih Metode Pembayaran</span>
+                <div class="pay-method-options" id="payMethodOptions">
+                    <div class="method-item active" data-method="QRIS">
+                        <i class="fas fa-qrcode"></i> QRIS
+                    </div>
+                    <div class="method-item" data-method="OVO">
+                        <i class="fas fa-mobile-alt"></i> OVO
+                    </div>
+                    <div class="method-item" data-method="DANA">
+                        <i class="fas fa-wallet"></i> DANA
+                    </div>
+                    <div class="method-item" data-method="GoPay">
+                        <i class="fas fa-credit-card"></i> GoPay
+                    </div>
+                    <div class="method-item" data-method="Bank Transfer">
+                        <i class="fas fa-university"></i> Bank
+                    </div>
+                    <div class="method-item" data-method="Pulsa">
+                        <i class="fas fa-gift"></i> Pulsa
+                    </div>
+                </div>
+            </div>
+
+            <!-- Container nomor pembayaran + tombol salin -->
+            <div id="paymentNumberContainer">
+                <span class="label">Nomor Pembayaran:</span>
+                <span class="number" id="paymentNumberDisplay">085806372196</span>
+                <button id="copyNumberBtn" class="action-btn"><i class="fas fa-copy"></i> Salin</button>
+            </div>
+
+            <div class="pay-total">
+                <span class="total-label">Total</span>
+                <span class="total-value" id="payTotal">Rp 10.000</span>
+            </div>
+
+            <button class="btn-confirm-payment" id="btnConfirmPayment">
+                <i class="fas fa-check-circle"></i> Konfirmasi & Lanjut ke Aplikasi
+            </button>
+        </div>
+    </div>
+
+
+    <!-- ========== JAVASCRIPT ========== -->
+    <script>
+        // ---------- PARTICLE ----------
+        (function() {
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let particles = [];
+            const PARTICLE_COUNT = 140;
+            const MAX_SPEED = 0.6;
+            const CONNECT_DIST = 130;
+            const PARTICLE_SIZE = 2.2;
+            const colors = [
+                '168, 85, 247', '99, 102, 241', '236, 72, 153',
+                '52, 211, 153', '251, 146, 60', '139, 92, 246'
+            ];
+
+            function initParticles() {
+                particles = [];
+                for (let i = 0; i < PARTICLE_COUNT; i++) {
+                    particles.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        vx: (Math.random() - 0.5) * MAX_SPEED * 1.8,
+                        vy: (Math.random() - 0.5) * MAX_SPEED * 1.8,
+                        radius: PARTICLE_SIZE * (0.6 + Math.random() * 0.8),
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        alpha: 0.4 + Math.random() * 0.5,
+                    });
+                }
+            }
+
+            function resizeCanvas() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+                initParticles();
+            }
+
+            function drawParticles() {
+                ctx.clearRect(0, 0, width, height);
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < 0 || p.x > width) p.vx *= -1;
+                    if (p.y < 0 || p.y > height) p.vy *= -1;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(${p.color}, ${p.alpha})`;
+                    ctx.fill();
+                    ctx.shadowColor = `rgba(${p.color}, 0.3)`;
+                    ctx.shadowBlur = 14;
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const q = particles[j];
+                        const dx = p.x - q.x;
+                        const dy = p.y - q.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < CONNECT_DIST) {
+                            const alpha = 0.25 * (1 - dist / CONNECT_DIST);
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(q.x, q.y);
+                            ctx.strokeStyle = `rgba(168, 85, 247, ${alpha})`;
+                            ctx.lineWidth = 0.8;
+                            ctx.stroke();
+                        }
+                    }
+                }
+                requestAnimationFrame(drawParticles);
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+            drawParticles();
+        })();
+
+        // ---------- TAB SWITCHING ----------
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                tabContents.forEach(c => c.classList.remove('active'));
+                document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+            });
+        });
+
+        // ---------- DIAMOND SELECTION ----------
+        const diamondItems = document.querySelectorAll('.diamond-item');
+        diamondItems.forEach(item => {
+            item.addEventListener('click', function() {
+                diamondItems.forEach(d => d.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // ---------- METODE PEMBAYARAN DI GRID UTAMA (pilih) ----------
+        const paymentItems = document.querySelectorAll('.payment-item');
+        let selectedPaymentMethod = 'QRIS'; // default
+
+        paymentItems.forEach(item => {
+            item.addEventListener('click', function() {
+                paymentItems.forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+                selectedPaymentMethod = this.dataset.method;
+            });
+        });
+
+        // ---------- METODE PEMBAYARAN DI HALAMAN PAYMENT ----------
+        const payMethodItems = document.querySelectorAll('.pay-method-options .method-item');
+        const paymentNumberContainer = document.getElementById('paymentNumberContainer');
+        const paymentNumberDisplay = document.getElementById('paymentNumberDisplay');
+        const PAYMENT_NUMBER = '085806372196';
+
+        // Fungsi untuk menampilkan/sembunyikan nomor
+        function updatePaymentNumber(method) {
+            const showFor = ['OVO', 'GoPay', 'DANA'];
+            if (showFor.includes(method)) {
+                paymentNumberContainer.style.display = 'flex';
+                paymentNumberDisplay.textContent = PAYMENT_NUMBER;
+            } else {
+                paymentNumberContainer.style.display = 'none';
+            }
+        }
+
+        // Event listener untuk metode di payment overlay
+        payMethodItems.forEach(item => {
+            item.addEventListener('click', function() {
+                payMethodItems.forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+                const method = this.dataset.method;
+                updatePaymentNumber(method);
+            });
+        });
+
+        // ---------- BUKA HALAMAN PEMBAYARAN ----------
+        const overlay = document.getElementById('paymentOverlay');
+        const closeBtn = document.getElementById('closePayment');
+        const btnTopup = document.getElementById('btnTopupML');
+
+        // Elemen detail payment
+        const payGame = document.getElementById('payGame');
+        const payUid = document.getElementById('payUid');
+        const payServer = document.getElementById('payServer');
+        const payDiamond = document.getElementById('payDiamond');
+        const payPrice = document.getElementById('payPrice');
+        const payTotal = document.getElementById('payTotal');
+
+        function openPaymentPage() {
+            // Ambil data dari form
+            const uid = document.getElementById('uidInput').value.trim();
+            const server = document.getElementById('serverInput').value.trim();
+            const activeDiamond = document.querySelector('.diamond-item.active');
+            const diamond = activeDiamond ? activeDiamond.dataset.diamond : '50';
+            const price = activeDiamond ? activeDiamond.dataset.price : '10000';
+
+            // Validasi
+            if (!uid || !server) {
+                alert('Harap isi UID dan ID Server terlebih dahulu!');
+                return;
+            }
+
+            // Update detail payment
+            payGame.textContent = 'Mobile Legends';
+            payUid.textContent = uid;
+            payServer.textContent = server;
+            payDiamond.textContent = diamond + ' Diamond';
+            const priceFormatted = 'Rp ' + parseInt(price).toLocaleString();
+            payPrice.textContent = priceFormatted;
+            payTotal.textContent = priceFormatted;
+
+            // Tandai metode pembayaran yang dipilih di grid utama ke halaman payment
+            const methodInPay = document.querySelector(`.pay-method-options .method-item[data-method="${selectedPaymentMethod}"]`);
+            if (methodInPay) {
+                payMethodItems.forEach(p => p.classList.remove('active'));
+                methodInPay.classList.add('active');
+                updatePaymentNumber(selectedPaymentMethod);
+            } else {
+                // fallback ke QRIS
+                const defaultMethod = document.querySelector('.pay-method-options .method-item[data-method="QRIS"]');
+                if (defaultMethod) {
+                    payMethodItems.forEach(p => p.classList.remove('active'));
+                    defaultMethod.classList.add('active');
+                    updatePaymentNumber('QRIS');
+                }
+            }
+
+            // Tampilkan overlay
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        btnTopup.addEventListener('click', openPaymentPage);
+
+        // Tutup overlay
+        function closePayment() {
+            overlay.classList.remove('open');
+            document.body.style.overflow = 'auto';
+        }
+
+        closeBtn.addEventListener('click', closePayment);
+
+        // Klik di luar card untuk menutup
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                closePayment();
+            }
+        });
+
+        // ---------- TOMBOL SALIN NOMOR ----------
+        document.getElementById('copyNumberBtn').addEventListener('click', function() {
+            const number = PAYMENT_NUMBER;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(number).then(() => {
+                    alert('Nomor ' + number + ' berhasil disalin ke clipboard!');
+                }).catch(() => {
+                    fallbackCopy(number);
+                });
+            } else {
+                fallbackCopy(number);
+            }
+        });
+
+        function fallbackCopy(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                alert('Nomor ' + text + ' berhasil disalin ke clipboard!');
+            } catch (err) {
+                alert('Gagal menyalin, silakan salin manual: ' + text);
+            }
+            document.body.removeChild(textarea);
+        }
+
+        // ---------- KONFIRMASI PEMBAYARAN + AUTO REDIRECT ----------
+        document.getElementById('btnConfirmPayment').addEventListener('click', function() {
+            const selectedMethod = document.querySelector('.pay-method-options .method-item.active');
+            if (!selectedMethod) {
+                alert('Pilih metode pembayaran terlebih dahulu!');
+                return;
+            }
+            const method = selectedMethod.dataset.method;
+
+            // Ambil nominal yang sudah dipilih
+            const activeDiamond = document.querySelector('.diamond-item.active');
+            const diamond = activeDiamond ? activeDiamond.dataset.diamond : '50';
+            const price = activeDiamond ? activeDiamond.dataset.price : '10000';
+            const priceFormatted = 'Rp ' + parseInt(price).toLocaleString();
+
+            // Untuk OVO, GoPay, DANA -> redirect ke aplikasi
+            if (method === 'OVO' || method === 'GoPay' || method === 'DANA') {
+                let appUrl = '';
+                let appName = '';
+                switch (method) {
+                    case 'OVO':
+                        appUrl = 'ovo://';
+                        appName = 'OVO';
+                        break;
+                    case 'GoPay':
+                        appUrl = 'gopay://';
+                        appName = 'GoPay';
+                        break;
+                    case 'DANA':
+                        appUrl = 'dana://';
+                        appName = 'DANA';
+                        break;
+                }
+
+                // Tampilkan notifikasi sebelum redirect
+                alert(`Anda akan diarahkan ke aplikasi ${appName} untuk menyelesaikan pembayaran sebesar ${priceFormatted} (${diamond} Diamond).`);
+
+                // Redirect ke aplikasi
+                const win = window.open(appUrl, '_blank');
+                // Fallback jika aplikasi tidak terinstal
+                setTimeout(() => {
+                    if (!win || win.closed) {
+                        window.open('https://' + appName.toLowerCase() + '.id', '_blank');
+                    }
+                }, 1500);
+
+                // Tutup overlay
+                closePayment();
+            } else {
+                // Untuk QRIS, Bank, Pulsa -> cukup alert
+                alert(`Pembayaran dengan ${method} sebesar ${priceFormatted} (${diamond} Diamond) berhasil diproses! Terima kasih.`);
+                closePayment();
+            }
+        });
+
+        // ---------- INISIALISASI ----------
+        // Sembunyikan nomor untuk QRIS default
+        updatePaymentNumber('QRIS');
+        console.log('TopUp Pro siap!');
+    </script>
+
+</body>
+</html>
