@@ -1,0 +1,88 @@
+<html>
+ <head>
+  <meta charset="utf-8"> 
+  <meta name="viewport" content="width=device-width,initial-scale=1"> 
+  <title>HOLO CUSTOM - Activation</title>
+  <style>
+@import url(&#39;https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap&#39;);
+*{box-sizing:border-box}
+:root{--violet:#a855f7;--magenta:#e879f9;--gold:#fbbf24;--muted:#b6abce;--line:rgba(255,255,255,.10)}
+html,body{max-width:100%;overflow-x:hidden}
+body{margin:0;min-height:100vh;color:#f3eefb;font-family:Inter,Arial,sans-serif;font-size:15px;line-height:1.7;
+background:radial-gradient(circle at 12% 0%,rgba(168,85,247,.24),transparent 36%),radial-gradient(circle at 90% 6%,rgba(232,121,249,.20),transparent 34%),radial-gradient(circle at 50% 112%,rgba(251,191,36,.16),transparent 38%),#0a0712}
+body:before{content:&#34;&#34;;position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.16;
+background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);
+background-size:42px 42px;-webkit-mask-image:linear-gradient(to bottom,#000,transparent 80%);mask-image:linear-gradient(to bottom,#000,transparent 80%)}
+.wrap{max-width:460px;margin:auto;padding:46px 18px;position:relative;z-index:1}
+.card{position:relative;background:linear-gradient(180deg,rgba(26,20,40,.86),rgba(12,9,20,.92));border:1px solid var(--line);
+border-radius:22px;padding:30px 26px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+box-shadow:0 24px 70px rgba(0,0,0,.55),0 0 38px rgba(168,85,247,.14),0 0 46px rgba(251,191,36,.07)}
+.card:before{content:&#34;&#34;;position:absolute;inset:0;border-radius:22px;padding:1.5px;pointer-events:none;
+background:linear-gradient(135deg,rgba(168,85,247,.9),rgba(232,121,249,.7),rgba(251,191,36,.7),rgba(168,85,247,.9));
+background-size:300% 300%;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;animation:bord 7s linear infinite}
+@keyframes bord{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.badge{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:2px;font-weight:700;color:#f3d9ff;
+padding:6px 13px;border-radius:999px;border:1px solid rgba(168,85,247,.45);background:rgba(168,85,247,.10);
+box-shadow:0 0 18px rgba(168,85,247,.25);margin-bottom:18px}
+.badge i{width:7px;height:7px;border-radius:50%;background:var(--magenta);box-shadow:0 0 10px var(--magenta);font-style:normal;animation:bl 1.5s ease-in-out infinite}
+@keyframes bl{50%{opacity:.35}}
+h1{margin:0 0 6px;font-size:25px;font-family:Orbitron,Inter,sans-serif;font-weight:800;letter-spacing:1px;
+text-shadow:0 0 24px rgba(168,85,247,.45)}
+.sub{color:var(--muted);margin:0 0 24px;font-size:14.5px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;border:1px solid var(--line);
+border-radius:14px;background:rgba(20,15,32,.6);margin-bottom:12px;font-size:14.5px}
+.row span{color:var(--muted)}
+.row b{color:#f6eeff;font-family:monospace;font-weight:600;font-size:15px;word-break:break-all}
+.pill{padding:5px 13px;border-radius:999px;font-weight:700;font-size:12.5px;display:inline-block;white-space:nowrap}
+.ok{color:#d8ffe9;border:1px solid rgba(52,211,153,.5);background:rgba(52,211,153,.12);box-shadow:0 0 16px rgba(52,211,153,.22)}
+.bad{color:#ffe0e6;border:1px solid rgba(251,113,133,.5);background:rgba(251,113,133,.12);box-shadow:0 0 16px rgba(251,113,133,.20)}
+input{width:100%;padding:16px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(10,7,18,.85);
+color:#fff;font-size:16px;margin:6px 0 16px;outline:none;transition:.18s;font-family:Inter,Arial,sans-serif}
+input::placeholder{color:#7d7290}
+input:focus{border-color:rgba(168,85,247,.75);box-shadow:0 0 0 3px rgba(168,85,247,.18),0 0 22px rgba(168,85,247,.28)}
+.keyfield{letter-spacing:2px;text-align:center;font-weight:600;font-family:monospace}
+button{width:100%;padding:16px;border:0;border-radius:14px;font-weight:800;font-size:16px;cursor:pointer;letter-spacing:.4px;
+color:#1a0b2e;background:linear-gradient(135deg,var(--violet),var(--magenta) 55%,var(--gold));background-size:200% 200%;
+box-shadow:0 0 26px rgba(168,85,247,.40),0 0 30px rgba(251,191,36,.18);transition:.18s;animation:gw 5s ease infinite}
+button:hover{transform:translateY(-2px);filter:brightness(1.08)}
+button:active{transform:translateY(0) scale(.99)}
+@keyframes gw{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.note{color:var(--muted);font-size:13.5px;margin-top:22px;line-height:1.75}
+.note b{color:#e7daf5;font-weight:600}
+.proxy{display:block;text-align:center;font-family:monospace;font-size:18px;font-weight:600;color:#ffe6a8;
+background:rgba(10,7,18,.8);padding:14px;border-radius:12px;border:1px solid rgba(251,191,36,.4);
+box-shadow:0 0 20px rgba(251,191,36,.16);margin-top:10px;letter-spacing:1px}
+.msg{padding:13px 15px;border-radius:13px;margin-bottom:16px;font-size:14px;font-weight:600;word-break:break-word}
+.msg.good{background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.4);color:#bdf5dc}
+.msg.err{background:rgba(251,113,133,.12);border:1px solid rgba(251,113,133,.4);color:#ffd3da}
+@media(max-width:480px){.wrap{padding:30px 13px}.card{padding:24px 19px}h1{font-size:22px}}
+</style>
+ </head>
+ <body> 
+  <div class="wrap">
+   <div class="card"> 
+    <div class="badge">
+     <i></i>VIP &nbsp;HOLOGRAM &nbsp;ACCESS
+    </div> 
+    <h1>HOLO <span style="color:#34d399;text-shadow:0 0 16px rgba(52,211,153,.6)">GREEN</span> <span style="color:#9d8bbf">/</span> <span style="color:#fb7185;text-shadow:0 0 16px rgba(251,113,133,.6)">RED</span></h1> 
+    <p class="sub">Enter your key to activate your device.</p> 
+    <div class="row">
+     <span>Your IP</span>
+     <b>185.137.142.67</b>
+    </div> 
+    <div class="row">
+     <span>Status</span> 
+     <span class="pill bad">Not active</span>
+    </div> 
+    <form method="post" action="/activate"> 
+     <input class="keyfield" name="key" placeholder="HOLO-XXXX-XXXX-XXXX" value="" autocomplete="off" required autocapitalize="characters" autocorrect="off" spellcheck="false"> 
+     <button>Activate my device</button> 
+    </form> 
+    <div class="note"> 
+     <span class="proxy">162.220.167.141:40464</span> 
+    </div> 
+   </div>
+  </div>
+ </body>
+</html>
