@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Bug Menu Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        body {
+            background: #0b141a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 16px;
+            transition: background 0.3s;
+        }
+        body.glitch {
+            animation: glitchBg 0.15s infinite alternate;
+        }
+        @keyframes glitchBg {
+            0% { background: #0b141a; }
+            25% { background: #1a0505; }
+            50% { background: #0a1a0a; }
+            75% { background: #1a0a0a; }
+            100% { background: #0b141a; }
+        }
+
+        .card {
+            max-width: 440px;
+            width: 100%;
+            background: #1e2a32;
+            border-radius: 28px;
+            padding: 24px 20px 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            border: 1px solid #2a3b47;
+            position: relative;
+            z-index: 2;
+            transition: transform 0.1s;
+        }
+        .card.shake {
+            animation: shake 0.08s infinite alternate;
+        }
+        @keyframes shake {
+            0% { transform: translateX(-4px) rotate(-1deg); }
+            100% { transform: translateX(4px) rotate(1deg); }
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #2a3b47;
+        }
+        .header i { font-size: 28px; color: #25d366; }
+        .header h1 { font-size: 22px; font-weight: 700; color: #e9edef; }
+        .header .badge {
+            margin-left: auto;
+            background: #d32f2f;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .menu-item {
+            background: #23333e;
+            border-radius: 16px;
+            padding: 16px 18px;
+            margin-top: 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border: 1px solid #2f424f;
+        }
+        .menu-item .icon {
+            width: 44px; height: 44px;
+            border-radius: 14px;
+            background: #2a3b47;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #25d366;
+        }
+        .menu-item .info { flex: 1; }
+        .menu-item .info h3 { font-size: 17px; font-weight: 600; color: #e9edef; }
+        .menu-item .info p { font-size: 13px; color: #a0b4c3; margin-top: 2px; }
+        .menu-item .toggle {
+            width: 48px; height: 28px;
+            background: #3a4c5a;
+            border-radius: 40px;
+            position: relative;
+            cursor: pointer;
+            border: none;
+            transition: 0.25s;
+        }
+        .menu-item .toggle.active { background: #d32f2f; }
+        .menu-item .toggle::after {
+            content: '';
+            position: absolute;
+            top: 3px; left: 3px;
+            width: 22px; height: 22px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.25s;
+        }
+        .menu-item .toggle.active::after { left: 23px; }
+
+        /* Input target */
+        .target-area {
+            margin-top: 18px;
+            background: #1a2933;
+            border-radius: 16px;
+            padding: 14px 16px;
+            border: 1px solid #2f424f;
+        }
+        .target-area label {
+            font-size: 13px;
+            color: #a0b4c3;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .target-area .input-group {
+            display: flex;
+            gap: 8px;
+        }
+        .target-area input {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 40px;
+            border: 1px solid #2f424f;
+            background: #0f1a22;
+            color: #e9edef;
+            font-size: 14px;
+            outline: none;
+        }
+        .target-area input:focus { border-color: #25d366; }
+        .target-area button {
+            background: #d32f2f;
+            border: none;
+            color: white;
+            padding: 0 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .target-area button:active { transform: scale(0.95); }
+
+        /* Efek virus (hanya visual) */
+        .virus-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            background: rgba(255,0,0,0.05);
+            display: none;
+            mix-blend-mode: overlay;
+        }
+        .virus-overlay.active {
+            display: block;
+            animation: virusFlash 0.3s infinite alternate;
+        }
+        @keyframes virusFlash {
+            0% { background: rgba(255,0,0,0.03); }
+            100% { background: rgba(255,0,0,0.15); }
+        }
+
+        /* Glitch text */
+        .glitch-text {
+            color: #ff4444;
+            font-weight: 700;
+            text-shadow: 2px 0 red, -2px 0 cyan;
+            animation: glitchText 0.2s infinite alternate;
+        }
+        @keyframes glitchText {
+            0% { text-shadow: 2px 0 red, -2px 0 cyan; }
+            50% { text-shadow: -2px 0 red, 2px 0 cyan; }
+            100% { text-shadow: 2px 0 cyan, -2px 0 red; }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: #1e2a32;
+            color: #e9edef;
+            padding: 14px 24px;
+            border-radius: 40px;
+            border-left: 6px solid #25d366;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0;
+            transition: 0.35s ease;
+            pointer-events: none;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #2a3b47;
+            z-index: 10000;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .toast.error { border-left-color: #d32f2f; }
+        .toast i { color: #25d366; }
+        .toast.error i { color: #d32f2f; }
+
+        .footer {
+            margin-top: 22px;
+            text-align: center;
+            font-size: 12px;
+            color: #5f7a8a;
+            border-top: 1px solid #1f313b;
+            padding-top: 16px;
+        }
+        .footer a { color: #25d366; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <!-- Overlay efek virus (hanya visual) -->
+    <div class="virus-overlay" id="virusOverlay"></div>
+
+    <!-- Toast notifikasi -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMsg">Notifikasi</span>
+    </div>
+
+    <!-- Kartu utama -->
+    <div class="card" id="card">
+
+        <div class="header">
+            <i class="fab fa-whatsapp"></i>
+            <h1>Bug Menu Pro</h1>
+            <span class="badge">🔥 VIRUS</span>
+        </div>
+
+        <!-- Menu toggle Lag Crasher -->
+        <div class="menu-item">
+            <div class="icon"><i class="fas fa-bolt"></i></div>
+            <div class="info">
+                <h3>Lag Crasher</h3>
+                <p>Android & iPhone · Force logout</p>
+            </div>
+            <button class="toggle" id="toggleBtn"></button>
+        </div>
+
+        <!-- Input nomor target -->
+        <div class="target-area">
+            <label><i class="fas fa-bullseye"></i> Nomor Target (simulasi)</label>
+            <div class="input-group">
+                <input type="text" id="targetInput" placeholder="+62 812 3456 7890" value="+62 812 3456 7890">
+                <button id="attackBtn"><i class="fas fa-skull"></i> Kirim</button>
+            </div>
+        </div>
+
+        <!-- Status efek -->
+        <div style="margin-top:16px; text-align:center; font-size:13px; color:#a0b4c3;" id="statusArea">
+            <span id="statusText">⚡ Siap menyerang (simulasi)</span>
+        </div>
+
+        <div class="footer">
+            ⚠️ 100% simulasi visual · Tidak ada bahaya nyata · <a href="#">Edukasi UI</a>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const toggleBtn = document.getElementById('toggleBtn');
+            const attackBtn = document.getElementById('attackBtn');
+            const targetInput = document.getElementById('targetInput');
+            const statusText = document.getElementById('statusText');
+            const card = document.getElementById('card');
+            const overlay = document.getElementById('virusOverlay');
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+
+            let isActive = false;
+            let attackInterval = null;
+
+            // Show toast
+            function showToast(msg, isError = false) {
+                toastMsg.textContent = msg;
+                toast.className = 'toast' + (isError ? ' error' : '');
+                toast.classList.add('show');
+                clearTimeout(toast._timer);
+                toast._timer = setTimeout(() => toast.classList.remove('show'), 3000);
+            }
+
+            // Hentikan efek serangan
+            function stopAttack() {
+                if (attackInterval) {
+                    clearInterval(attackInterval);
+                    attackInterval = null;
+                }
+                card.classList.remove('shake');
+                overlay.classList.remove('active');
+                document.body.classList.remove('glitch');
+                statusText.innerHTML = '⚡ Siap menyerang (simulasi)';
+                statusText.style.color = '#a0b4c3';
+            }
+
+            // Mulai efek serangan (visual saja)
+            function startAttack(target) {
+                // Jika sudah aktif, matikan dulu
+                stopAttack();
+
+                // Tampilkan status
+                statusText.innerHTML = `🔥 Menyerang <span class="glitch-text">${target}</span> ...`;
+                statusText.style.color = '#ff4444';
+
+                // Efek glitch pada body
+                document.body.classList.add('glitch');
+
+                // Efek shake pada card
+                card.classList.add('shake');
+
+                // Overlay merah
+                overlay.classList.add('active');
+
+                // Toast peringatan
+                showToast(`⚠️ Virus dikirim ke ${target} (SIMULASI)`, true);
+
+                // Set interval efek kedipan tambahan
+                let count = 0;
+                attackInterval = setInterval(() => {
+                    count++;
+                    // Ganti teks status dengan efek glitch
+                    if (count % 3 === 0) {
+                        statusText.innerHTML = `🔥 <span class="glitch-text">${target}</span> terinfeksi!`;
+                    } else if (count % 3 === 1) {
+                        statusText.innerHTML = `💀 <span class="glitch-text">${target}</span> logout paksa!`;
+                    } else {
+                        statusText.innerHTML = `⚡ <span class="glitch-text">${target}</span> crash!`;
+                    }
+
+                    // Hentikan setelah 8 detik (simulasi selesai)
+                    if (count >= 20) {
+                        stopAttack();
+                        showToast(`✅ Serangan simulasi selesai. Tidak ada kerusakan nyata.`);
+                        statusText.innerHTML = `✅ Target ${target} aman (simulasi)`;
+                        statusText.style.color = '#25d366';
+                    }
+                }, 400);
+            }
+
+            // Toggle
+            toggleBtn.addEventListener('click', function() {
+                isActive = !isActive;
+                this.classList.toggle('active', isActive);
+                if (isActive) {
+                    showToast('⚡ Lag Crasher diaktifkan (simulasi)');
+                } else {
+                    showToast('⏹️ Lag Crasher dinonaktifkan');
+                    stopAttack();
+                }
+            });
+
+            // Tombol Kirim (serangan)
+            attackBtn.addEventListener('click', function() {
+                let target = targetInput.value.trim();
+                if (!target) {
+                    showToast('Masukkan nomor target terlebih dahulu!', true);
+                    return;
+                }
+                // Validasi sederhana
+                if (!target.match(/^\+?\d[\d\s\-]{8,20}$/)) {
+                    showToast('Format nomor tidak valid (contoh: +62 812 3456 7890)', true);
+                    return;
+                }
+
+                // Jika toggle tidak aktif, beri peringatan
+                if (!isActive) {
+                    showToast('Aktifkan "Lag Crasher" terlebih dahulu!', true);
+                    return;
+                }
+
+                // Mulai serangan simulasi
+                startAttack(target);
+            });
+
+            // Inisialisasi status
+            statusText.innerHTML = '⚡ Siap menyerang (simulasi)';
+        })();
+    </script>
+
+</body>
+</html>
