@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>✦ Key Generator · Massal & Durasi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
+    <style>
+        /* ── reset ── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0b0a0f;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        /* ── canvas partikel ── */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ── orb glow ── */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.5;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .glow-orb--1 {
+            width: 650px;
+            height: 650px;
+            background: radial-gradient(circle, #a855f7, #7c3aed);
+            top: -20%;
+            right: -10%;
+        }
+        .glow-orb--2 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, #f472b6, #db2777);
+            bottom: -20%;
+            left: -10%;
+        }
+        .glow-orb--3 {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, #38bdf8, #2563eb);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.25;
+        }
+
+        /* ── CARD SUPER TRANSPARAN ── */
+        .card {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 680px;
+            padding: 32px 28px 28px;
+            background: rgba(255, 255, 255, 0.015);
+            backdrop-filter: blur(48px) saturate(1.8);
+            -webkit-backdrop-filter: blur(48px) saturate(1.8);
+            border-radius: 48px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 40px 120px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.4s ease;
+            max-height: 98vh;
+            overflow-y: auto;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 50px 140px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        .card::-webkit-scrollbar {
+            width: 4px;
+        }
+        .card::-webkit-scrollbar-thumb {
+            background: rgba(168, 85, 247, 0.2);
+            border-radius: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 20px;
+            border-radius: 100px;
+            background: rgba(168, 85, 247, 0.08);
+            border: 1px solid rgba(168, 85, 247, 0.12);
+            color: #c084fc;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            backdrop-filter: blur(4px);
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f0e9ff 0%, #c084fc 50%, #f472b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 6px;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 14px;
+            font-weight: 400;
+            margin-bottom: 24px;
+            letter-spacing: 0.01em;
+        }
+
+        hr.divider {
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            margin: 24px 0 20px;
+        }
+
+        /* ── display key ── */
+        .key-display {
+            position: relative;
+            background: rgba(255, 255, 255, 0.015);
+            border-radius: 20px;
+            padding: 18px 24px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: border-color 0.3s, box-shadow 0.3s;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            word-break: break-all;
+        }
+        .key-display:hover {
+            border-color: rgba(168, 85, 247, 0.10);
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.02);
+        }
+
+        .key-text {
+            font-size: 28px;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: 0.08em;
+            font-family: 'Inter', monospace;
+            background: linear-gradient(135deg, #ffffff 60%, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: opacity 0.2s;
+        }
+        .key-text.placeholder {
+            opacity: 0.25;
+            -webkit-text-fill-color: rgba(255, 255, 255, 0.2);
+            background: none;
+            font-weight: 400;
+            font-size: 16px;
+            letter-spacing: 0.02em;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: none;
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 18px;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 12px;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 12px;
+        }
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            transform: scale(1.04);
+        }
+        .copy-btn.copied {
+            color: #34d399;
+            background: rgba(52, 211, 153, 0.08);
+        }
+
+        /* ── generate row ── */
+        .generate-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 4px;
+            flex-wrap: wrap;
+        }
+        .generate-row .field-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.015);
+            border-radius: 60px;
+            padding: 2px 14px 2px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            flex: 0 1 auto;
+        }
+        .generate-row .field-group label {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .generate-row .field-group input,
+        .generate-row .field-group select {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            padding: 10px 0;
+            width: 60px;
+            text-align: center;
+        }
+        .generate-row .field-group input::-webkit-inner-spin-button {
+            opacity: 0.5;
+        }
+        .generate-row .field-group select {
+            width: 90px;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(255,255,255,0.3)'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 4px center;
+            padding-right: 20px;
+        }
+        .generate-row .field-group select option {
+            background: #1a1820;
+            color: #fff;
+        }
+        .generate-row .btn-generate {
+            flex: 1;
+            min-width: 140px;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 60px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            color: #fff;
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(124, 58, 237, 0.2);
+            letter-spacing: 0.01em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        .generate-row .btn-generate::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 60px;
+            padding: 2px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        .generate-row .btn-generate:hover {
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 12px 44px rgba(124, 58, 237, 0.3);
+            background: linear-gradient(135deg, #8b5cf6, #b06aff);
+        }
+        .generate-row .btn-generate:active {
+            transform: scale(0.97);
+            transition-duration: 0.08s;
+        }
+
+        /* ── API Key ── */
+        .api-section .label {
+            display: block;
+            text-align: left;
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+            margin-bottom: 8px;
+        }
+        .api-key-display {
+            background: rgba(255, 255, 255, 0.015);
+            border-radius: 16px;
+            padding: 12px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+            min-height: 52px;
+            transition: border-color 0.3s;
+        }
+        .api-key-display:hover {
+            border-color: rgba(168, 85, 247, 0.08);
+        }
+        .api-key-display .api-key-text {
+            font-family: 'Inter', monospace;
+            font-size: 16px;
+            font-weight: 500;
+            color: #e2d9f3;
+            letter-spacing: 0.04em;
+            word-break: break-all;
+            flex: 1;
+            text-align: left;
+        }
+        .api-key-display .api-key-text.placeholder {
+            color: rgba(255, 255, 255, 0.15);
+            font-weight: 400;
+            font-size: 14px;
+        }
+        .api-key-display .copy-btn {
+            position: static;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .api-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .api-actions .btn-sm {
+            flex: 1;
+            min-width: 100px;
+            padding: 10px 16px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.015);
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 13px;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(4px);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .api-actions .btn-sm:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border-color: rgba(168, 85, 247, 0.10);
+        }
+        .api-actions .btn-sm.primary {
+            background: rgba(168, 85, 247, 0.06);
+            border-color: rgba(168, 85, 247, 0.10);
+            color: #c084fc;
+        }
+        .api-actions .btn-sm.primary:hover {
+            background: rgba(168, 85, 247, 0.12);
+            border-color: rgba(168, 85, 247, 0.18);
+        }
+        .api-actions .btn-sm.danger {
+            color: #f472b6;
+            border-color: rgba(244, 114, 182, 0.08);
+        }
+        .api-actions .btn-sm.danger:hover {
+            background: rgba(244, 114, 182, 0.06);
+            border-color: rgba(244, 114, 182, 0.15);
+        }
+
+        /* ── validasi ── */
+        .validate-area {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .validate-area .input-group {
+            display: flex;
+            gap: 10px;
+        }
+        .validate-area input {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.015);
+            color: #fff;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.3s, background 0.3s;
+            min-width: 0;
+        }
+        .validate-area input::placeholder {
+            color: rgba(255, 255, 255, 0.12);
+        }
+        .validate-area input:focus {
+            border-color: rgba(168, 85, 247, 0.20);
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .validate-area .btn-validate {
+            padding: 10px 24px;
+            border-radius: 60px;
+            border: none;
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            color: #fff;
+            font-weight: 600;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+        }
+        .validate-area .btn-validate:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 24px rgba(124, 58, 237, 0.25);
+        }
+        .validate-area .validation-result {
+            font-size: 13px;
+            font-weight: 500;
+            min-height: 20px;
+            text-align: left;
+            padding-left: 4px;
+        }
+        .validation-result.success {
+            color: #34d399;
+        }
+        .validation-result.error {
+            color: #f87171;
+        }
+
+        /* ── KEY LIST ── */
+        .key-list-section {
+            margin-top: 8px;
+        }
+        .key-list-section .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .key-list-section .section-header .left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .key-list-section .section-header .badge-count {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+        .key-list-section .section-header .actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .key-list-section .section-header .actions .btn-action {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.4);
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .key-list-section .section-header .actions .btn-action:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            border-color: rgba(168, 85, 247, 0.15);
+        }
+        .key-list-section .section-header .actions .btn-action:active {
+            transform: scale(0.95);
+        }
+        .key-list-section .section-header .actions .btn-action.danger:hover {
+            border-color: rgba(244, 114, 182, 0.25);
+            color: #f87171;
+            background: rgba(244, 114, 182, 0.06);
+        }
+        .key-list-container {
+            max-height: 180px;
+            overflow-y: auto;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            padding: 4px 2px;
+        }
+        .key-list-container::-webkit-scrollbar {
+            width: 3px;
+        }
+        .key-list-container::-webkit-scrollbar-thumb {
+            background: rgba(168, 85, 247, 0.2);
+            border-radius: 10px;
+        }
+
+        .key-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            transition: background 0.2s;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .key-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .key-item:last-child {
+            border-bottom: none;
+        }
+        .key-item .key-value {
+            font-family: 'Inter', monospace;
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 0.04em;
+            flex: 1;
+            text-align: left;
+            min-width: 120px;
+        }
+        .key-item .key-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.3);
+            flex-wrap: wrap;
+        }
+        .key-item .key-meta .duration-badge {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1px 10px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .key-item .status-badge {
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .status-badge.active {
+            background: rgba(52, 211, 153, 0.12);
+            color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.15);
+        }
+        .status-badge.inactive {
+            background: rgba(248, 113, 113, 0.10);
+            color: #f87171;
+            border: 1px solid rgba(248, 113, 113, 0.12);
+        }
+        .key-item .delete-key-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.15);
+            cursor: pointer;
+            font-size: 14px;
+            transition: color 0.2s;
+            padding: 0 4px;
+        }
+        .key-item .delete-key-btn:hover {
+            color: #f87171;
+        }
+        .empty-list {
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 14px;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        /* ── info & counter ── */
+        .key-info {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+        }
+        .key-info span {
+            color: rgba(255, 255, 255, 0.3);
+            font-weight: 500;
+        }
+
+        .counter-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+        .counter-wrapper .counter-number {
+            font-size: 18px;
+            font-weight: 700;
+            color: #c084fc;
+            background: rgba(168, 85, 247, 0.08);
+            padding: 2px 14px;
+            border-radius: 30px;
+            border: 1px solid rgba(168, 85, 247, 0.08);
+            font-variant-numeric: tabular-nums;
+            min-width: 48px;
+            display: inline-block;
+            text-align: center;
+        }
+        .counter-wrapper .reset-counter {
+            background: rgba(255, 255, 255, 0.02);
+            border: none;
+            color: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 2px 10px;
+            border-radius: 30px;
+            transition: all 0.25s ease;
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+        }
+        .counter-wrapper .reset-counter:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #f87171;
+        }
+
+        /* ── toast ── */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 14px 28px;
+            border-radius: 60px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 999;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ── responsive ── */
+        @media (max-width: 600px) {
+            .card {
+                padding: 24px 16px 20px;
+                border-radius: 32px;
+                max-height: 96vh;
+            }
+            .title {
+                font-size: 26px;
+            }
+            .key-text {
+                font-size: 22px;
+                letter-spacing: 0.06em;
+            }
+            .key-display {
+                padding: 14px 16px;
+                min-height: 60px;
+            }
+            .copy-btn {
+                top: 8px;
+                right: 10px;
+                font-size: 10px;
+                padding: 4px 8px;
+            }
+            .generate-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .generate-row .field-group {
+                flex: 1;
+                justify-content: center;
+                padding: 2px 14px;
+            }
+            .generate-row .field-group input,
+            .generate-row .field-group select {
+                width: 70px;
+            }
+            .generate-row .field-group select {
+                width: 100px;
+            }
+            .generate-row .btn-generate {
+                width: 100%;
+                min-width: unset;
+            }
+            .api-key-display {
+                flex-wrap: wrap;
+                padding: 10px 14px;
+            }
+            .api-key-display .api-key-text {
+                font-size: 14px;
+            }
+            .api-actions {
+                flex-direction: column;
+            }
+            .api-actions .btn-sm {
+                min-width: unset;
+            }
+            .validate-area .input-group {
+                flex-direction: column;
+            }
+            .glow-orb--1 {
+                width: 300px;
+                height: 300px;
+            }
+            .glow-orb--2 {
+                width: 280px;
+                height: 280px;
+            }
+            .key-info {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 6px;
+            }
+            .counter-wrapper {
+                justify-content: center;
+            }
+            .key-item {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 4px;
+                padding: 8px 10px;
+            }
+            .key-item .key-value {
+                font-size: 13px;
+                min-width: unset;
+            }
+            .key-item .key-meta {
+                justify-content: space-between;
+            }
+            .key-list-container {
+                max-height: 140px;
+            }
+            .key-list-section .section-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 6px;
+            }
+            .key-list-section .section-header .left {
+                justify-content: space-between;
+            }
+            .key-list-section .section-header .actions {
+                justify-content: stretch;
+            }
+            .key-list-section .section-header .actions .btn-action {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+        @media (max-width: 400px) {
+            .card {
+                padding: 16px 10px 14px;
+                border-radius: 24px;
+            }
+            .title {
+                font-size: 22px;
+            }
+            .key-text {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- partikel canvas -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- glow orbs -->
+    <div class="glow-orb glow-orb--1"></div>
+    <div class="glow-orb glow-orb--2"></div>
+    <div class="glow-orb glow-orb--3"></div>
+
+    <!-- toast -->
+    <div class="toast" id="toast">✦ Disalin ke clipboard!</div>
+
+    <!-- ─── CARD ─── -->
+    <div class="card">
+
+        <span class="badge">✦ Premium Generator</span>
+
+        <h1 class="title">Key Generator</h1>
+        <p class="subtitle">ULTRA PREMIUM GENERATE KEY CREDITS : Denn</p>
+
+        <!-- 10-digit key -->
+        <div class="key-display" id="keyDisplay">
+            <span class="key-text placeholder" id="keyText">Klik tombol untuk generate</span>
+            <button class="copy-btn" id="copyBtn" title="Salin key">
+                <span>📋</span> <span id="copyLabel">Salin</span>
+            </button>
+        </div>
+
+        <!-- generate row -->
+        <div class="generate-row">
+            <div class="field-group">
+                <label>Jumlah</label>
+                <input type="number" id="quantityInput" min="1" max="200" value="1" />
+            </div>
+            <div class="field-group">
+                <label>Durasi</label>
+                <select id="durationSelect">
+                    <option value="1">1 Day</option>
+                    <option value="3" selected>3 Days</option>
+                    <option value="7">7 Days</option>
+                    <option value="15">15 Days</option>
+                    <option value="30">30 Days</option>
+                </select>
+            </div>
+            <button class="btn-generate" id="generateBtn">
+                <span class="icon">✦</span> Generate
+            </button>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- ─── API KEY ─── -->
+        <div class="api-section">
+            <span class="label">🔑 API Key (untuk APK)</span>
+
+            <div class="api-key-display" id="apiKeyDisplay">
+                <span class="api-key-text placeholder" id="apiKeyText">— belum dibuat —</span>
+                <button class="copy-btn" id="copyApiBtn" title="Salin API Key">
+                    <span>📋</span> <span id="copyApiLabel">Salin</span>
+                </button>
+            </div>
+
+            <div class="api-actions">
+                <button class="btn-sm primary" id="regenerateApiBtn">⟳ Generate Baru</button>
+                <button class="btn-sm danger" id="deleteApiBtn">✕ Hapus</button>
+            </div>
+
+            <!-- validasi -->
+            <div class="validate-area">
+                <div class="input-group">
+                    <input type="text" id="validateInput" placeholder="Masukkan API Key untuk validasi" />
+                    <button class="btn-validate" id="validateBtn">Validasi</button>
+                </div>
+                <div class="validation-result" id="validationResult"></div>
+            </div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- ─── KEY LIST ─── -->
+        <div class="key-list-section">
+            <div class="section-header">
+                <div class="left">
+                    <span>📋 Daftar Key</span>
+                    <span class="badge-count" id="keyCountBadge">0 key</span>
+                </div>
+                <div class="actions">
+                    <button class="btn-action" id="copyAllKeysBtn">📋 Copy All</button>
+                    <button class="btn-action danger" id="deleteAllKeysBtn">🗑️ Delete All</button>
+                </div>
+            </div>
+            <div class="key-list-container" id="keyListContainer">
+                <div class="empty-list" id="emptyList">Belum ada key dibuat</div>
+            </div>
+        </div>
+
+        <!-- ─── INFO + COUNTER ─── -->
+        <div class="key-info">
+            <div>
+                <span>UPDATE GENERATE KEY</span> &nbsp;·&nbsp; LINER H
+            </div>
+            <div class="counter-wrapper">
+                <span>📊 Total Key:</span>
+                <span class="counter-number" id="counterDisplay">0</span>
+                <button class="reset-counter" id="resetCounterBtn" title="Reset total key">↺</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // 1. PARTIKEL
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouseX = null,
+            mouseY = null;
+        let w, h;
+
+        function resize() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * w;
+                this.y = Math.random() * h;
+                this.size = Math.random() * 3.2 + 0.8;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.opacity = Math.random() * 0.7 + 0.3;
+                this.pulse = Math.random() * Math.PI * 2;
+                this.pulseSpeed = 0.01 + Math.random() * 0.02;
+            }
+            update() {
+                this.pulse += this.pulseSpeed;
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (mouseX !== null && mouseY !== null) {
+                    const dx = this.x - mouseX,
+                        dy = this.y - mouseY;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 200) {
+                        const force = (200 - dist) / 200 * 0.6;
+                        this.x += dx * force * 0.05;
+                        this.y += dy * force * 0.05;
+                    }
+                }
+                if (this.x < 0 || this.x > w) this.speedX *= -1;
+                if (this.y < 0 || this.y > h) this.speedY *= -1;
+            }
+            draw() {
+                const base = 0.5 + 0.5 * Math.sin(this.pulse);
+                const alpha = this.opacity * (0.7 + 0.3 * base);
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+                ctx.shadowColor = 'rgba(168, 85, 247, 0.25)';
+                ctx.shadowBlur = 18;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        const PARTICLE_COUNT = Math.min(200, Math.floor((w * h) / 6000));
+        for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
+
+        window.addEventListener('mousemove', (e) => { mouseX = e.clientX;
+            mouseY = e.clientY; });
+        window.addEventListener('mouseleave', () => { mouseX = null;
+            mouseY = null; });
+        window.addEventListener('touchmove', (e) => {
+            const t = e.touches[0];
+            mouseX = t.clientX;
+            mouseY = t.clientY;
+        }, { passive: true });
+        window.addEventListener('touchend', () => { mouseX = null;
+            mouseY = null; });
+
+        function drawLines() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 150) {
+                        const alpha = (1 - dist / 150) * 0.2;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+                        ctx.lineWidth = 0.8;
+                        ctx.shadowColor = 'rgba(168, 85, 247, 0.05)';
+                        ctx.shadowBlur = 8;
+                        ctx.stroke();
+                        ctx.shadowBlur = 0;
+                    }
+                }
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, w, h);
+            particles.forEach(p => { p.update();
+                p.draw(); });
+            drawLines();
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // 2. KEY GENERATOR MASSAL + DURASI + LIST
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        const keyText = document.getElementById('keyText');
+        const generateBtn = document.getElementById('generateBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const copyLabel = document.getElementById('copyLabel');
+        const durationSelect = document.getElementById('durationSelect');
+        const quantityInput = document.getElementById('quantityInput');
+        const toast = document.getElementById('toast');
+        const counterDisplay = document.getElementById('counterDisplay');
+        const resetCounterBtn = document.getElementById('resetCounterBtn');
+        const keyListContainer = document.getElementById('keyListContainer');
+        const emptyList = document.getElementById('emptyList');
+        const keyCountBadge = document.getElementById('keyCountBadge');
+        const copyAllKeysBtn = document.getElementById('copyAllKeysBtn');
+        const deleteAllKeysBtn = document.getElementById('deleteAllKeysBtn');
+
+        let currentKey = '';
+        const KEY_LENGTH = 10;
+        const COUNTER_STORAGE_KEY = 'key_generator_total';
+        const KEY_LIST_STORAGE_KEY = 'key_generator_list';
+        let toastTimer = null;
+
+        // ── Data structure ──
+        function loadKeyList() {
+            const saved = localStorage.getItem(KEY_LIST_STORAGE_KEY);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    if (Array.isArray(data)) return data;
+                } catch (_) {}
+            }
+            return [];
+        }
+
+        function saveKeyList(list) {
+            localStorage.setItem(KEY_LIST_STORAGE_KEY, JSON.stringify(list));
+        }
+
+        function getKeyStatus(item) {
+            const now = Date.now();
+            const expiry = item.createdAt + item.duration * 86400000;
+            return now <= expiry ? 'active' : 'inactive';
+        }
+
+        function renderKeyList() {
+            const list = loadKeyList();
+            const children = keyListContainer.children;
+            for (let i = children.length - 1; i >= 0; i--) {
+                if (children[i].id !== 'emptyList') {
+                    keyListContainer.removeChild(children[i]);
+                }
+            }
+
+            if (list.length === 0) {
+                emptyList.style.display = 'block';
+                keyCountBadge.textContent = '0 key';
+                return;
+            }
+            emptyList.style.display = 'none';
+            keyCountBadge.textContent = `${list.length} key`;
+
+            const sorted = [...list].sort((a, b) => b.createdAt - a.createdAt);
+
+            sorted.forEach((item) => {
+                const status = getKeyStatus(item);
+                const div = document.createElement('div');
+                div.className = 'key-item';
+
+                const keySpan = document.createElement('span');
+                keySpan.className = 'key-value';
+                keySpan.textContent = item.key;
+
+                const metaDiv = document.createElement('div');
+                metaDiv.className = 'key-meta';
+
+                const durSpan = document.createElement('span');
+                durSpan.className = 'duration-badge';
+                durSpan.textContent = `${item.duration}d`;
+
+                const statusSpan = document.createElement('span');
+                statusSpan.className = `status-badge ${status}`;
+                statusSpan.textContent = status === 'active' ? '● Aktif' : '○ Nonaktif';
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-key-btn';
+                deleteBtn.innerHTML = '✕';
+                deleteBtn.title = 'Hapus key ini';
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteKeyItem(item.key);
+                });
+
+                metaDiv.appendChild(durSpan);
+                metaDiv.appendChild(statusSpan);
+                metaDiv.appendChild(deleteBtn);
+
+                div.appendChild(keySpan);
+                div.appendChild(metaDiv);
+                keyListContainer.appendChild(div);
+            });
+        }
+
+        function deleteKeyItem(keyToDelete) {
+            let list = loadKeyList();
+            list = list.filter(item => item.key !== keyToDelete);
+            saveKeyList(list);
+            renderKeyList();
+            showToast('🗑️ Key dihapus dari daftar.');
+        }
+
+        function deleteAllKeys() {
+            const list = loadKeyList();
+            if (list.length === 0) {
+                showToast('📋 Tidak ada key untuk dihapus.');
+                return;
+            }
+
+            // Konfirmasi sebelum menghapus semua
+            const confirmMsg = `Yakin ingin menghapus semua ${list.length} key yang tersimpan?`;
+            if (!confirm(confirmMsg)) {
+                return;
+            }
+
+            saveKeyList([]);
+            renderKeyList();
+            showToast(`🗑️ ${list.length} key berhasil dihapus semua.`);
+        }
+
+        function addKeyToList(key, duration) {
+            const list = loadKeyList();
+            const exists = list.some(item => item.key === key);
+            if (!exists) {
+                list.push({
+                    key: key,
+                    createdAt: Date.now(),
+                    duration: duration
+                });
+                saveKeyList(list);
+                renderKeyList();
+            }
+        }
+
+        function addMultipleKeys(keys, duration) {
+            const list = loadKeyList();
+            let added = 0;
+            keys.forEach(key => {
+                const exists = list.some(item => item.key === key);
+                if (!exists) {
+                    list.push({
+                        key: key,
+                        createdAt: Date.now(),
+                        duration: duration
+                    });
+                    added++;
+                }
+            });
+            if (added > 0) {
+                saveKeyList(list);
+                renderKeyList();
+            }
+            return added;
+        }
+
+        // ── Counter ──
+        function loadCounter() {
+            const saved = localStorage.getItem(COUNTER_STORAGE_KEY);
+            if (saved) {
+                const val = parseInt(saved, 10);
+                return isNaN(val) ? 0 : val;
+            }
+            return 0;
+        }
+
+        function saveCounter(val) {
+            localStorage.setItem(COUNTER_STORAGE_KEY, String(val));
+        }
+
+        let totalKeys = loadCounter();
+
+        function updateCounterDisplay() {
+            counterDisplay.textContent = totalKeys;
+        }
+
+        function incrementCounter(amount = 1) {
+            totalKeys += amount;
+            saveCounter(totalKeys);
+            updateCounterDisplay();
+        }
+
+        function resetCounter() {
+            if (totalKeys === 0) {
+                showToast('📊 Total key sudah 0.');
+                return;
+            }
+            totalKeys = 0;
+            saveCounter(totalKeys);
+            updateCounterDisplay();
+            showToast('📊 Total key di-reset.');
+        }
+
+        // ── Generate key ──
+        function generateNumericKey() {
+            let result = '';
+            for (let i = 0; i < KEY_LENGTH; i++) {
+                result += Math.floor(Math.random() * 10);
+            }
+            return result;
+        }
+
+        function generateMultipleKeys() {
+            const quantity = parseInt(quantityInput.value, 10);
+            if (isNaN(quantity) || quantity < 1) {
+                showToast('⚠️ Jumlah minimal 1.');
+                return;
+            }
+            if (quantity > 200) {
+                showToast('⚠️ Jumlah maksimal 200.');
+                return;
+            }
+            const duration = parseInt(durationSelect.value, 10);
+
+            const keys = [];
+            for (let i = 0; i < quantity; i++) {
+                keys.push(generateNumericKey());
+            }
+
+            // Tampilkan key pertama di display
+            currentKey = keys[0];
+            keyText.textContent = currentKey;
+            keyText.className = 'key-text';
+            copyLabel.textContent = 'Salin';
+            copyBtn.classList.remove('copied');
+
+            const added = addMultipleKeys(keys, duration);
+            incrementCounter(added);
+
+            showToast(`✦ ${added} key berhasil dibuat! (${duration} hari)`);
+        }
+
+        // ── Copy All Keys ──
+        function copyAllKeys() {
+            const list = loadKeyList();
+            if (list.length === 0) {
+                showToast('📋 Tidak ada key untuk disalin.');
+                return;
+            }
+            const sorted = [...list].sort((a, b) => b.createdAt - a.createdAt);
+            const allKeys = sorted.map(item => item.key).join('\n');
+
+            copyText(allKeys, null, null, () => {
+                showToast(`📋 ${list.length} key disalin ke clipboard!`);
+            });
+        }
+
+        // ── Fungsi copy dengan callback ──
+        function copyText(text, labelEl, btnEl, onSuccess) {
+            if (!text || text.length === 0) {
+                showToast('✦ Tidak ada teks untuk disalin.');
+                return;
+            }
+
+            const doCopy = () => {
+                if (labelEl && btnEl) {
+                    setCopiedState(labelEl, btnEl);
+                }
+                if (onSuccess) onSuccess();
+                else showToast('✦ Disalin ke clipboard!');
+            };
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text)
+                    .then(doCopy)
+                    .catch(() => fallbackCopy(text, doCopy));
+            } else {
+                fallbackCopy(text, doCopy);
+            }
+        }
+
+        function fallbackCopy(text, onSuccess) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-9999px';
+            textarea.style.top = '-9999px';
+            textarea.style.width = '1px';
+            textarea.style.height = '1px';
+            textarea.style.opacity = '0';
+            textarea.style.pointerEvents = 'none';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+
+            try {
+                const success = document.execCommand('copy');
+                document.body.removeChild(textarea);
+                if (success) {
+                    onSuccess();
+                } else {
+                    showToast('❌ Gagal menyalin, coba manual.');
+                }
+            } catch (e) {
+                document.body.removeChild(textarea);
+                showToast('❌ Gagal menyalin, coba manual.');
+            }
+        }
+
+        function setCopiedState(labelEl, btnEl) {
+            labelEl.textContent = 'Disalin!';
+            btnEl.classList.add('copied');
+            setTimeout(() => {
+                labelEl.textContent = 'Salin';
+                btnEl.classList.remove('copied');
+            }, 3000);
+        }
+
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2200);
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // 3. API KEY
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        const apiKeyText = document.getElementById('apiKeyText');
+        const copyApiBtn = document.getElementById('copyApiBtn');
+        const copyApiLabel = document.getElementById('copyApiLabel');
+        const regenerateApiBtn = document.getElementById('regenerateApiBtn');
+        const deleteApiBtn = document.getElementById('deleteApiBtn');
+        const validateInput = document.getElementById('validateInput');
+        const validateBtn = document.getElementById('validateBtn');
+        const validationResult = document.getElementById('validationResult');
+
+        const STORAGE_KEY = 'api_key_data';
+
+        function loadApiKey() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    if (data && data.key) return data.key;
+                } catch (_) {}
+            }
+            return null;
+        }
+
+        function saveApiKey(key) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({ key }));
+        }
+
+        function generateApiKey() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < 32; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        function renderApiKey(key) {
+            if (key) {
+                apiKeyText.textContent = key;
+                apiKeyText.className = 'api-key-text';
+                copyApiLabel.textContent = 'Salin';
+                copyApiBtn.classList.remove('copied');
+            } else {
+                apiKeyText.textContent = '— belum dibuat —';
+                apiKeyText.className = 'api-key-text placeholder';
+                copyApiLabel.textContent = 'Salin';
+                copyApiBtn.classList.remove('copied');
+            }
+        }
+
+        function refreshApiKey() {
+            let key = loadApiKey();
+            if (!key) {
+                key = generateApiKey();
+                saveApiKey(key);
+            }
+            renderApiKey(key);
+            return key;
+        }
+
+        function regenerateApiKey() {
+            const newKey = generateApiKey();
+            saveApiKey(newKey);
+            renderApiKey(newKey);
+            showToast('✦ API Key baru dibuat!');
+            validationResult.textContent = '';
+            validationResult.className = 'validation-result';
+            validateInput.value = '';
+        }
+
+        function deleteApiKey() {
+            localStorage.removeItem(STORAGE_KEY);
+            renderApiKey(null);
+            validationResult.textContent = '';
+            validationResult.className = 'validation-result';
+            validateInput.value = '';
+            showToast('✦ API Key dihapus.');
+        }
+
+        function validateApiKey(inputKey) {
+            const stored = loadApiKey();
+            if (!stored) {
+                validationResult.textContent = '⚠️ Belum ada API Key tersimpan. Buat dulu!';
+                validationResult.className = 'validation-result error';
+                return;
+            }
+            if (inputKey === stored) {
+                validationResult.textContent = '✅ API Key VALID! Cocok dengan tersimpan.';
+                validationResult.className = 'validation-result success';
+            } else {
+                validationResult.textContent = '❌ API Key TIDAK VALID. Periksa kembali.';
+                validationResult.className = 'validation-result error';
+            }
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // 4. EVENT LISTENERS
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        generateBtn.addEventListener('click', generateMultipleKeys);
+
+        copyBtn.addEventListener('click', () => {
+            if (!currentKey) {
+                showToast('✦ Generate key dulu!');
+                return;
+            }
+            copyText(currentKey, copyLabel, copyBtn);
+        });
+
+        copyApiBtn.addEventListener('click', () => {
+            const key = loadApiKey();
+            if (!key) {
+                showToast('✦ Belum ada API Key.');
+                return;
+            }
+            copyText(key, copyApiLabel, copyApiBtn);
+        });
+
+        regenerateApiBtn.addEventListener('click', regenerateApiKey);
+        deleteApiBtn.addEventListener('click', deleteApiKey);
+
+        validateBtn.addEventListener('click', () => {
+            const input = validateInput.value.trim();
+            if (!input) {
+                validationResult.textContent = '⚠️ Masukkan API Key terlebih dahulu.';
+                validationResult.className = 'validation-result error';
+                return;
+            }
+            validateApiKey(input);
+        });
+
+        validateInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                validateBtn.click();
+            }
+        });
+
+        resetCounterBtn.addEventListener('click', resetCounter);
+
+        // Copy All Keys
+        copyAllKeysBtn.addEventListener('click', copyAllKeys);
+
+        // Delete All Keys
+        deleteAllKeysBtn.addEventListener('click', deleteAllKeys);
+
+        // ── inisialisasi ──
+        updateCounterDisplay();
+        renderKeyList();
+        // Generate 1 key pertama kali
+        const firstKey = generateNumericKey();
+        currentKey = firstKey;
+        keyText.textContent = firstKey;
+        keyText.className = 'key-text';
+        addKeyToList(firstKey, 3);
+        incrementCounter(1);
+        refreshApiKey();
+
+        // ── shortcut spasi ──
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT')
+                return;
+            if (e.key === ' ' || e.key === 'Space') {
+                e.preventDefault();
+                generateBtn.click();
+            }
+        });
+
+        // ── refresh status setiap 30 detik ──
+        setInterval(() => {
+            renderKeyList();
+        }, 30000);
+
+        console.log('✦ Key Generator Massal + Copy All + Delete All siap!');
+    </script>
+</body>
+</html>
