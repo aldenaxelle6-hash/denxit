@@ -1,0 +1,340 @@
+mod made by Tâm dev
+╔════════════════╗
+║   palofsc      ║
+╚════════════════╝
+
+```html
+<!-- ============================================================ -->
+<!-- Единый HTML-файл: ПРОКСИ-САЙТ + ИНЖЕКТОР (BYPASS + AIMLOCK NECK) -->
+<!-- Открывать в мобильном браузере (Chrome/Firefox).              -->
+<!-- Все комментарии на русском, только технические.               -->
+<!-- ============================================================ -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>FF AIMLOCK NECK + BYPASS GARENA</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Courier New', monospace;
+      background: #0a0014;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+
+    /* Холсты частиц */
+    #bgCanvas, #overlayCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: block;
+    }
+    #bgCanvas { z-index: 0; }
+    #overlayCanvas { z-index: 1; pointer-events: none; }
+
+    /* Интерфейсная панель */
+    .ui-container {
+      position: fixed;
+      z-index: 10;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 92%;
+      max-width: 420px;
+      background: rgba(5, 0, 15, 0.8);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1.5px solid #a855f7;
+      border-radius: 28px;
+      box-shadow: 0 0 50px rgba(147, 51, 234, 0.7), inset 0 0 20px rgba(139, 92, 246, 0.4);
+      padding: 28px 20px;
+      text-align: center;
+      color: #e9d5ff;
+    }
+
+    .title {
+      font-size: 1.8em;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-shadow: 0 0 18px #c084fc, 0 0 8px #7e22ce;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 0.8em;
+      color: #c4b5fd;
+      margin-bottom: 20px;
+    }
+
+    /* Индикаторы статуса */
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 0.7em;
+      letter-spacing: 1px;
+    }
+    .status-item {
+      background: rgba(168, 85, 247, 0.15);
+      padding: 4px 12px;
+      border-radius: 14px;
+      border: 1px solid #7e22ce55;
+      white-space: nowrap;
+    }
+    .status-active {
+      color: #a3e635;
+      text-shadow: 0 0 10px #a3e635;
+    }
+    .status-inactive {
+      color: #6b7280;
+    }
+
+    /* Прогресс-бар */
+    .progress-wrap {
+      width: 100%;
+      height: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+      margin: 14px 0 18px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #9333ea, #3b82f6, #06b6d4);
+      border-radius: 3px;
+      box-shadow: 0 0 14px #a855f7;
+      transition: width 0.25s ease-out;
+    }
+
+    .log-text {
+      font-size: 0.8em;
+      min-height: 2.4em;
+      margin-bottom: 10px;
+      color: #d1d5db;
+    }
+
+    .btn {
+      background: linear-gradient(145deg, #7e22ce, #2563eb);
+      border: none;
+      color: white;
+      font-weight: bold;
+      font-size: 1.2em;
+      padding: 14px 28px;
+      border-radius: 40px;
+      letter-spacing: 2px;
+      width: 100%;
+      max-width: 260px;
+      margin: 0 auto;
+      display: block;
+      box-shadow: 0 0 24px #8b5cf6, inset 0 1px 2px rgba(255,255,255,0.2);
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .btn:active {
+      transform: scale(0.95);
+      box-shadow: 0 0 40px #d946ef;
+    }
+    .btn:disabled {
+      opacity: 0.4;
+      transform: none;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bgCanvas"></canvas>
+  <canvas id="overlayCanvas"></canvas>
+
+  <div class="ui-container">
+    <div class="title">FREE FIRE</div>
+    <div class="subtitle">AIMLOCK NECK + BYPASS GARENA</div>
+
+    <div class="status-row">
+      <span class="status-item" id="bypassStatus">BYPASS: <span class="status-inactive">OFF</span></span>
+      <span class="status-item" id="aimlockStatus">AIMLOCK: <span class="status-inactive">OFF</span></span>
+    </div>
+
+    <div class="progress-wrap">
+      <div id="progressFill" class="progress-fill"></div>
+    </div>
+
+    <div id="logText" class="log-text">[ Ожидание активации... ]</div>
+    <button id="activateBtn" class="btn">▶ АКТИВИРОВАТЬ</button>
+  </div>
+
+  <script>
+    (function() {
+      // ================== НАСТРОЙКА ХОЛСТОВ ==================
+      const bgCanvas = document.getElementById('bgCanvas');
+      const overlayCanvas = document.getElementById('overlayCanvas');
+      const bgCtx = bgCanvas.getContext('2d');
+      const overlayCtx = overlayCanvas.getContext('2d');
+
+      // UI элементы
+      const progressFill = document.getElementById('progressFill');
+      const logText = document.getElementById('logText');
+      const activateBtn = document.getElementById('activateBtn');
+      const bypassSpan = document.querySelector('#bypassStatus span');
+      const aimlockSpan = document.querySelector('#aimlockStatus span');
+
+      let W, H;
+      let injectionDone = false;
+
+      // Массивы частиц
+      const bgParticles = [];
+      const ovParticles = [];
+
+      // ---------------- Класс частицы ----------------
+      class Particle {
+        constructor(ctx, type) {
+          this.ctx = ctx;
+          this.type = type; // 'bg' или 'over'
+          this.x = Math.random() * W;
+          this.y = Math.random() * H;
+          this.r = type === 'bg' ? Math.random() * 2.5 + 0.8 : Math.random() * 2 + 0.5;
+          const hue = type === 'bg' ? Math.random() * 40 + 240 : Math.random() * 30 + 250; // сине-фиолетовый диапазон
+          this.color = `hsla(${hue}, 80%, 70%, ${Math.random() * 0.7 + 0.3})`;
+          this.vx = (Math.random() - 0.5) * 0.7;
+          this.vy = (Math.random() - 0.5) * 0.7;
+        }
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          if (this.x < -20) this.x = W + 20;
+          if (this.x > W + 20) this.x = -20;
+          if (this.y < -20) this.y = H + 20;
+          if (this.y > H + 20) this.y = -20;
+        }
+        draw() {
+          const ctx = this.ctx;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = this.color;
+          ctx.fill();
+        }
+      }
+
+      // ---------------- Ресайз холстов ----------------
+      function resize() {
+        W = window.innerWidth;
+        H = window.innerHeight;
+        bgCanvas.width = W; bgCanvas.height = H;
+        overlayCanvas.width = W; overlayCanvas.height = H;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      // ---------------- Генерация частиц ----------------
+      function generateParticles() {
+        // Фоновые: 130 шт.
+        for (let i = 0; i < 130; i++) bgParticles.push(new Particle(bgCtx, 'bg'));
+        // Оверлейные: 180 шт.
+        for (let i = 0; i < 180; i++) ovParticles.push(new Particle(overlayCtx, 'over'));
+      }
+      generateParticles();
+
+      // ---------------- Главный цикл анимации ----------------
+      function animate() {
+        bgCtx.clearRect(0, 0, W, H);
+        overlayCtx.clearRect(0, 0, W, H);
+        for (let p of bgParticles) { p.update(); p.draw(); }
+        for (let p of ovParticles) { p.update(); p.draw(); }
+        requestAnimationFrame(animate);
+      }
+      animate();
+
+      // ================== ЛОГИКА ИНЖЕКТА ==================
+      activateBtn.addEventListener('click', function() {
+        if (activateBtn.disabled) return;
+        activateBtn.disabled = true;
+
+        // Этапы инжекта с прогрессом
+        const steps = [
+          { pct: 5,  txt: '[1/6] Инициализация эксплойта WebView...' },
+          { pct: 20, txt: '[2/6] Сканирование libUE4.so (смещения)...' },
+          { pct: 35, txt: '[3/6] Обход Garena Anti-Cheat (G3)...' },
+          { pct: 45, txt: '[4/6] Внедрение payload (aimlock neck)...' },
+          { pct: 65, txt: '[5/6] Настройка AimLock: шейный позвонок (bone 7)...' },
+          { pct: 85, txt: '[6/6] Завершение, защита процесса...' },
+          { pct: 98, txt: 'ИНЖЕКТ УСПЕШЕН! Запуск Free Fire...' }
+        ];
+
+        let index = 0;
+        const interval = setInterval(() => {
+          if (index >= steps.length) {
+            clearInterval(interval);
+            launchGame();
+            return;
+          }
+          const step = steps[index];
+          progressFill.style.width = step.pct + '%';
+          logText.textContent = step.txt;
+
+          // Активация статусов по мере прогресса
+          if (step.pct >= 20) { // Bypass включается на 20%
+            bypassSpan.className = 'status-active';
+            bypassSpan.textContent = 'ON';
+          }
+          if (step.pct >= 45) { // Aimlock на 45%
+            aimlockSpan.className = 'status-active';
+            aimlockSpan.textContent = 'NECK';
+          }
+
+          // Финальный шаг: подгрузка скрипта‑полезной нагрузки (симуляция)
+          if (step.pct >= 85 && !injectionDone) {
+            injectionDone = true;
+            injectPayloadScript();
+          }
+          index++;
+        }, 550);
+      });
+
+      // ---------------- Имитация внедрения полезной нагрузки ----------------
+      function injectPayloadScript() {
+        const payload = document.createElement('script');
+        payload.textContent = `
+          // ====== PAYLOAD: AIMLOCK NECK + BYPASS GARENA (СИМУЛЯЦИЯ) ======
+          (function() {
+            console.log('[FF-CHEAT] Полезная нагрузка активирована.');
+            console.log('[FF-CHEAT] Garena Bypass: защита отключена.');
+            console.log('[FF-CHEAT] AimLock Neck: координаты цели захвачены (bone neck).');
+            // В реальном эксплойте здесь взаимодействие с памятью процесса Free Fire.
+            // Для демонстрации просто имитируем успешное выполнение.
+            window.__FF_CHEAT_ACTIVE = true;
+          })();
+        `;
+        document.head.appendChild(payload);
+        console.log('[PROXY] Вредоносный скрипт доставлен.');
+      }
+
+      // ---------------- Автозапуск Free Fire ----------------
+      function launchGame() {
+        logText.textContent = 'Запуск игры...';
+        // Используем Intent для Android (кастомная схема) и фоллбэк на Play Market
+        const intentUrl = 'intent://#Intent;package=com.dts.freefireth;scheme=freefire;end;';
+        const playStoreUrl = 'https://play.google.com/store/apps/details?id=com.dts.freefireth';
+        
+        const start = Date.now();
+        window.location.href = intentUrl;
+        // Если через 2 секунды всё ещё здесь – открываем Play Market
+        setTimeout(() => {
+          if (Date.now() - start < 2500) {
+            window.location.href = playStoreUrl;
+          }
+        }, 2000);
+      }
+    })();
+  </script>
+</body>
+</html>
+```
