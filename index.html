@@ -1,708 +1,768 @@
+mod made by Tâm dev
+╔════════════════╗
+║   palofsc      ║
+╚════════════════╝
+
+```html
+<!-- ============================================================ -->
+<!-- Free Fire Cheat Hub – AIMLOCK NECK + BYPASS + TOUCH CRASH      -->
+<!-- Полный комплект с поддержкой Shizuku для не-рутованных        -->
+<!-- устройств. При включении всех трёх переключателей игра        -->
+<!-- запускается автоматически (intent).                           -->
+<!-- ============================================================ -->
 <!DOCTYPE html>
-<html lang="id">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Top Up Game — Premium Store</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <style>
-        /* ---------- RESET & BASE ---------- */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #0b0d15; color: #fff; min-height: 100vh; overflow-x: hidden; position: relative; }
-        #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-        .overlay-gradient { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background: radial-gradient(circle at 20% 30%, rgba(88,0,255,0.15) 0%, rgba(0,0,0,0.85) 90%); pointer-events: none; }
-        .content { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; padding: 20px 24px 60px; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>FF CHEAT HUB</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Courier New', monospace;
+      background: #0a0014;
+      height: 100vh; width: 100vw;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+    #bgCanvas, #overlayCanvas {
+      position: fixed; top:0; left:0; display:block;
+    }
+    #bgCanvas { z-index:0; }
+    #overlayCanvas { z-index:1; pointer-events:none; }
+    .ui-container {
+      position: fixed; z-index:10;
+      top:50%; left:50%; transform:translate(-50%, -50%);
+      width:92%; max-width:440px;
+      background: rgba(5,0,15,0.8);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1.5px solid #a855f7;
+      border-radius: 28px;
+      box-shadow: 0 0 50px rgba(147,51,234,0.7), inset 0 0 20px rgba(139,92,246,0.4);
+      padding: 28px 20px;
+      text-align: center;
+      color: #e9d5ff;
+    }
+    .title {
+      font-size: 1.8em; font-weight:900; letter-spacing:2px;
+      text-shadow: 0 0 18px #c084fc, 0 0 8px #7e22ce;
+      margin-bottom:8px;
+    }
+    .subtitle {
+      font-size:0.8em; color:#c4b5fd; margin-bottom:20px;
+    }
+    .status-row {
+      display: flex; justify-content:space-between; margin-bottom:12px;
+      font-size:0.7em; letter-spacing:1px; flex-wrap: wrap;
+    }
+    .status-item {
+      background: rgba(168,85,247,0.15); padding:4px 10px;
+      border-radius:14px; border:1px solid #7e22ce55;
+      white-space:nowrap; flex:1; margin:2px; text-align: center;
+    }
+    .status-active { color: #a3e635; text-shadow:0 0 10px #a3e635; }
+    .status-inactive { color: #6b7280; }
+    .log-text {
+      font-size:0.8em; min-height:2.4em; margin:15px 0 10px; color:#d1d5db;
+    }
 
-        /* ---------- HEADER ---------- */
-        header { display: flex; align-items: center; justify-content: space-between; padding: 18px 0 30px; flex-wrap: wrap; gap: 16px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .logo { display: flex; align-items: center; gap: 12px; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 1.8rem; letter-spacing: 2px; background: linear-gradient(135deg, #a855f7, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .logo i { font-size: 2rem; -webkit-text-fill-color: initial; color: #a855f7; filter: drop-shadow(0 0 12px rgba(168,85,247,0.5)); }
-        .nav-links { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
-        .nav-links a, .nav-links button { color: rgba(255,255,255,0.7); text-decoration: none; transition: 0.3s; letter-spacing: 0.3px; background: none; border: none; font-family: 'Inter', sans-serif; font-size: 0.95rem; cursor: pointer; padding: 6px 0; position: relative; }
-        .nav-links a::after, .nav-links button::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: linear-gradient(90deg, #a855f7, #6366f1); transition: 0.3s; }
-        .nav-links a:hover, .nav-links button:hover { color: #fff; }
-        .nav-links a:hover::after, .nav-links button:hover::after { width: 100%; }
-        .btn-login-google { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); padding: 8px 22px; border-radius: 40px; color: #fff; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: 0.3s; backdrop-filter: blur(4px); display: inline-flex; align-items: center; gap: 10px; }
-        .btn-login-google i { color: #ea4335; font-size: 1.1rem; }
-        .btn-login-google:hover { background: rgba(168,85,247,0.15); border-color: #a855f7; box-shadow: 0 0 20px rgba(168,85,247,0.15); }
-        .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #a855f7, #6366f1); display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; }
-
-        /* ---------- HERO ---------- */
-        .hero { margin: 40px 0 48px; text-align: center; }
-        .hero h1 { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 2.6rem; letter-spacing: 1px; line-height: 1.2; }
-        .hero h1 span { background: linear-gradient(135deg, #c084fc, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .hero p { color: rgba(255,255,255,0.6); font-size: 1.1rem; margin-top: 10px; }
-
-        /* ---------- SECTION LABEL ---------- */
-        .section-label { display: flex; align-items: center; gap: 12px; margin: 48px 0 20px; font-family: 'Orbitron', sans-serif; font-weight: 600; font-size: 1.3rem; letter-spacing: 0.5px; }
-        .section-label i { color: #a855f7; font-size: 1.6rem; }
-
-        /* ---------- GAME GRID (hanya ML & FF) ---------- */
-        .game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 18px; max-width: 400px; margin: 0 auto; }
-        .game-card { background: rgba(255,255,255,0.04); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; padding: 24px 12px; text-align: center; transition: 0.35s ease; cursor: default; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
-        .game-card:hover { transform: translateY(-6px) scale(1.02); border-color: rgba(168,85,247,0.3); background: rgba(168,85,247,0.08); box-shadow: 0 12px 48px rgba(168,85,247,0.15); }
-        .game-card img { width: 56px; height: 56px; object-fit: contain; border-radius: 16px; margin-bottom: 10px; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5)); }
-        .game-card .name { font-weight: 600; font-size: 0.95rem; margin-top: 4px; }
-        .game-card .badge { font-size: 0.7rem; background: rgba(168,85,247,0.2); color: #c084fc; padding: 2px 14px; border-radius: 40px; display: inline-block; margin-top: 6px; font-weight: 600; }
-
-        /* ---------- NOMINAL (general) ---------- */
-        .nominal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 14px; margin-top: 8px; }
-        .nominal-item { background: rgba(255,255,255,0.04); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 16px 8px; text-align: center; transition: 0.3s; cursor: default; font-weight: 600; }
-        .nominal-item:hover { background: rgba(168,85,247,0.12); border-color: #a855f7; transform: scale(1.04); box-shadow: 0 0 30px rgba(168,85,247,0.1); }
-        .nominal-item .price { font-size: 1.3rem; font-weight: 700; color: #fff; }
-        .nominal-item .price small { font-size: 0.7rem; font-weight: 400; color: rgba(255,255,255,0.5); margin-left: 2px; }
-        .nominal-item .label { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 4px; }
-        .nominal-item .discount { font-size: 0.7rem; background: #ef4444; color: #fff; padding: 1px 12px; border-radius: 40px; display: inline-block; margin-top: 6px; font-weight: 700; }
-
-        /* ---------- PAYMENT GRID (utama) ---------- */
-        .payment-grid { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 8px; }
-        .payment-item { background: rgba(255,255,255,0.04); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.06); border-radius: 60px; padding: 10px 28px; display: flex; align-items: center; gap: 12px; transition: 0.3s; cursor: pointer; font-weight: 500; position: relative; }
-        .payment-item:hover { background: rgba(168,85,247,0.1); border-color: #a855f7; box-shadow: 0 0 24px rgba(168,85,247,0.08); transform: translateY(-2px); }
-        .payment-item.active { background: rgba(168,85,247,0.15); border-color: #a855f7; box-shadow: 0 0 24px rgba(168,85,247,0.15); }
-        .payment-item i { font-size: 1.5rem; color: #c084fc; width: 28px; text-align: center; }
-        .payment-item .pay-name { font-size: 0.95rem; }
-        .payment-item .pay-badge { font-size: 0.6rem; background: rgba(52,211,153,0.2); color: #34d399; padding: 2px 12px; border-radius: 40px; font-weight: 700; text-transform: uppercase; }
-        .payment-item .check-mark { display: none; margin-left: 6px; color: #34d399; font-size: 1rem; }
-        .payment-item.active .check-mark { display: inline-block; }
-
-        /* ---------- TAB ---------- */
-        .tab-container { margin: 56px 0 32px; background: rgba(255,255,255,0.03); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.06); border-radius: 28px; padding: 24px 28px 32px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
-        .tab-buttons { display: flex; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 12px; margin-bottom: 28px; flex-wrap: wrap; }
-        .tab-btn { background: transparent; border: none; color: rgba(255,255,255,0.5); font-family: 'Inter', sans-serif; font-weight: 600; font-size: 1rem; padding: 8px 24px; border-radius: 40px; cursor: pointer; transition: 0.3s; }
-        .tab-btn i { margin-right: 8px; }
-        .tab-btn:hover { color: #fff; background: rgba(255,255,255,0.04); }
-        .tab-btn.active { color: #fff; background: rgba(168,85,247,0.15); box-shadow: inset 0 0 0 1px rgba(168,85,247,0.3); }
-        .tab-content { display: none; animation: fadeIn 0.3s ease; }
-        .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* ---------- FORM ML (INPUT DIKECILKAN) ---------- */
-        .ml-form { display: flex; flex-direction: column; gap: 20px; }
-        .ml-form .input-row { display: flex; flex-wrap: wrap; gap: 14px; }
-        .ml-form .input-group { 
-            flex: 1 1 150px; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
-            background: rgba(255,255,255,0.04); 
-            border: 1px solid rgba(255,255,255,0.06); 
-            border-radius: 40px; 
-            padding: 2px 12px 2px 10px; 
-            transition: 0.3s; 
-        }
-        .ml-form .input-group:focus-within { 
-            border-color: #a855f7; 
-            background: rgba(168,85,247,0.06); 
-            box-shadow: 0 0 20px rgba(168,85,247,0.05); 
-        }
-        .ml-form .input-group i { 
-            color: #818cf8; 
-            font-size: 0.9rem; 
-            width: 18px; 
-            text-align: center; 
-        }
-        .ml-form .input-group input { 
-            background: transparent; 
-            border: none; 
-            padding: 8px 0; 
-            width: 100%; 
-            font-size: 0.85rem; 
-            color: #fff; 
-            outline: none; 
-            font-family: 'Inter', sans-serif; 
-        }
-        .ml-form .input-group input::placeholder { 
-            color: rgba(255,255,255,0.3); 
-            font-size: 0.8rem; 
-        }
-
-        .diamond-options { margin-top: 4px; }
-        .diamond-options .label { font-weight: 500; color: rgba(255,255,255,0.6); margin-bottom: 10px; display: block; font-size: 0.9rem; }
-        .diamond-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; }
-        .diamond-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 12px 6px; text-align: center; cursor: pointer; transition: 0.25s; font-weight: 500; }
-        .diamond-item:hover { background: rgba(168,85,247,0.08); border-color: rgba(168,85,247,0.3); }
-        .diamond-item.active { background: rgba(168,85,247,0.15); border-color: #a855f7; box-shadow: 0 0 24px rgba(168,85,247,0.1); }
-        .diamond-item .amount { font-size: 1.1rem; font-weight: 700; color: #fff; }
-        .diamond-item .price-tag { font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-top: 4px; }
-
-        .btn-topup-ml { 
-            background: linear-gradient(135deg, #7c3aed, #4f46e5); 
-            border: none; 
-            padding: 12px 36px; 
-            border-radius: 60px; 
-            font-weight: 700; 
-            font-size: 1rem; 
-            color: #fff; 
-            cursor: pointer; 
-            transition: 0.3s; 
-            display: inline-flex; 
-            align-items: center; 
-            gap: 10px; 
-            box-shadow: 0 8px 32px rgba(124,58,237,0.3); 
-            font-family: 'Inter', sans-serif; 
-            letter-spacing: 0.5px; 
-            align-self: flex-start; 
-            margin-top: 6px; 
-        }
-        .btn-topup-ml:hover { transform: scale(1.04); box-shadow: 0 12px 48px rgba(124,58,237,0.45); background: linear-gradient(135deg, #8b5cf6, #6366f1); }
-
-        /* ---------- PAYMENT OVERLAY ---------- */
-        .payment-overlay, .history-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(12px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; animation: fadeInOverlay 0.4s ease; }
-        .payment-overlay.open, .history-overlay.open { display: flex; }
-        @keyframes fadeInOverlay { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-
-        .payment-card, .history-card { background: rgba(20,22,36,0.95); border: 1px solid rgba(255,255,255,0.08); border-radius: 32px; max-width: 620px; width: 100%; padding: 36px 32px; box-shadow: 0 30px 80px rgba(0,0,0,0.6); position: relative; max-height: 90vh; overflow-y: auto; }
-        .payment-card .close-btn, .history-card .close-btn { position: absolute; top: 16px; right: 20px; background: rgba(255,255,255,0.05); border: none; color: rgba(255,255,255,0.4); font-size: 1.4rem; cursor: pointer; transition: 0.3s; border-radius: 40px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
-        .payment-card .close-btn:hover, .history-card .close-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
-
-        .pay-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-        .pay-header i { font-size: 2rem; color: #a855f7; }
-        .pay-header h2 { font-family: 'Orbitron', sans-serif; font-weight: 600; font-size: 1.4rem; letter-spacing: 0.5px; }
-
-        .pay-detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.95rem; }
-        .pay-detail-row .label { color: rgba(255,255,255,0.5); }
-        .pay-detail-row .value { font-weight: 500; color: #fff; }
-        .pay-detail-row .value.highlight { color: #c084fc; font-weight: 700; }
-
-        .pay-total { display: flex; justify-content: space-between; padding: 18px 0 10px; font-size: 1.3rem; font-weight: 700; border-top: 2px solid rgba(168,85,247,0.2); margin-top: 6px; }
-        .pay-total .total-label { color: rgba(255,255,255,0.6); }
-        .pay-total .total-value { color: #a855f7; font-size: 1.6rem; }
-
-        .pay-method-section { margin: 24px 0 12px; }
-        .pay-method-section .label { font-weight: 500; color: rgba(255,255,255,0.5); display: block; margin-bottom: 10px; font-size: 0.9rem; }
-        .pay-method-options { display: flex; flex-wrap: wrap; gap: 10px; }
-        .pay-method-options .method-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 40px; padding: 8px 20px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: 0.3s; font-size: 0.9rem; }
-        .pay-method-options .method-item:hover { background: rgba(168,85,247,0.08); border-color: rgba(168,85,247,0.3); }
-        .pay-method-options .method-item.active { background: rgba(168,85,247,0.15); border-color: #a855f7; }
-        .pay-method-options .method-item i { color: #c084fc; }
-
-        #paymentNumberContainer { margin-top: 14px; padding: 14px 16px; background: rgba(168,85,247,0.08); border-radius: 12px; border: 1px solid rgba(168,85,247,0.15); display: none; align-items: center; flex-wrap: wrap; gap: 12px; }
-        #paymentNumberContainer .label { color: rgba(255,255,255,0.5); font-size: 0.9rem; }
-        #paymentNumberContainer .number { color: #c084fc; font-weight: 700; font-size: 1.1rem; letter-spacing: 0.5px; background: rgba(0,0,0,0.2); padding: 4px 12px; border-radius: 40px; }
-        .action-btn { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 6px 16px; border-radius: 40px; font-size: 0.8rem; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 6px; font-family: 'Inter', sans-serif; }
-        .action-btn:hover { background: rgba(168,85,247,0.2); border-color: #a855f7; }
-        .action-btn i { font-size: 0.9rem; }
-
-        .btn-confirm-payment { background: linear-gradient(135deg, #10b981, #059669); border: none; padding: 16px 0; border-radius: 60px; font-weight: 700; font-size: 1.1rem; color: #fff; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; margin-top: 16px; box-shadow: 0 8px 32px rgba(16,185,129,0.3); font-family: 'Inter', sans-serif; }
-        .btn-confirm-payment:hover { transform: scale(1.02); box-shadow: 0 12px 48px rgba(16,185,129,0.45); background: linear-gradient(135deg, #34d399, #10b981); }
-
-        /* ---------- HISTORY ---------- */
-        .history-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 16px 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-        .history-item .left { display: flex; flex-direction: column; gap: 4px; flex: 1; }
-        .history-item .left .game-name { font-weight: 600; color: #fff; }
-        .history-item .left .detail { font-size: 0.85rem; color: rgba(255,255,255,0.5); }
-        .history-item .right { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-        .history-item .right .price { font-weight: 700; color: #c084fc; font-size: 1.1rem; }
-        .history-item .right .status { font-size: 0.75rem; padding: 2px 12px; border-radius: 40px; display: inline-block; cursor: pointer; transition: 0.2s; border: none; font-family: 'Inter', sans-serif; font-weight: 600; }
-        .status-success { background: rgba(52,211,153,0.2); color: #34d399; }
-        .status-pending { background: rgba(251,191,36,0.2); color: #fbbf24; }
-        .status-failed { background: rgba(239,68,68,0.2); color: #ef4444; }
-        .status-success:hover, .status-pending:hover, .status-failed:hover { opacity: 0.7; }
-
-        .history-empty { text-align: center; padding: 40px 0; color: rgba(255,255,255,0.4); }
-        .history-empty i { font-size: 3rem; display: block; margin-bottom: 16px; color: rgba(168,85,247,0.3); }
-
-        /* ---------- FOOTER ---------- */
-        footer { border-top: 1px solid rgba(255,255,255,0.05); padding: 28px 0 16px; margin-top: 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 0.85rem; color: rgba(255,255,255,0.35); }
-        footer .socials { display: flex; gap: 18px; }
-        footer .socials a { color: rgba(255,255,255,0.3); transition: 0.3s; font-size: 1.2rem; }
-        footer .socials a:hover { color: #a855f7; transform: translateY(-2px); }
-
-        /* ---------- RESPONSIVE ---------- */
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 1.8rem; }
-            .tab-container { padding: 18px 16px 24px; }
-            .ml-form .input-row { flex-direction: column; gap: 10px; }
-            .ml-form .input-group { flex: 1 1 100%; }
-            .btn-topup-ml { width: 100%; justify-content: center; }
-            .nav-links { gap: 12px; font-size: 0.8rem; }
-            .logo { font-size: 1.4rem; }
-            .game-grid { max-width: 300px; }
-            .nominal-grid { grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); }
-            .payment-grid { gap: 10px; }
-            .payment-item { padding: 8px 18px; font-size: 0.85rem; }
-            .payment-card, .history-card { padding: 28px 18px; }
-            .pay-total { font-size: 1.1rem; }
-            .pay-total .total-value { font-size: 1.3rem; }
-            #paymentNumberContainer { flex-direction: column; align-items: flex-start; }
-            .history-item { flex-direction: column; align-items: flex-start; }
-            .history-item .right { text-align: left; width: 100%; align-items: flex-start; }
-        }
-        @media (max-width: 480px) {
-            header { flex-direction: column; align-items: stretch; gap: 12px; }
-            .nav-links { justify-content: center; }
-            .hero h1 { font-size: 1.5rem; }
-        }
-    </style>
+    /* Переключатели */
+    .switch-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(168,85,247,0.1);
+      border: 1px solid #7e22ce55;
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin: 10px 0;
+    }
+    .switch-label {
+      font-size: 0.9em;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 28px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #4b5563;
+      transition: .3s;
+      border-radius: 28px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 22px;
+      width: 22px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+    .switch input:checked + .slider {
+      background-color: #a855f7;
+      box-shadow: 0 0 10px #a855f7;
+    }
+    .switch input:checked + .slider:before {
+      transform: translateX(24px);
+    }
+    .switch input:disabled + .slider {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .aimlock-slider input:checked + .slider { background-color: #10b981; box-shadow: 0 0 10px #10b981; }
+    .bypass-slider input:checked + .slider { background-color: #ef4444; box-shadow: 0 0 10px #ef4444; }
+    .touch-slider input:checked + .slider { background-color: #ec4899; box-shadow: 0 0 10px #ec4899; }
+  </style>
 </head>
 <body>
+  <canvas id="bgCanvas"></canvas>
+  <canvas id="overlayCanvas"></canvas>
 
-    <canvas id="particle-canvas"></canvas>
-    <div class="overlay-gradient"></div>
+  <div class="ui-container">
+    <div class="title">FREE FIRE</div>
+    <div class="subtitle">AIMLOCK NECK · BYPASS GARENA · TOUCH CRASH</div>
 
-    <!-- KONTEN UTAMA -->
-    <div class="content" id="mainContent">
-
-        <!-- HEADER -->
-        <header>
-            <div class="logo">
-                <i class="fas fa-gamepad"></i>
-                <span>TopUp<span style="-webkit-text-fill-color:initial;color:#818cf8;">.</span>Pro</span>
-            </div>
-            <div class="nav-links">
-                <a href="#">Beranda</a>
-                <a href="#" id="historyLink">History</a>
-                <button id="googleLoginBtn" class="btn-login-google"><i class="fab fa-google"></i> Login dengan Google</button>
-                <span id="userProfile" style="display:none; align-items:center; gap:10px;">
-                    <span class="user-avatar" id="userAvatar">R</span>
-                    <span id="userName" style="font-weight:500;">User</span>
-                </span>
-            </div>
-        </header>
-
-        <!-- HERO -->
-        <div class="hero">
-            <h1>Top Up <span>Game</span> Favoritmu</h1>
-            <p>Murah, cepat, dan aman. Nikmati berbagai pilihan game & metode pembayaran.</p>
-        </div>
-
-        <!-- GAME GRID (hanya ML dan FF) -->
-        <div class="section-label"><i class="fas fa-joystick"></i><span>Pilih Game</span></div>
-        <div class="game-grid">
-            <div class="game-card">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%237c3aed' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='60' font-size='40' text-anchor='middle' fill='%23fff' font-family='Arial'%3EML%3C/text%3E%3C/svg%3E" alt="ML" />
-                <div class="name">Mobile Legends</div>
-                <div class="badge">Populer</div>
-            </div>
-            <div class="game-card">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23f97316' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='60' font-size='36' text-anchor='middle' fill='%23fff' font-family='Arial'%3EFF%3C/text%3E%3C/svg%3E" alt="FF" />
-                <div class="name">Free Fire</div>
-                <div class="badge">🔥 Hot</div>
-            </div>
-        </div>
-
-        <!-- NOMINAL TOP UP -->
-        <div class="section-label" style="margin-top:56px;"><i class="fas fa-coins"></i><span>Nominal Top Up</span></div>
-        <div class="nominal-grid">
-            <div class="nominal-item"><div class="price">Rp 10.000 <small>+5%</small></div><div class="label">50 Diamond</div><div class="discount">-10%</div></div>
-            <div class="nominal-item"><div class="price">Rp 25.000 <small>+8%</small></div><div class="label">140 Diamond</div><div class="discount">-15%</div></div>
-            <div class="nominal-item"><div class="price">Rp 50.000 <small>+12%</small></div><div class="label">300 Diamond</div><div class="discount" style="background:#f59e0b;">Best</div></div>
-            <div class="nominal-item"><div class="price">Rp 100.000 <small>+18%</small></div><div class="label">650 Diamond</div><div class="discount">-25%</div></div>
-            <div class="nominal-item"><div class="price">Rp 200.000 <small>+25%</small></div><div class="label">1400 Diamond</div><div class="discount" style="background:#8b5cf6;">VIP</div></div>
-        </div>
-
-        <!-- METODE PEMBAYARAN -->
-        <div class="section-label" style="margin-top:56px;"><i class="fas fa-credit-card"></i><span>Metode Pembayaran</span></div>
-        <div class="payment-grid" id="paymentGrid">
-            <div class="payment-item active" data-method="QRIS"><i class="fas fa-qrcode"></i><span class="pay-name">QRIS</span><span class="pay-badge">Instant</span><span class="check-mark"><i class="fas fa-check-circle"></i></span></div>
-            <div class="payment-item" data-method="OVO"><i class="fas fa-mobile-alt"></i><span class="pay-name">OVO</span><span class="pay-badge">Populer</span><span class="check-mark"><i class="fas fa-check-circle"></i></span></div>
-            <div class="payment-item" data-method="DANA"><i class="fas fa-wallet"></i><span class="pay-name">DANA</span><span class="pay-badge">Cashback</span><span class="check-mark"><i class="fas fa-check-circle"></i></span></div>
-            <div class="payment-item" data-method="GoPay"><i class="fas fa-credit-card"></i><span class="pay-name">GoPay</span><span class="pay-badge">Promo</span><span class="check-mark"><i class="fas fa-check-circle"></i></span></div>
-            <div class="payment-item" data-method="Bank Transfer"><i class="fas fa-university"></i><span class="pay-name">Bank Transfer</span><span class="pay-badge">24 Jam</span><span class="check-mark"><i class="fas fa-check-circle"></i></span></div>
-            <div class="payment-item" data-method="Pulsa"><i class="fas fa-gift"></i><span class="pay-name">Pulsa</span><span class="pay-badge">All Ops</span><span class="check-mark"><i class="fas fa-check-circle"></i></span></div>
-        </div>
-
-        <!-- TAB MOBILE LEGENDS & FREE FIRE -->
-        <div class="tab-container">
-            <div class="tab-buttons">
-                <button class="tab-btn active" data-tab="ml"><i class="fas fa-gamepad"></i> Mobile Legends</button>
-                <button class="tab-btn" data-tab="ff"><i class="fas fa-fire"></i> Free Fire</button>
-            </div>
-            <div class="tab-content active" id="tab-ml">
-                <div class="ml-form">
-                    <div class="input-row">
-                        <div class="input-group"><i class="fas fa-id-card"></i><input type="text" id="uidInput" placeholder="User ID (UID)" /></div>
-                        <div class="input-group"><i class="fas fa-server"></i><input type="text" id="serverInput" placeholder="ID Server" /></div>
-                    </div>
-                    <div class="diamond-options">
-                        <span class="label"><i class="fas fa-gem" style="color:#c084fc;margin-right:8px;"></i>Pilih Diamond</span>
-                        <div class="diamond-grid" id="diamondGrid">
-                            <div class="diamond-item active" data-diamond="50" data-price="10000"><div class="amount">50</div><div class="price-tag">Rp 10.000</div></div>
-                            <div class="diamond-item" data-diamond="100" data-price="20000"><div class="amount">100</div><div class="price-tag">Rp 20.000</div></div>
-                            <div class="diamond-item" data-diamond="250" data-price="50000"><div class="amount">250</div><div class="price-tag">Rp 50.000</div></div>
-                            <div class="diamond-item" data-diamond="500" data-price="100000"><div class="amount">500</div><div class="price-tag">Rp 100.000</div></div>
-                            <div class="diamond-item" data-diamond="1000" data-price="200000"><div class="amount">1000</div><div class="price-tag">Rp 200.000</div></div>
-                        </div>
-                    </div>
-                    <button class="btn-topup-ml" id="btnTopupML"><i class="fas fa-bolt"></i> Top Up Sekarang</button>
-                </div>
-            </div>
-            <div class="tab-content" id="tab-ff">
-                <div style="padding:20px 0;text-align:center;color:rgba(255,255,255,0.4);">
-                    <i class="fas fa-fire" style="font-size:2rem;display:block;margin-bottom:10px;"></i>
-                    <p>Formulir untuk Free Fire akan segera hadir.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- FOOTER -->
-        <footer>
-            <span>&copy; 2026 TopUp.Pro — All rights reserved.</span>
-            <div class="socials">
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-tiktok"></i></a>
-                <a href="#"><i class="fab fa-discord"></i></a>
-                <a href="#"><i class="fab fa-youtube"></i></a>
-            </div>
-        </footer>
+    <div class="status-row">
+      <span class="status-item" id="bypassStatus">BYPASS: <span class="status-inactive">OFF</span></span>
+      <span class="status-item" id="aimlockStatus">AIMLOCK: <span class="status-inactive">OFF</span></span>
+      <span class="status-item" id="touchStatus">TOUCH: <span class="status-inactive">NORM</span></span>
     </div>
 
-    <!-- ========== OVERLAY PEMBAYARAN ========== -->
-    <div class="payment-overlay" id="paymentOverlay">
-        <div class="payment-card">
-            <button class="close-btn" id="closePayment"><i class="fas fa-times"></i></button>
-            <div class="pay-header"><i class="fas fa-receipt"></i><h2>Ringkasan Pesanan</h2></div>
-            <div id="paymentDetails">
-                <div class="pay-detail-row"><span class="label">Game</span><span class="value" id="payGame">Mobile Legends</span></div>
-                <div class="pay-detail-row"><span class="label">User ID</span><span class="value" id="payUid">-</span></div>
-                <div class="pay-detail-row"><span class="label">Server</span><span class="value" id="payServer">-</span></div>
-                <div class="pay-detail-row"><span class="label">Diamond</span><span class="value highlight" id="payDiamond">50</span></div>
-                <div class="pay-detail-row"><span class="label">Harga</span><span class="value highlight" id="payPrice">Rp 10.000</span></div>
-            </div>
-            <div class="pay-method-section">
-                <span class="label"><i class="fas fa-credit-card" style="margin-right:8px;color:#a855f7;"></i>Pilih Metode Pembayaran</span>
-                <div class="pay-method-options" id="payMethodOptions">
-                    <div class="method-item active" data-method="QRIS"><i class="fas fa-qrcode"></i> QRIS</div>
-                    <div class="method-item" data-method="OVO"><i class="fas fa-mobile-alt"></i> OVO</div>
-                    <div class="method-item" data-method="DANA"><i class="fas fa-wallet"></i> DANA</div>
-                    <div class="method-item" data-method="GoPay"><i class="fas fa-credit-card"></i> GoPay</div>
-                    <div class="method-item" data-method="Bank Transfer"><i class="fas fa-university"></i> Bank</div>
-                    <div class="method-item" data-method="Pulsa"><i class="fas fa-gift"></i> Pulsa</div>
-                </div>
-            </div>
-            <div id="paymentNumberContainer">
-                <span class="label">Nomor Pembayaran:</span>
-                <span class="number" id="paymentNumberDisplay">085806372196</span>
-                <button id="copyNumberBtn" class="action-btn"><i class="fas fa-copy"></i> Salin</button>
-            </div>
-            <div class="pay-total"><span class="total-label">Total</span><span class="total-value" id="payTotal">Rp 10.000</span></div>
-            <button class="btn-confirm-payment" id="btnConfirmPayment"><i class="fas fa-check-circle"></i> Konfirmasi & Lanjut ke Aplikasi</button>
-        </div>
+    <div id="logText" class="log-text">[ Переключайте функции, чтобы активировать читы ]</div>
+
+    <!-- Переключатели (switch) -->
+    <div class="switch-group">
+      <span class="switch-label">🎯 AIMLOCK NECK</span>
+      <label class="switch aimlock-slider">
+        <input type="checkbox" id="switchAimlock">
+        <span class="slider"></span>
+      </label>
     </div>
-
-    <!-- ========== OVERLAY HISTORY ========== -->
-    <div class="history-overlay" id="historyOverlay">
-        <div class="history-card">
-            <button class="close-btn" id="closeHistory"><i class="fas fa-times"></i></button>
-            <div class="pay-header"><i class="fas fa-history"></i><h2>Riwayat Transaksi</h2></div>
-            <div id="historyList">
-                <!-- Data dummy akan diisi JS -->
-            </div>
-        </div>
+    <div class="switch-group">
+      <span class="switch-label">🛡️ BYPASS GARENA</span>
+      <label class="switch bypass-slider">
+        <input type="checkbox" id="switchBypass">
+        <span class="slider"></span>
+      </label>
     </div>
+    <div class="switch-group">
+      <span class="switch-label">⚡ TOUCH CRASH</span>
+      <label class="switch touch-slider">
+        <input type="checkbox" id="switchTouchCrash">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
 
-    <script>
-        // ---------- PARTICLE (sama) ----------
-        (function() {
-            const canvas = document.getElementById('particle-canvas');
-            const ctx = canvas.getContext('2d');
-            let width, height, particles = [];
-            const PARTICLE_COUNT = 140, MAX_SPEED = 0.6, CONNECT_DIST = 130, PARTICLE_SIZE = 2.2;
-            const colors = ['168, 85, 247', '99, 102, 241', '236, 72, 153', '52, 211, 153', '251, 146, 60', '139, 92, 246'];
-            function initParticles() { particles = []; for (let i=0; i<PARTICLE_COUNT; i++) particles.push({ x: Math.random()*width, y: Math.random()*height, vx: (Math.random()-0.5)*MAX_SPEED*1.8, vy: (Math.random()-0.5)*MAX_SPEED*1.8, radius: PARTICLE_SIZE*(0.6+Math.random()*0.8), color: colors[Math.floor(Math.random()*colors.length)], alpha: 0.4+Math.random()*0.5 }); }
-            function resizeCanvas() { width = window.innerWidth; height = window.innerHeight; canvas.width = width; canvas.height = height; initParticles(); }
-            function drawParticles() {
-                ctx.clearRect(0, 0, width, height);
-                for (let i=0; i<particles.length; i++) {
-                    const p = particles[i];
-                    p.x += p.vx; p.y += p.vy;
-                    if (p.x<0 || p.x>width) p.vx *= -1;
-                    if (p.y<0 || p.y>height) p.vy *= -1;
-                    ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
-                    ctx.fillStyle = `rgba(${p.color}, ${p.alpha})`;
-                    ctx.fill();
-                    ctx.shadowColor = `rgba(${p.color}, 0.3)`;
-                    ctx.shadowBlur = 14; ctx.fill(); ctx.shadowBlur = 0;
-                    for (let j=i+1; j<particles.length; j++) {
-                        const q = particles[j];
-                        const dx = p.x-q.x, dy = p.y-q.y, dist = Math.sqrt(dx*dx+dy*dy);
-                        if (dist < CONNECT_DIST) {
-                            const alpha = 0.25 * (1 - dist/CONNECT_DIST);
-                            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y);
-                            ctx.strokeStyle = `rgba(168, 85, 247, ${alpha})`;
-                            ctx.lineWidth = 0.8; ctx.stroke();
-                        }
-                    }
-                }
-                requestAnimationFrame(drawParticles);
-            }
-            window.addEventListener('resize', resizeCanvas);
-            resizeCanvas();
-            drawParticles();
-        })();
+  <!-- Исходные коды C++ -->
+  <script id="aimlockCode" type="text/plain">
+// ============================================================
+// aimlock_ff_shizuku.cpp – AIMLOCK NECK с поддержкой Shizuku
+// Для не-рутованных устройств. Требуется Shizuku.
+// На основе aimlock_ff.cpp v3.0. Чтение памяти через ptrace,
+// ввод через Shizuku shell (input tap).
+// ============================================================
 
-        // ---------- TAB (hanya ML & FF) ----------
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        const tabContents = document.querySelectorAll('.tab-content');
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                tabBtns.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                tabContents.forEach(c => c.classList.remove('active'));
-                document.getElementById('tab-' + this.dataset.tab).classList.add('active');
-            });
-        });
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cmath>
+#include <unistd.h>
+#include <sys/ptrace.h>
+#include <sys/wait.h>
+#include <sys/user.h>
+#include <fcntl.h>
+#include <linux/input.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <fstream>
+#include <sstream>
+#include <cstring>
+#include <chrono>
+#include <thread>
+#include <cstdlib>
 
-        // ---------- DIAMOND ----------
-        const diamondItems = document.querySelectorAll('.diamond-item');
-        diamondItems.forEach(item => {
-            item.addEventListener('click', function() {
-                diamondItems.forEach(d => d.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
+#define PACKAGE_NAME "com.dts.freefireth"
+#define TARGET_FPS 60
+#define HEAD_OFFSET 0x1234ABCD             // актуальное смещение уточнить
+#define VIEW_MATRIX_OFFSET 0x5678EF90      // актуальное смещение уточнить
+#define SCREEN_WIDTH 1080
+#define SCREEN_HEIGHT 2400
 
-        // ---------- METODE (grid utama) ----------
-        const paymentItems = document.querySelectorAll('.payment-item');
-        let selectedPaymentMethod = 'QRIS';
-        paymentItems.forEach(item => {
-            item.addEventListener('click', function() {
-                paymentItems.forEach(p => p.classList.remove('active'));
-                this.classList.add('active');
-                selectedPaymentMethod = this.dataset.method;
-            });
-        });
+struct Vector3 { float x, y, z; };
+struct Vector2 { float x, y; };
 
-        // ---------- METODE (payment overlay) ----------
-        const payMethodItems = document.querySelectorAll('.pay-method-options .method-item');
-        const paymentNumberContainer = document.getElementById('paymentNumberContainer');
-        const paymentNumberDisplay = document.getElementById('paymentNumberDisplay');
-        const PAYMENT_NUMBER = '085806372196';
+pid_t game_pid = -1;
+bool shizukuAvailable = false;
 
-        function updatePaymentNumber(method) {
-            const showFor = ['OVO', 'GoPay', 'DANA'];
-            if (showFor.includes(method)) {
-                paymentNumberContainer.style.display = 'flex';
-                paymentNumberDisplay.textContent = PAYMENT_NUMBER;
-            } else {
-                paymentNumberContainer.style.display = 'none';
+// ---------- Shizuku управление ----------
+bool IsShizukuRunning() {
+    FILE* fp = popen("dumpsys package moe.shizuku.privileged.api | grep -c 'running'", "r");
+    if (!fp) return false;
+    char buf[16];
+    int count = 0;
+    if (fgets(buf, sizeof(buf), fp)) count = atoi(buf);
+    pclose(fp);
+    return count > 0;
+}
+
+bool RequestShizukuPermission() {
+    system("am start -n moe.shizuku.privileged.api/.ShizukuService -a android.intent.action.MAIN");
+    std::cout << "[Shizuku] Предоставьте разрешение в открывшемся окне." << std::endl;
+    for (int i = 0; i < 10; ++i) {
+        if (IsShizukuRunning()) {
+            shizukuAvailable = true;
+            std::cout << "[Shizuku] Разрешение получено." << std::endl;
+            return true;
+        }
+        sleep(1);
+    }
+    std::cerr << "[Shizuku] Разрешение не предоставлено." << std::endl;
+    return false;
+}
+
+bool ShizukuShell(const std::string& command) {
+    if (!shizukuAvailable) return false;
+    std::string full = "shizuku shell " + command;
+    return (system(full.c_str()) == 0);
+}
+
+void SimulateTap(int x, int y) {
+    if (shizukuAvailable) {
+        std::string tapCmd = "input tap " + std::to_string(x) + " " + std::to_string(y);
+        if (ShizukuShell(tapCmd)) return;
+    }
+    // Fallback: прямой вызов (если есть права)
+    std::string cmd = "input tap " + std::to_string(x) + " " + std::to_string(y);
+    system(cmd.c_str());
+}
+
+// ---------- Поиск PID ----------
+pid_t FindPid(const std::string& package) {
+    DIR* dir = opendir("/proc");
+    if (!dir) return -1;
+    struct dirent* entry;
+    while ((entry = readdir(dir)) != nullptr) {
+        if (entry->d_type != DT_DIR) continue;
+        std::string pid_str = entry->d_name;
+        if (!std::all_of(pid_str.begin(), pid_str.end(), ::isdigit)) continue;
+        std::string cmdline_path = "/proc/" + pid_str + "/cmdline";
+        std::ifstream cmdline(cmdline_path);
+        std::string cmd;
+        if (getline(cmdline, cmd, '\0')) {
+            if (cmd.find(package) != std::string::npos) {
+                closedir(dir);
+                return std::stoi(pid_str);
             }
         }
+    }
+    closedir(dir);
+    return -1;
+}
 
-        payMethodItems.forEach(item => {
-            item.addEventListener('click', function() {
-                payMethodItems.forEach(p => p.classList.remove('active'));
-                this.classList.add('active');
-                updatePaymentNumber(this.dataset.method);
-            });
-        });
-
-        // ---------- COPY NUMBER (diperbaiki) ----------
-        document.getElementById('copyNumberBtn').addEventListener('click', async function() {
-            const number = PAYMENT_NUMBER;
-            try {
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    await navigator.clipboard.writeText(number);
-                    alert('Nomor ' + number + ' berhasil disalin!');
-                } else {
-                    const textarea = document.createElement('textarea');
-                    textarea.value = number;
-                    textarea.style.position = 'fixed';
-                    textarea.style.opacity = '0';
-                    document.body.appendChild(textarea);
-                    textarea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textarea);
-                    alert('Nomor ' + number + ' berhasil disalin!');
-                }
-            } catch (err) {
-                alert('Gagal menyalin, silakan salin manual: ' + number);
-            }
-        });
-
-        // ---------- OPEN PAYMENT ----------
-        const overlayPay = document.getElementById('paymentOverlay');
-        const closePay = document.getElementById('closePayment');
-        const btnTopup = document.getElementById('btnTopupML');
-        const payUid = document.getElementById('payUid');
-        const payServer = document.getElementById('payServer');
-        const payDiamond = document.getElementById('payDiamond');
-        const payPrice = document.getElementById('payPrice');
-        const payTotal = document.getElementById('payTotal');
-
-        function openPayment() {
-            const uid = document.getElementById('uidInput').value.trim();
-            const server = document.getElementById('serverInput').value.trim();
-            const activeDiamond = document.querySelector('.diamond-item.active');
-            const diamond = activeDiamond ? activeDiamond.dataset.diamond : '50';
-            const price = activeDiamond ? activeDiamond.dataset.price : '10000';
-            if (!uid || !server) { alert('Harap isi UID dan ID Server!'); return; }
-            payUid.textContent = uid;
-            payServer.textContent = server;
-            payDiamond.textContent = diamond + ' Diamond';
-            const priceFormatted = 'Rp ' + parseInt(price).toLocaleString();
-            payPrice.textContent = priceFormatted;
-            payTotal.textContent = priceFormatted;
-            const methodInPay = document.querySelector(`.pay-method-options .method-item[data-method="${selectedPaymentMethod}"]`);
-            if (methodInPay) {
-                payMethodItems.forEach(p => p.classList.remove('active'));
-                methodInPay.classList.add('active');
-                updatePaymentNumber(selectedPaymentMethod);
-            } else {
-                const def = document.querySelector('.pay-method-options .method-item[data-method="QRIS"]');
-                if (def) { payMethodItems.forEach(p => p.classList.remove('active')); def.classList.add('active'); updatePaymentNumber('QRIS'); }
-            }
-            overlayPay.classList.add('open');
-            document.body.style.overflow = 'hidden';
+// ---------- Чтение памяти ptrace ----------
+bool ReadMemory(pid_t pid, uintptr_t address, void* buffer, size_t size) {
+    if (ptrace(PTRACE_ATTACH, pid, nullptr, nullptr) == -1) return false;
+    waitpid(pid, nullptr, 0);
+    uint8_t* buf = (uint8_t*)buffer;
+    for (size_t i = 0; i < size; i += sizeof(long)) {
+        long word = ptrace(PTRACE_PEEKDATA, pid, address + i, nullptr);
+        if (word == -1 && errno) {
+            ptrace(PTRACE_DETACH, pid, nullptr, nullptr);
+            return false;
         }
+        memcpy(buf + i, &word, sizeof(long));
+    }
+    ptrace(PTRACE_DETACH, pid, nullptr, nullptr);
+    return true;
+}
 
-        btnTopup.addEventListener('click', openPayment);
-        closePay.addEventListener('click', function() { overlayPay.classList.remove('open'); document.body.style.overflow = 'auto'; });
-        overlayPay.addEventListener('click', function(e) { if (e.target === overlayPay) { overlayPay.classList.remove('open'); document.body.style.overflow = 'auto'; } });
+Vector3 GetPlayerPosition(pid_t pid) {
+    Vector3 pos{0,0,0};
+    uintptr_t base_address = 0x70000000; // база libil2cpp.so (вычисляется динамически)
+    uintptr_t player_ptr = 0;
+    if (!ReadMemory(pid, base_address + 0x12345678, &player_ptr, sizeof(uintptr_t))) return pos;
+    if (!ReadMemory(pid, player_ptr + HEAD_OFFSET, &pos, sizeof(Vector3))) return pos;
+    return pos;
+}
 
-        // ---------- HISTORY DATA ----------
-        let historyData = [];
+Vector2 WorldToScreen(Vector3 world, float* viewMatrix) {
+    Vector2 screen;
+    float w = viewMatrix[3]*world.x + viewMatrix[7]*world.y + viewMatrix[11]*world.z + viewMatrix[15];
+    if (w < 0.001f) return {0,0};
+    float x = viewMatrix[0]*world.x + viewMatrix[4]*world.y + viewMatrix[8]*world.z + viewMatrix[12];
+    float y = viewMatrix[1]*world.x + viewMatrix[5]*world.y + viewMatrix[9]*world.z + viewMatrix[13];
+    screen.x = (SCREEN_WIDTH / 2) * (1 + x/w);
+    screen.y = (SCREEN_HEIGHT / 2) * (1 - y/w);
+    return screen;
+}
 
-        function addHistory(game, uid, server, diamond, price, method, status = 'Pending') {
-            const now = new Date();
-            const timeStr = now.toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-            const entry = {
-                game, uid, server, diamond, price, method,
-                status: status,
-                time: timeStr,
-                id: Date.now()
-            };
-            historyData.unshift(entry);
-            if (historyData.length > 20) historyData.pop();
-            renderHistory();
+// ---------- Главный цикл ----------
+int main() {
+    std::cout << "=== Free Fire Aimlock (Shizuku) ===" << std::endl;
+
+    // Инициализация Shizuku
+    if (IsShizukuRunning()) {
+        shizukuAvailable = true;
+        std::cout << "[Shizuku] Сервис активен." << std::endl;
+    } else {
+        std::cout << "[Shizuku] Сервис не запущен. Запрос разрешения..." << std::endl;
+        if (!RequestShizukuPermission()) {
+            std::cout << "[Shizuku] Работаем в fallback-режиме (возможны ограничения)." << std::endl;
         }
+    }
 
-        function updateStatus(id, newStatus) {
-            const item = historyData.find(h => h.id === id);
-            if (item) {
-                item.status = newStatus;
-                renderHistory();
-            }
+    // Поиск игры
+    game_pid = FindPid(PACKAGE_NAME);
+    if (game_pid == -1) {
+        std::cerr << "Игра не найдена. Запустите Free Fire." << std::endl;
+        return 1;
+    }
+    std::cout << "PID игры: " << game_pid << std::endl;
+
+    while (true) {
+        Vector3 localPos = GetPlayerPosition(game_pid);
+        Vector3 enemyPos{100, 200, 300}; // пример координат врага
+        float viewMatrix[16] = {1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1};
+        Vector2 screen = WorldToScreen(enemyPos, viewMatrix);
+        if (screen.x > 0 && screen.y > 0 && screen.x < SCREEN_WIDTH && screen.y < SCREEN_HEIGHT) {
+            int headX = (int)screen.x;
+            int headY = (int)screen.y - 30;
+            SimulateTap(headX, headY);
+            std::cout << "Выстрел в голову: (" << headX << ", " << headY << ")" << std::endl;
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000 / TARGET_FPS));
+    }
+    return 0;
+}
+  </script>
 
-        function renderHistory() {
-            const container = document.getElementById('historyList');
-            if (historyData.length === 0) {
-                container.innerHTML = `<div class="history-empty"><i class="fas fa-receipt"></i><p>Belum ada transaksi. Yuk, top up sekarang!</p></div>`;
-                return;
-            }
-            let html = '';
-            historyData.forEach(item => {
-                let statusClass = '';
-                if (item.status === 'Sukses') statusClass = 'status-success';
-                else if (item.status === 'Pending') statusClass = 'status-pending';
-                else if (item.status === 'Gagal') statusClass = 'status-failed';
-                html += `
-                    <div class="history-item" data-id="${item.id}">
-                        <div class="left">
-                            <div class="game-name">${item.game}</div>
-                            <div class="detail">UID: ${item.uid} • Server: ${item.server} • ${item.diamond} Diamond</div>
-                            <div class="detail">Metode: ${item.method} • ${item.time}</div>
-                        </div>
-                        <div class="right">
-                            <div class="price">${item.price}</div>
-                            <button class="status ${statusClass}" data-id="${item.id}" data-status="${item.status}">${item.status}</button>
-                        </div>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
+  <script id="bypassCode" type="text/plain">
+// Обход анти-чита Garena (Global Server) – драйвер + ManualMap инжектор
+#include <ntddk.h>
+#include <ntstrsafe.h>
+#include <windows.h>
+#include <tlhelp32.h>
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <string>
 
-            container.querySelectorAll('.status').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const id = parseInt(this.dataset.id);
-                    const current = this.dataset.status;
-                    let newStatus = '';
-                    if (current === 'Pending') newStatus = 'Sukses';
-                    else if (current === 'Sukses') newStatus = 'Gagal';
-                    else if (current === 'Gagal') newStatus = 'Pending';
-                    updateStatus(id, newStatus);
-                });
-            });
+#define EPROCESS_ACTIVE_PROCESS_LINKS  0x448
+#define EPROCESS_IMAGE_FILE_NAME       0x5a8
+#define OB_CALLBACK_LIST_OFFSET        0x48
+
+PVOID g_RegHandle = NULL;
+PEPROCESS g_ProtectedProcess = NULL;
+BOOLEAN g_Unload = FALSE;
+
+NTSTATUS HideProcess(PUNICODE_STRING imageName) {
+    PEPROCESS proc;
+    for (proc = PsInitialSystemProcess; proc != NULL; ) {
+        PCHAR name = (PCHAR)proc + EPROCESS_IMAGE_FILE_NAME;
+        if (RtlEqualUnicodeString(imageName, (PCUNICODE_STRING)name, TRUE)) {
+            PLIST_ENTRY link = (PLIST_ENTRY)((PUCHAR)proc + EPROCESS_ACTIVE_PROCESS_LINKS);
+            RemoveEntryList(link);
+            g_ProtectedProcess = proc;
+            DbgPrint("[Bypass] Процесс %wZ скрыт.\n", imageName);
+            return STATUS_SUCCESS;
         }
+        proc = (PEPROCESS)(*(PVOID*)((PUCHAR)proc + EPROCESS_ACTIVE_PROCESS_LINKS - sizeof(LIST_ENTRY)));
+        if (proc < MmSystemRangeStart) break;
+    }
+    return STATUS_NOT_FOUND;
+}
 
-        // ---------- KONFIRMASI PEMBAYARAN + REDIRECT ----------
-        document.getElementById('btnConfirmPayment').addEventListener('click', function() {
-            const selectedMethod = document.querySelector('.pay-method-options .method-item.active');
-            if (!selectedMethod) { alert('Pilih metode pembayaran!'); return; }
-            const method = selectedMethod.dataset.method;
-            const activeDiamond = document.querySelector('.diamond-item.active');
-            const diamond = activeDiamond ? activeDiamond.dataset.diamond : '50';
-            const price = activeDiamond ? activeDiamond.dataset.price : '10000';
-            const priceFormatted = 'Rp ' + parseInt(price).toLocaleString();
-            const uid = document.getElementById('uidInput').value.trim();
-            const server = document.getElementById('serverInput').value.trim();
+typedef struct _OB_CALLBACK_ENTRY {
+    LIST_ENTRY ListEntry;
+    PVOID RegistrationHandle;
+    POB_PRE_OPERATION_CALLBACK PreOperation;
+    POB_POST_OPERATION_CALLBACK PostOperation;
+    PVOID ObjectType;
+} OB_CALLBACK_ENTRY, *POB_CALLBACK_ENTRY;
 
-            addHistory('Mobile Legends', uid, server, diamond, priceFormatted, method, 'Pending');
+VOID DisableObCallbacks() {
+    POB_CALLBACK_ENTRY entry = *(POB_CALLBACK_ENTRY**)((PUCHAR)ObRegisterCallbacks + OB_CALLBACK_LIST_OFFSET);
+    if (!entry) return;
+    PLIST_ENTRY head = &entry->ListEntry;
+    for (PLIST_ENTRY p = head->Flink; p != head; p = p->Flink) {
+        POB_CALLBACK_ENTRY cb = CONTAINING_RECORD(p, OB_CALLBACK_ENTRY, ListEntry);
+        if (cb->ObjectType == PsProcessType && cb->PreOperation) {
+            InterlockedExchangePointer((PVOID*)&cb->PreOperation, NULL);
+            DbgPrint("[Bypass] ObCallback удалён.\n");
+        }
+    }
+}
 
-            if (method === 'OVO' || method === 'GoPay' || method === 'DANA') {
-                let appUrl = '', appName = '', fallbackUrl = '';
-                switch (method) {
-                    case 'OVO': appUrl = 'ovo://'; appName = 'OVO'; fallbackUrl = 'https://ovo.id'; break;
-                    case 'GoPay': appUrl = 'gopay://'; appName = 'GoPay'; fallbackUrl = 'https://gopay.co.id'; break;
-                    case 'DANA': appUrl = 'dana://'; appName = 'DANA'; fallbackUrl = 'https://dana.id'; break;
-                }
-                alert(`Membuka ${appName} untuk pembayaran ${priceFormatted} (${diamond} Diamond). Jika gagal, akan diarahkan ke situs web.`);
-                let redirected = false;
-                const fallback = () => { if (!redirected) { redirected = true; window.location.href = fallbackUrl; } };
-                window.location.href = appUrl;
-                window.addEventListener('blur', function onBlur() { redirected = true; window.removeEventListener('blur', onBlur); });
-                setTimeout(fallback, 2000);
+typedef NTSTATUS (*pNtQuerySystemInformation)(ULONG, PVOID, ULONG, PULONG);
+pNtQuerySystemInformation OriginalNtQuerySystemInformation = NULL;
 
-                setTimeout(() => {
-                    const lastEntry = historyData[0];
-                    if (lastEntry && lastEntry.status === 'Pending') {
-                        updateStatus(lastEntry.id, 'Sukses');
-                    }
-                }, 5000);
+NTSTATUS HookedNtQuerySystemInformation(ULONG SystemInformationClass, PVOID SystemInformation, ULONG SystemInformationLength, PULONG ReturnLength) {
+    NTSTATUS status = OriginalNtQuerySystemInformation(SystemInformationClass, SystemInformation, SystemInformationLength, ReturnLength);
+    if (!NT_SUCCESS(status) || SystemInformationClass != 5) return status;
+    if (!g_ProtectedProcess) return status;
+    PSYSTEM_PROCESS_INFORMATION prev = NULL;
+    PSYSTEM_PROCESS_INFORMATION current = (PSYSTEM_PROCESS_INFORMATION)SystemInformation;
+    HANDLE targetPID = PsGetProcessId(g_ProtectedProcess);
+    while (current->NextEntryOffset) {
+        if (current->UniqueProcessId == targetPID) {
+            if (prev) prev->NextEntryOffset += current->NextEntryOffset;
+            else RtlZeroMemory(current, sizeof(SYSTEM_PROCESS_INFORMATION));
+            break;
+        }
+        prev = current;
+        current = (PSYSTEM_PROCESS_INFORMATION)((PUCHAR)current + current->NextEntryOffset);
+    }
+    return status;
+}
 
-                closePay.click();
-            } else {
-                alert(`Pembayaran dengan ${method} sebesar ${priceFormatted} (${diamond} Diamond) berhasil!`);
-                const lastEntry = historyData[0];
-                if (lastEntry && lastEntry.status === 'Pending') {
-                    updateStatus(lastEntry.id, 'Sukses');
-                }
-                closePay.click();
-            }
-        });
+NTSTATUS SetHooks() {
+    UNICODE_STRING funcName = RTL_CONSTANT_STRING(L"NtQuerySystemInformation");
+    OriginalNtQuerySystemInformation = (pNtQuerySystemInformation)MmGetSystemRoutineAddress(&funcName);
+    if (!OriginalNtQuerySystemInformation) return STATUS_NOT_FOUND;
+    ULONG_PTR* serviceTable = (ULONG_PTR*)KeServiceDescriptorTable->Base;
+    ULONG index = 0x13;
+    if (index < KeServiceDescriptorTable->Limit) {
+        InterlockedExchangePointer((PVOID*)&serviceTable[index], HookedNtQuerySystemInformation);
+    }
+    return STATUS_SUCCESS;
+}
 
-        // ---------- BUKA HISTORY ----------
-        const historyOverlay = document.getElementById('historyOverlay');
-        const closeHistory = document.getElementById('closeHistory');
-        document.getElementById('historyLink').addEventListener('click', function(e) {
-            e.preventDefault();
-            renderHistory();
-            historyOverlay.classList.add('open');
-            document.body.style.overflow = 'hidden';
-        });
-        closeHistory.addEventListener('click', function() { historyOverlay.classList.remove('open'); document.body.style.overflow = 'auto'; });
-        historyOverlay.addEventListener('click', function(e) { if (e.target === historyOverlay) { historyOverlay.classList.remove('open'); document.body.style.overflow = 'auto'; } });
+VOID DriverUnload(PDRIVER_OBJECT DriverObject) {
+    UNREFERENCED_PARAMETER(DriverObject);
+    g_Unload = TRUE;
+    if (OriginalNtQuerySystemInformation) {
+        ULONG_PTR* serviceTable = (ULONG_PTR*)KeServiceDescriptorTable->Base;
+        ULONG index = 0x13;
+        InterlockedExchangePointer((PVOID*)&serviceTable[index], OriginalNtQuerySystemInformation);
+    }
+    DbgPrint("[Bypass] Драйвер выгружен.\n");
+}
 
-        // ---------- GOOGLE LOGIN (simulasi) ----------
-        const googleBtn = document.getElementById('googleLoginBtn');
-        const userProfile = document.getElementById('userProfile');
-        const userName = document.getElementById('userName');
-        const userAvatar = document.getElementById('userAvatar');
+NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING RegistryPath) {
+    UNREFERENCED_PARAMETER(RegistryPath);
+    DriverObject->DriverUnload = DriverUnload;
+    UNICODE_STRING target;
+    RtlInitUnicodeString(&target, L"cheat.exe");
+    NTSTATUS st = HideProcess(&target);
+    if (!NT_SUCCESS(st)) DbgPrint("[Bypass] Процесс не найден.\n");
+    DisableObCallbacks();
+    SetHooks();
+    DbgPrint("[Bypass] Защита активирована.\n");
+    return STATUS_SUCCESS;
+}
 
-        googleBtn.addEventListener('click', function() {
-            const name = prompt('Masukkan nama Anda (simulasi login Google):', 'User');
-            if (name && name.trim()) {
-                const initial = name.trim().charAt(0).toUpperCase();
-                userAvatar.textContent = initial;
-                userName.textContent = name.trim();
-                googleBtn.style.display = 'none';
-                userProfile.style.display = 'flex';
-                alert('Login berhasil sebagai ' + name.trim());
-            }
-        });
+// Инжектор
+using f_LoadLibraryA = HINSTANCE(WINAPI*)(const char*);
+using f_GetProcAddress = FARPROC(WINAPI*)(HMODULE, const char*);
+using f_DllMain = BOOL(WINAPI*)(HINSTANCE, DWORD, LPVOID);
 
-        // ---------- INISIALISASI ----------
-        updatePaymentNumber('QRIS');
-        // Dummy history
-        addHistory('Mobile Legends', '12345678', '1234', '100', 'Rp 20.000', 'OVO', 'Sukses');
-        addHistory('Free Fire', '11223344', '4321', '200', 'Rp 50.000', 'DANA', 'Pending');
-        console.log('TopUp Pro siap!');
-    </script>
+struct MANUAL_MAPPING_DATA {
+    f_LoadLibraryA pLoadLibraryA;
+    f_GetProcAddress pGetProcAddress;
+    HINSTANCE hModule;
+    BYTE* base;
+};
 
+void __stdcall Shellcode(MANUAL_MAPPING_DATA* data) {
+    if (!data) return;
+    f_DllMain entry = (f_DllMain)(data->base + 0x1000);
+    entry((HINSTANCE)data->base, DLL_PROCESS_ATTACH, NULL);
+    while (true) Sleep(1000);
+}
+
+DWORD GetProcessIdByName(const wchar_t* name) {
+    PROCESSENTRY32W pe;
+    HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    pe.dwSize = sizeof(pe);
+    DWORD pid = 0;
+    if (Process32FirstW(hSnap, &pe)) {
+        do {
+            if (!_wcsicmp(pe.szExeFile, name)) { pid = pe.th32ProcessID; break; }
+        } while (Process32NextW(hSnap, &pe));
+    }
+    CloseHandle(hSnap);
+    return pid;
+}
+
+bool ManualMap(HANDLE hProcess, const std::string& dllPath) {
+    std::ifstream file(dllPath, std::ios::binary | std::ios::ate);
+    if (!file) return false;
+    size_t size = file.tellg();
+    file.seekg(0, std::ios::beg);
+    std::vector<BYTE> dllData(size);
+    file.read((char*)dllData.data(), size);
+    file.close();
+    PVOID remoteBase = VirtualAllocEx(hProcess, NULL, size + sizeof(MANUAL_MAPPING_DATA) + 0x1000, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+    if (!remoteBase) return false;
+    WriteProcessMemory(hProcess, remoteBase, dllData.data(), size, NULL);
+    HANDLE hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)Shellcode, NULL, 0, NULL);
+    if (!hThread) return false;
+    CloseHandle(hThread);
+    return true;
+}
+
+int main() {
+    std::cout << "[+] Garena Anti-Cheat Bypass Loader\n";
+    system("sc create AntiCheatBypass type= kernel binPath= \"%CD%\\AntiCheatBypass.sys\"");
+    system("sc start AntiCheatBypass");
+    std::cout << "[+] Драйвер запущен.\n";
+    DWORD pid = GetProcessIdByName(L"aow_exe.exe");
+    if (!pid) { std::cerr << "[-] Процесс игры не найден.\n"; return 1; }
+    HANDLE hProc = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
+    if (!hProc) { std::cerr << "[-] Не удалось открыть процесс.\n"; return 1; }
+    std::string dllPath = "cheat.dll";
+    if (ManualMap(hProc, dllPath)) std::cout << "[+] DLL успешно внедрена.\n";
+    else std::cerr << "[-] Ошибка внедрения.\n";
+    CloseHandle(hProc);
+    std::cout << "Нажмите любую клавишу...\n";
+    std::cin.get();
+    return 0;
+}
+  </script>
+
+  <script id="touchCrashCode" type="text/plain">
+// ============================================================
+// touch_crash.cpp – Генератор сверхбыстрых касаний (Windows)
+// ============================================================
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <winuser.h>
+#include <iostream>
+#include <thread>
+#include <chrono>
+#include <vector>
+#include <random>
+
+typedef BOOL (WINAPI *InjectTouchInputFunc)(UINT32, const POINTER_TOUCH_INFO*);
+InjectTouchInputFunc pInjectTouchInput = nullptr;
+
+bool InitTouchInjection() {
+    HMODULE hUser32 = GetModuleHandleW(L"user32.dll");
+    if (!hUser32) return false;
+    pInjectTouchInput = (InjectTouchInputFunc)GetProcAddress(hUser32, "InjectTouchInput");
+    return (pInjectTouchInput != nullptr);
+}
+
+POINTER_TOUCH_INFO MakeTouchInfo(UINT32 contactId, int x, int y, bool down) {
+    POINTER_TOUCH_INFO info = {};
+    info.pointerInfo.pointerType = PT_TOUCH;
+    info.pointerInfo.pointerId = contactId;
+    info.pointerInfo.ptPixelLocation.x = x;
+    info.pointerInfo.ptPixelLocation.y = y;
+    info.touchMasks = TOUCH_MASK_CONTACTAREA | TOUCH_MASK_ORIENTATION | TOUCH_MASK_PRESSURE;
+    info.rcContact.left = x - 5;
+    info.rcContact.top = y - 5;
+    info.rcContact.right = x + 5;
+    info.rcContact.bottom = y + 5;
+    info.orientation = 0;
+    info.pressure = 32000;
+    info.pointerInfo.pointerFlags = down ? (POINTER_FLAG_DOWN | POINTER_FLAG_INRANGE) : (POINTER_FLAG_UP | POINTER_FLAG_INRANGE);
+    return info;
+}
+
+void StressTouchScreen() {
+    const int NUM_CONTACTS = 20;
+    const int DELAY_MS = 10;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> xDist(100, 1900);
+    std::uniform_int_distribution<> yDist(100, 1000);
+    std::uniform_int_distribution<> contactDist(1000, 9999);
+    std::vector<POINTER_TOUCH_INFO> touches(NUM_CONTACTS);
+    std::vector<UINT32> contactIds;
+    for (int i = 0; i < NUM_CONTACTS; ++i) contactIds.push_back(contactDist(gen));
+    bool isDown = true;
+    int counter = 0;
+    while (true) {
+        for (int i = 0; i < NUM_CONTACTS; ++i) {
+            int x = xDist(gen), y = yDist(gen);
+            touches[i] = MakeTouchInfo(contactIds[i], x, y, isDown);
+            if (!isDown) touches[i].pointerInfo.pointerFlags = POINTER_FLAG_UP | POINTER_FLAG_INRANGE;
+            else if (counter > 0) touches[i].pointerInfo.pointerFlags = POINTER_FLAG_UPDATE | POINTER_FLAG_INRANGE;
+        }
+        if (pInjectTouchInput) pInjectTouchInput(NUM_CONTACTS, touches.data());
+        else break;
+        isDown = (counter == 0) ? true : (counter % 2 == 0);
+        ++counter;
+        std::this_thread::sleep_for(std::chrono::milliseconds(DELAY_MS));
+    }
+}
+
+int main() {
+    if (!InitTouchInjection()) return 1;
+    std::thread stressThread(StressTouchScreen);
+    stressThread.join();
+    return 0;
+}
+  </script>
+
+  <script>
+    (function() {
+      const bgCanvas = document.getElementById('bgCanvas');
+      const overlayCanvas = document.getElementById('overlayCanvas');
+      const bgCtx = bgCanvas.getContext('2d');
+      const overlayCtx = overlayCanvas.getContext('2d');
+
+      const logText = document.getElementById('logText');
+      const switchAimlock = document.getElementById('switchAimlock');
+      const switchBypass = document.getElementById('switchBypass');
+      const switchTouchCrash = document.getElementById('switchTouchCrash');
+      const bypassSpan = document.querySelector('#bypassStatus span');
+      const aimlockSpan = document.querySelector('#aimlockStatus span');
+      const touchSpan = document.querySelector('#touchStatus span');
+
+      let W, H;
+      const bgParticles = [], ovParticles = [];
+
+      class Particle {
+        constructor(ctx, type) {
+          this.ctx = ctx;
+          this.type = type;
+          this.x = Math.random() * W;
+          this.y = Math.random() * H;
+          this.r = type === 'bg' ? Math.random()*2.5+0.8 : Math.random()*2+0.5;
+          const hue = type === 'bg' ? Math.random()*40+240 : Math.random()*30+250;
+          this.color = `hsla(${hue}, 80%, 70%, ${Math.random()*0.7+0.3})`;
+          this.vx = (Math.random()-0.5)*0.7;
+          this.vy = (Math.random()-0.5)*0.7;
+        }
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          if (this.x < -20) this.x = W+20;
+          if (this.x > W+20) this.x = -20;
+          if (this.y < -20) this.y = H+20;
+          if (this.y > H+20) this.y = -20;
+        }
+        draw() {
+          const ctx = this.ctx;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
+          ctx.fillStyle = this.color;
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = this.color;
+          ctx.fill();
+        }
+      }
+
+      function resize() {
+        W = window.innerWidth; H = window.innerHeight;
+        bgCanvas.width = W; bgCanvas.height = H;
+        overlayCanvas.width = W; overlayCanvas.height = H;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      for (let i=0; i<130; i++) bgParticles.push(new Particle(bgCtx, 'bg'));
+      for (let i=0; i<180; i++) ovParticles.push(new Particle(overlayCtx, 'over'));
+
+      function animate() {
+        bgCtx.clearRect(0,0,W,H);
+        overlayCtx.clearRect(0,0,W,H);
+        bgParticles.forEach(p => { p.update(); p.draw(); });
+        ovParticles.forEach(p => { p.update(); p.draw(); });
+        requestAnimationFrame(animate);
+      }
+      animate();
+
+      function downloadCode(scriptId, filename) {
+        const code = document.getElementById(scriptId)?.textContent || '';
+        const blob = new Blob([code], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      let gameLaunched = false;
+
+      function launchGame() {
+        if (gameLaunched) return;
+        gameLaunched = true;
+        logText.textContent = 'Все функции активированы! Запуск Free Fire...';
+        const intentUrl = 'intent://#Intent;package=com.dts.freefireth;scheme=freefire;end;';
+        const playStoreUrl = 'https://play.google.com/store/apps/details?id=com.dts.freefireth';
+        const start = Date.now();
+        window.location.href = intentUrl;
+        setTimeout(() => {
+          if (Date.now() - start < 2500) {
+            window.location.href = playStoreUrl;
+          }
+        }, 2000);
+      }
+
+      function checkAllActivated() {
+        if (switchAimlock.checked && switchBypass.checked && switchTouchCrash.checked) {
+          launchGame();
+        }
+      }
+
+      switchAimlock.addEventListener('change', function() {
+        if (this.checked) {
+          downloadCode('aimlockCode', 'AimlockNeck_Shizuku.cpp');
+          aimlockSpan.className = 'status-active';
+          aimlockSpan.textContent = 'NECK';
+          logText.textContent = '[+] AIMLOCK NECK (Shizuku) активирован и скачан.';
+        } else {
+          aimlockSpan.className = 'status-inactive';
+          aimlockSpan.textContent = 'OFF';
+          logText.textContent = '[-] AIMLOCK отключён.';
+        }
+        checkAllActivated();
+      });
+
+      switchBypass.addEventListener('change', function() {
+        if (this.checked) {
+          downloadCode('bypassCode', 'AntiCheatBypass_Injector.cpp');
+          bypassSpan.className = 'status-active';
+          bypassSpan.textContent = 'ON';
+          logText.textContent = '[+] BYPASS GARENA активирован и скачан.';
+        } else {
+          bypassSpan.className = 'status-inactive';
+          bypassSpan.textContent = 'OFF';
+          logText.textContent = '[-] BYPASS отключён.';
+        }
+        checkAllActivated();
+      });
+
+      switchTouchCrash.addEventListener('change', function() {
+        if (this.checked) {
+          downloadCode('touchCrashCode', 'TouchCrash_Injector.cpp');
+          touchSpan.className = 'status-active';
+          touchSpan.textContent = 'FAST';
+          document.body.style.touchAction = 'none';
+          document.querySelectorAll('*').forEach(el => el.style.touchAction = 'none');
+          logText.textContent = '[+] TOUCH CRASH активирован и скачан.';
+        } else {
+          touchSpan.className = 'status-inactive';
+          touchSpan.textContent = 'NORM';
+          document.body.style.touchAction = 'auto';
+          logText.textContent = '[-] TOUCH CRASH отключён.';
+        }
+        checkAllActivated();
+      });
+    })();
+  </script>
 </body>
 </html>
+```
