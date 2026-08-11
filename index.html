@@ -1,768 +1,410 @@
-mod made by Tâm dev
-╔════════════════╗
-║   palofsc      ║
-╚════════════════╝
-
-```html
-<!-- ============================================================ -->
-<!-- Free Fire Cheat Hub – AIMLOCK NECK + BYPASS + TOUCH CRASH      -->
-<!-- Полный комплект с поддержкой Shizuku для не-рутованных        -->
-<!-- устройств. При включении всех трёх переключателей игра        -->
-<!-- запускается автоматически (intent).                           -->
-<!-- ============================================================ -->
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="id" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>FF CHEAT HUB</title>
-  <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      font-family: 'Courier New', monospace;
-      background: #0a0014;
-      height: 100vh; width: 100vw;
-      overflow: hidden;
-      touch-action: manipulation;
-    }
-    #bgCanvas, #overlayCanvas {
-      position: fixed; top:0; left:0; display:block;
-    }
-    #bgCanvas { z-index:0; }
-    #overlayCanvas { z-index:1; pointer-events:none; }
-    .ui-container {
-      position: fixed; z-index:10;
-      top:50%; left:50%; transform:translate(-50%, -50%);
-      width:92%; max-width:440px;
-      background: rgba(5,0,15,0.8);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1.5px solid #a855f7;
-      border-radius: 28px;
-      box-shadow: 0 0 50px rgba(147,51,234,0.7), inset 0 0 20px rgba(139,92,246,0.4);
-      padding: 28px 20px;
-      text-align: center;
-      color: #e9d5ff;
-    }
-    .title {
-      font-size: 1.8em; font-weight:900; letter-spacing:2px;
-      text-shadow: 0 0 18px #c084fc, 0 0 8px #7e22ce;
-      margin-bottom:8px;
-    }
-    .subtitle {
-      font-size:0.8em; color:#c4b5fd; margin-bottom:20px;
-    }
-    .status-row {
-      display: flex; justify-content:space-between; margin-bottom:12px;
-      font-size:0.7em; letter-spacing:1px; flex-wrap: wrap;
-    }
-    .status-item {
-      background: rgba(168,85,247,0.15); padding:4px 10px;
-      border-radius:14px; border:1px solid #7e22ce55;
-      white-space:nowrap; flex:1; margin:2px; text-align: center;
-    }
-    .status-active { color: #a3e635; text-shadow:0 0 10px #a3e635; }
-    .status-inactive { color: #6b7280; }
-    .log-text {
-      font-size:0.8em; min-height:2.4em; margin:15px 0 10px; color:#d1d5db;
-    }
-
-    /* Переключатели */
-    .switch-group {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(168,85,247,0.1);
-      border: 1px solid #7e22ce55;
-      border-radius: 14px;
-      padding: 12px 16px;
-      margin: 10px 0;
-    }
-    .switch-label {
-      font-size: 0.9em;
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 52px;
-      height: 28px;
-    }
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #4b5563;
-      transition: .3s;
-      border-radius: 28px;
-    }
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 22px;
-      width: 22px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: .3s;
-      border-radius: 50%;
-    }
-    .switch input:checked + .slider {
-      background-color: #a855f7;
-      box-shadow: 0 0 10px #a855f7;
-    }
-    .switch input:checked + .slider:before {
-      transform: translateX(24px);
-    }
-    .switch input:disabled + .slider {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    .aimlock-slider input:checked + .slider { background-color: #10b981; box-shadow: 0 0 10px #10b981; }
-    .bypass-slider input:checked + .slider { background-color: #ef4444; box-shadow: 0 0 10px #ef4444; }
-    .touch-slider input:checked + .slider { background-color: #ec4899; box-shadow: 0 0 10px #ec4899; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biologi Sel: Mitosis, Meiosis & Sintesis Protein</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+brand: {
+50: '#f0f9ff',
+100: '#e0f2fe',
+500: '#0284c7',
+600: '#0369a1',
+700: '#075985',
+800: '#0c4a6e',
+}
+}
+}
+}
+}
+</script>
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+.stage-card.active {
+border-color: #0284c7;
+background-color: #f0f9ff;
+box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+</style>
 </head>
-<body>
-  <canvas id="bgCanvas"></canvas>
-  <canvas id="overlayCanvas"></canvas>
-
-  <div class="ui-container">
-    <div class="title">FREE FIRE</div>
-    <div class="subtitle">AIMLOCK NECK · BYPASS GARENA · TOUCH CRASH</div>
-
-    <div class="status-row">
-      <span class="status-item" id="bypassStatus">BYPASS: <span class="status-inactive">OFF</span></span>
-      <span class="status-item" id="aimlockStatus">AIMLOCK: <span class="status-inactive">OFF</span></span>
-      <span class="status-item" id="touchStatus">TOUCH: <span class="status-inactive">NORM</span></span>
-    </div>
-
-    <div id="logText" class="log-text">[ Переключайте функции, чтобы активировать читы ]</div>
-
-    <!-- Переключатели (switch) -->
-    <div class="switch-group">
-      <span class="switch-label">🎯 AIMLOCK NECK</span>
-      <label class="switch aimlock-slider">
-        <input type="checkbox" id="switchAimlock">
-        <span class="slider"></span>
-      </label>
-    </div>
-    <div class="switch-group">
-      <span class="switch-label">🛡️ BYPASS GARENA</span>
-      <label class="switch bypass-slider">
-        <input type="checkbox" id="switchBypass">
-        <span class="slider"></span>
-      </label>
-    </div>
-    <div class="switch-group">
-      <span class="switch-label">⚡ TOUCH CRASH</span>
-      <label class="switch touch-slider">
-        <input type="checkbox" id="switchTouchCrash">
-        <span class="slider"></span>
-      </label>
-    </div>
-  </div>
-
-  <!-- Исходные коды C++ -->
-  <script id="aimlockCode" type="text/plain">
-// ============================================================
-// aimlock_ff_shizuku.cpp – AIMLOCK NECK с поддержкой Shizuku
-// Для не-рутованных устройств. Требуется Shizuku.
-// На основе aimlock_ff.cpp v3.0. Чтение памяти через ptrace,
-// ввод через Shizuku shell (input tap).
-// ============================================================
-
-#include <iostream>
-#include <string>
-#include <vector>
-#include <cmath>
-#include <unistd.h>
-#include <sys/ptrace.h>
-#include <sys/wait.h>
-#include <sys/user.h>
-#include <fcntl.h>
-#include <linux/input.h>
-#include <sys/stat.h>
-#include <dirent.h>
-#include <fstream>
-#include <sstream>
-#include <cstring>
-#include <chrono>
-#include <thread>
-#include <cstdlib>
-
-#define PACKAGE_NAME "com.dts.freefireth"
-#define TARGET_FPS 60
-#define HEAD_OFFSET 0x1234ABCD             // актуальное смещение уточнить
-#define VIEW_MATRIX_OFFSET 0x5678EF90      // актуальное смещение уточнить
-#define SCREEN_WIDTH 1080
-#define SCREEN_HEIGHT 2400
-
-struct Vector3 { float x, y, z; };
-struct Vector2 { float x, y; };
-
-pid_t game_pid = -1;
-bool shizukuAvailable = false;
-
-// ---------- Shizuku управление ----------
-bool IsShizukuRunning() {
-    FILE* fp = popen("dumpsys package moe.shizuku.privileged.api | grep -c 'running'", "r");
-    if (!fp) return false;
-    char buf[16];
-    int count = 0;
-    if (fgets(buf, sizeof(buf), fp)) count = atoi(buf);
-    pclose(fp);
-    return count > 0;
+<body class="bg-slate-50 text-slate-800 font-sans antialiased pb-12">
+<!-- Header Navigasi -->
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-brand-500 text-white rounded-lg">
+<i data-lucide="dna" class="w-6 h-6"></i>
+</div>
+<div>
+<h1 class="font-bold text-slate-900 text-lg sm:text-xl leading-tight">Modul Biologi Sel</h1>
+<p class="text-xs text-slate-500">Mitosis, Meiosis, dan Sintesis Protein</p>
+</div>
+</div>
+<nav class="hidden md:flex items-center gap-1 text-sm font-medium text-slate-600">
+<a href="#mitosis" class="px-3 py-2 rounded-md hover:text-brand-600 hover:bg-slate-100 transition">Mitosis</a>
+<a href="#meiosis" class="px-3 py-2 rounded-md hover:text-brand-600 hover:bg-slate-100 transition">Meiosis</a>
+<a href="#perbedaan" class="px-3 py-2 rounded-md hover:text-brand-600 hover:bg-slate-100 transition">Tabel Perbedaan</a>
+<a href="#sintesis-protein" class="px-3 py-2 rounded-md hover:text-brand-600 hover:bg-slate-100 transition">Sintesis Protein</a>
+</nav>
+</div>
+</header>
+<!-- Konten Utama -->
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 space-y-12">
+<!-- 1. MITOSIS -->
+<section id="mitosis" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+<div class="border-b border-slate-200 pb-5 mb-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700 mb-2">
+<i data-lucide="git-commit" class="w-3.5 h-3.5"></i> Pembelahan Sel Somatik
+</span>
+<h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">1. Pembelahan Mitosis</h2>
+<p class="text-slate-600 mt-2">
+Pembelahan sel yang menghasilkan dua sel anak yang secara genetis <strong>identik</strong> dengan sel induknya dan memiliki jumlah kromosom yang sama (diploid / 2n).
+</p>
+</div>
+<!-- Parameter Mitosis -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+<div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+<div class="text-xs text-slate-500 uppercase font-semibold">Tempat Terjadi</div>
+<div class="text-base font-bold text-slate-800 mt-1">Sel Somatis (Sel Tubuh)</div>
+<p class="text-xs text-slate-500 mt-1">Contoh: sel kulit, sel organ tubuh, ujung akar/batang.</p>
+</div>
+<div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+<div class="text-xs text-slate-500 uppercase font-semibold">Tujuan Utama</div>
+<div class="text-base font-bold text-slate-800 mt-1">Pertumbuhan & Regenerasi</div>
+<p class="text-xs text-slate-500 mt-1">Mengganti sel rusak dan perbaikan jaringan tubuh.</p>
+</div>
+<div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+<div class="text-xs text-slate-500 uppercase font-semibold">Hasil Pembelahan</div>
+<div class="text-base font-bold text-slate-800 mt-1">2 Sel Anak Identik</div>
+<p class="text-xs text-slate-500 mt-1">Sifat genetik persis sama dengan induk (2n → 2n).</p>
+</div>
+<div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+<div class="text-xs text-slate-500 uppercase font-semibold">Jumlah Pembelahan</div>
+<div class="text-base font-bold text-slate-800 mt-1">1 Kali Pembelahan</div>
+<p class="text-xs text-slate-500 mt-1">Satu kali siklus Profase-Metafase-Anafase-Telofase.</p>
+</div>
+</div>
+<!-- Tahapan Mitosis -->
+<h3 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+<i data-lucide="layers" class="w-5 h-5 text-brand-500"></i> Tahapan Mitosis & Gambar Ilustrasi
+</h3>
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6" id="mitosis-stage-selector">
+<button onclick="setMitosisStage(0)" class="stage-btn stage-card active p-3 rounded-xl border-2 text-center transition cursor-pointer" data-index="0">
+<div class="text-xs font-bold text-brand-600">Fase 1</div>
+<div class="text-sm font-semibold text-slate-800">Interfase</div>
+</button>
+<button onclick="setMitosisStage(1)" class="stage-btn stage-card p-3 rounded-xl border-2 text-center transition cursor-pointer border-slate-200" data-index="1">
+<div class="text-xs font-bold text-brand-600">Fase 2</div>
+<div class="text-sm font-semibold text-slate-800">Profase</div>
+</button>
+<button onclick="setMitosisStage(2)" class="stage-btn stage-card p-3 rounded-xl border-2 text-center transition cursor-pointer border-slate-200" data-index="2">
+<div class="text-xs font-bold text-brand-600">Fase 3</div>
+<div class="text-sm font-semibold text-slate-800">Metafase</div>
+</button>
+<button onclick="setMitosisStage(3)" class="stage-btn stage-card p-3 rounded-xl border-2 text-center transition cursor-pointer border-slate-200" data-index="3">
+<div class="text-xs font-bold text-brand-600">Fase 4</div>
+<div class="text-sm font-semibold text-slate-800">Anafase</div>
+</button>
+<button onclick="setMitosisStage(4)" class="stage-btn stage-card p-3 rounded-xl border-2 text-center transition cursor-pointer border-slate-200" data-index="4">
+<div class="text-xs font-bold text-brand-600">Fase 5</div>
+<div class="text-sm font-semibold text-slate-800">Telofase</div>
+</button>
+<button onclick="setMitosisStage(5)" class="stage-btn stage-card p-3 rounded-xl border-2 text-center transition cursor-pointer border-slate-200" data-index="5">
+<div class="text-xs font-bold text-brand-600">Fase Akhir</div>
+<div class="text-sm font-semibold text-slate-800">Sitokinesis</div>
+</button>
+</div>
+<div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+<div class="md:col-span-5 flex justify-center items-center bg-white p-6 rounded-xl border border-slate-200 min-h-[260px]" id="mitosis-svg-container">
+</div>
+<div class="md:col-span-7 space-y-4">
+<div class="flex items-center justify-between">
+<span id="mitosis-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800">
+Persiapan Siklus
+</span>
+<div class="flex gap-2">
+<button onclick="prevMitosisStage()" class="p-1.5 rounded-lg border border-slate-300 hover:bg-slate-100 text-slate-600">
+<i data-lucide="arrow-left" class="w-4 h-4"></i>
+</button>
+<button onclick="nextMitosisStage()" class="p-1.5 rounded-lg border border-slate-300 hover:bg-slate-100 text-slate-600">
+<i data-lucide="arrow-right" class="w-4 h-4"></i>
+</button>
+</div>
+</div>
+<h4 id="mitosis-stage-title" class="text-xl font-bold text-slate-900">Interfase</h4>
+<p id="mitosis-stage-desc" class="text-slate-600 text-sm sm:text-base leading-relaxed">
+Fase persiapan di mana sel tumbuh dan melakukan replikasi DNA.
+</p>
+<div class="border-t border-slate-200 pt-3">
+<span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Ciri-Ciri Utama:</span>
+<ul id="mitosis-stage-points" class="list-disc list-inside text-sm text-slate-700 mt-2 space-y-1">
+</ul>
+</div>
+</div>
+</div>
+</section>
+<!-- 2. MEIOSIS -->
+<section id="meiosis" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+<div class="border-b border-slate-200 pb-5 mb-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-700 mb-2">
+<i data-lucide="git-fork" class="w-3.5 h-3.5"></i> Pembelahan Reduksi Gamet
+</span>
+<h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">2. Pembelahan Meiosis</h2>
+<p class="text-slate-600 mt-2">
+Pembelahan sel yang menghasilkan <strong>empat sel anak haploid (n)</strong>, masing-masing dengan setengah jumlah kromosom dari sel induk (2n).
+</p>
+</div>
+<!-- Parameter Meiosis -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+<div class="p-4 bg-purple-50 rounded-xl border border-purple-100">
+<div class="text-xs text-purple-600 uppercase font-semibold">Tempat Terjadi</div>
+<div class="text-base font-bold text-slate-800 mt-1">Organ Reproduksi (Gonad)</div>
+<p class="text-xs text-slate-500 mt-1">Testis/Ovarium (Hewan), Anthera/Bakal Biji (Tumbuhan).</p>
+</div>
+<div class="p-4 bg-purple-50 rounded-xl border border-purple-100">
+<div class="text-xs text-purple-600 uppercase font-semibold">Tujuan Utama</div>
+<div class="text-base font-bold text-slate-800 mt-1">Pembentukan Gamet</div>
+<p class="text-xs text-slate-500 mt-1">Menjaga stabilitas jumlah kromosom & keanekaragaman genetik.</p>
+</div>
+<div class="p-4 bg-purple-50 rounded-xl border border-purple-100">
+<div class="text-xs text-purple-600 uppercase font-semibold">Hasil Pembelahan</div>
+<div class="text-base font-bold text-slate-800 mt-1">4 Sel Anak Haploid (n)</div>
+<p class="text-xs text-slate-500 mt-1">Setengah kromosom induk dan tidak identik.</p>
+</div>
+<div class="p-4 bg-purple-50 rounded-xl border border-purple-100">
+<div class="text-xs text-purple-600 uppercase font-semibold">Jumlah Pembelahan</div>
+<div class="text-base font-bold text-slate-800 mt-1">2 Kali Pembelahan</div>
+<p class="text-xs text-slate-500 mt-1">Meiosis I (Reduksi) dan Meiosis II (Pemisahan Kromatid).</p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Meiosis I -->
+<div class="border border-slate-200 rounded-xl p-5 bg-slate-50">
+<h3 class="text-lg font-bold text-purple-900 mb-3 pb-2 border-b border-slate-200">Tahap Meiosis I (Pembelahan Reduksi)</h3>
+<div class="space-y-3 text-sm">
+<div class="bg-white p-3 rounded-lg border border-purple-200">
+<span class="font-bold text-purple-700 block">1. Profase I</span>
+<p class="text-xs text-slate-600">Kromosom homolog berpasangan (tetrad) dan terjadi <strong>Pindah Silang (Crossing Over)</strong>.</p>
+</div>
+<div class="bg-white p-3 rounded-lg border border-slate-200">
+<span class="font-bold text-slate-800">2. Metafase I:</span> Pasangan kromosom homolog berbaris di bidang ekuator.
+</div>
+<div class="bg-white p-3 rounded-lg border border-slate-200">
+<span class="font-bold text-slate-800">3. Anafase I:</span> Kromosom homolog berpisah dan ditarik ke kutub berlawanan.
+</div>
+<div class="bg-white p-3 rounded-lg border border-slate-200">
+<span class="font-bold text-slate-800">4. Telofase I:</span> Terbentuk 2 sel anak haploid (n).
+</div>
+</div>
+</div>
+<!-- Meiosis II -->
+<div class="border border-slate-200 rounded-xl p-5 bg-slate-50">
+<h3 class="text-lg font-bold text-indigo-900 mb-3 pb-2 border-b border-slate-200">Tahap Meiosis II (Pemisahan Kromatid)</h3>
+<div class="space-y-3 text-sm">
+<div class="bg-white p-3 rounded-lg border border-slate-200">
+<span class="font-bold text-slate-800">1. Profase II:</span> Spindel terbentuk kembali tanpa replikasi DNA ulang.
+</div>
+<div class="bg-white p-3 rounded-lg border border-slate-200">
+<span class="font-bold text-slate-800">2. Metafase II:</span> Kromosom berbaris secara tunggal di ekuator.
+</div>
+<div class="bg-white p-3 rounded-lg border border-slate-200">
+<span class="font-bold text-slate-800">3. Anafase II:</span> Kromatid saudara berpisah menuju kutub sel.
+</div>
+<div class="bg-white p-3 rounded-lg border border-slate-200">
+<span class="font-bold text-slate-800">4. Telofase II:</span> Menghasilkan total <strong>4 sel anak haploid (n)</strong>.
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. TABEL PERBEDAAN -->
+<section id="perbedaan" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+<div class="border-b border-slate-200 pb-5 mb-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 mb-2">
+<i data-lucide="table" class="w-3.5 h-3.5"></i> Perbandingan Langsung
+</span>
+<h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">3. Tabel Perbedaan Mitosis vs Meiosis</h2>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm text-slate-700 border-collapse">
+<thead>
+<tr class="bg-slate-100 text-slate-900 border-b-2 border-slate-300">
+<th class="p-3.5 font-bold">Fitur Pembeda</th>
+<th class="p-3.5 font-bold text-blue-700 bg-blue-50/50">Mitosis</th>
+<th class="p-3.5 font-bold text-purple-700 bg-purple-50/50">Meiosis</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-200">
+<tr class="hover:bg-slate-50">
+<td class="p-3.5 font-semibold text-slate-900">Tempat Terjadi</td>
+<td class="p-3.5">Sel Somatis (Sel Tubuh)</td>
+<td class="p-3.5">Sel Gonad (Organ Kelamin)</td>
+</tr>
+<tr class="hover:bg-slate-50">
+<td class="p-3.5 font-semibold text-slate-900">Tujuan</td>
+<td class="p-3.5">Pertumbuhan & regenerasi sel</td>
+<td class="p-3.5">Membentuk sel kelamin (gamet)</td>
+</tr>
+<tr class="hover:bg-slate-50">
+<td class="p-3.5 font-semibold text-slate-900">Jumlah Pembelahan</td>
+<td class="p-3.5">1 Kali</td>
+<td class="p-3.5">2 Kali (Meiosis I & II)</td>
+</tr>
+<tr class="hover:bg-slate-50">
+<td class="p-3.5 font-semibold text-slate-900">Jumlah Sel Anak</td>
+<td class="p-3.5 font-bold text-blue-700">2 Sel Anak</td>
+<td class="p-3.5 font-bold text-purple-700">4 Sel Anak</td>
+</tr>
+<tr class="hover:bg-slate-50">
+<td class="p-3.5 font-semibold text-slate-900">Sifat Kromosom Anak</td>
+<td class="p-3.5">Diploid (2n) - Sama dengan induk</td>
+<td class="p-3.5">Haploid (n) - Setengah kromosom induk</td>
+</tr>
+<tr class="hover:bg-slate-50">
+<td class="p-3.5 font-semibold text-slate-900">Sifat Genetik Anak</td>
+<td class="p-3.5">Identik secara genetik</td>
+<td class="p-3.5">Berbeda/Bervariasi</td>
+</tr>
+<tr class="hover:bg-slate-50">
+<td class="p-3.5 font-semibold text-slate-900">Pindah Silang (Crossing Over)</td>
+<td class="p-3.5 text-rose-600 font-medium">Tidak Terjadi</td>
+<td class="p-3.5 text-emerald-600 font-medium">Terjadi di Profase I</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- 4. SINTESIS PROTEIN -->
+<section id="sintesis-protein" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+<div class="border-b border-slate-200 pb-5 mb-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 mb-2">
+<i data-lucide="cpu" class="w-3.5 h-3.5"></i> Ekspresi Genetik
+</span>
+<h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">4. Tahapan Sintesis Protein</h2>
+<p class="text-slate-600 mt-2">
+Mekanisme pembentukan protein berdasarkan instruksi kode genetik (Dogma Sentral: <strong>DNA → RNA → Protein</strong>).
+</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<!-- Transkripsi -->
+<div class="border border-slate-200 rounded-2xl p-6 bg-slate-50">
+<h3 class="text-lg font-bold text-slate-900 mb-2">1. Transkripsi (Di Nukleus)</h3>
+<p class="text-xs text-slate-500 mb-4">Proses pencetakan mRNA oleh RNA Polimerase dari templat DNA.</p>
+<ul class="space-y-2 text-xs">
+<li class="bg-white p-3 rounded-lg border border-slate-200"><strong>a. Inisiasi:</strong> RNA Polimerase menempel pada Promotor DNA.</li>
+<li class="bg-white p-3 rounded-lg border border-slate-200"><strong>b. Elongasi:</strong> Penyusunan rantai mRNA (A→U, T→A, G→C, C→G).</li>
+<li class="bg-white p-3 rounded-lg border border-slate-200"><strong>c. Terminasi:</strong> Penghentian di Terminator. mRNA lepas menuju sitoplasma.</li>
+</ul>
+</div>
+<!-- Translasi -->
+<div class="border border-slate-200 rounded-2xl p-6 bg-slate-50">
+<h3 class="text-lg font-bold text-slate-900 mb-2">2. Translasi (Di Ribosom)</h3>
+<p class="text-xs text-slate-500 mb-4">Penerjemahan kodon mRNA menjadi urutan asam amino oleh tRNA.</p>
+<ul class="space-y-2 text-xs">
+<li class="bg-white p-3 rounded-lg border border-slate-200"><strong>a. Inisiasi:</strong> Ribosom mengikat mRNA di <strong>Kodon Start (AUG)</strong>.</li>
+<li class="bg-white p-3 rounded-lg border border-slate-200"><strong>b. Elongasi:</strong> tRNA membawa asam amino sesuai pasangan kodon.</li>
+<li class="bg-white p-3 rounded-lg border border-slate-200"><strong>c. Terminasi:</strong> Mencapai <strong>Kodon Stop (UAA, UAG, UGA)</strong>. Protein dilepas.</li>
+</ul>
+</div>
+</div>
+</section>
+</main>
+<script>
+const mitosisStages = [
+{
+title: "1. Interfase",
+badge: "Persiapan Sel",
+badgeClass: "bg-amber-100 text-amber-800",
+desc: "Sel tumbuh aktif, melakukan metabolisme dan mereplikasi DNA pada fase S.",
+points: ["Kromatin belum memadat.", "Membran inti utuh.", "Terdiri dari fase G1, S, dan G2."],
+svg: ⁠<svg viewBox="0 0 240 240" class="w-48 h-48"><circle cx="120" cy="120" r="100" fill="#fef3c7" stroke="#f59e0b" stroke-width="3"/><circle cx="120" cy="130" r="50" fill="#fbcfe8" stroke="#db2777" stroke-width="2"/><text x="120" y="235" text-anchor="middle" font-size="11" font-weight="bold" fill="#78350f">Interfase</text></svg>⁠
+},
+{
+title: "2. Profase",
+badge: "Awal Pembelahan",
+badgeClass: "bg-blue-100 text-blue-800",
+desc: "Kromatin memadat menjadi kromosom. Membran inti mulai melebur.",
+points: ["Kromatin menjadi kromosom ganda.", "Membran inti mulai terputus.", "Sentrosom bergerak ke kutub."],
+svg: ⁠<svg viewBox="0 0 240 240" class="w-48 h-48"><circle cx="120" cy="120" r="100" fill="#f0f9ff" stroke="#0284c7" stroke-width="3"/><text x="120" y="235" text-anchor="middle" font-size="11" font-weight="bold" fill="#0369a1">Profase</text></svg>⁠
+},
+{
+title: "3. Metafase",
+badge: "Berjajar di Tengah",
+badgeClass: "bg-indigo-100 text-indigo-800",
+desc: "Kromosom-kromosom berbaris sejajar secara tunggal pada bidang ekuator.",
+points: ["Kromosom berbaris di ekuator.", "Spindel mengikat sentromer.", "Fase terbaik pengamatan kromosom."],
+svg: ⁠<svg viewBox="0 0 240 240" class="w-48 h-48"><circle cx="120" cy="120" r="100" fill="#f0f9ff" stroke="#0284c7" stroke-width="3"/><line x1="120" y1="30" x2="120" y2="210" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3"/><text x="120" y="235" text-anchor="middle" font-size="11" font-weight="bold" fill="#3730a3">Metafase</text></svg>⁠
+},
+{
+title: "4. Anafase",
+badge: "Pemisahan Kromatid",
+badgeClass: "bg-purple-100 text-purple-800",
+desc: "Kromatid saudara berpisah dan ditarik menuju kutub sel berlawanan.",
+points: ["Sentromer membelah.", "Kromatid bergerak ke kutub berlawanan.", "Jumlah kromosom seimbang."],
+svg: ⁠<svg viewBox="0 0 240 240" class="w-48 h-48"><circle cx="120" cy="120" r="100" fill="#f0f9ff" stroke="#0284c7" stroke-width="3"/><text x="120" y="235" text-anchor="middle" font-size="11" font-weight="bold" fill="#581c87">Anafase</text></svg>⁠
+},
+{
+title: "5. Telofase",
+badge: "Pembentukan Inti Kembali",
+badgeClass: "bg-teal-100 text-teal-800",
+desc: "Membran inti terbentuk kembali membungkus kromosom di masing-masing kutub.",
+points: ["Membran inti terbentuk lagi.", "Kromosom kembali jadi kromatin.", "Mulai ada lekukan pembelahan."],
+svg: ⁠<svg viewBox="0 0 240 240" class="w-48 h-48"><path d="M 120 40 C 170 40 190 70 190 120 C 190 170 170 200 120 200 C 70 200 50 170 50 120 C 50 70 70 40 120 40 Z" fill="#f0f9ff" stroke="#0284c7" stroke-width="3"/><text x="120" y="235" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f766e">Telofase</text></svg>⁠
+},
+{
+title: "6. Sitokinesis",
+badge: "Dua Sel Anak",
+badgeClass: "bg-emerald-100 text-emerald-800",
+desc: "Sitoplasma terbagi sempurna menghasilkan dua sel anak identik.",
+points: ["Pembagian sitoplasma selesai.", "Menghasilkan 2 sel anak 2n.", "Siap memasuki interfase."],
+svg: ⁠<svg viewBox="0 0 240 240" class="w-48 h-48"><circle cx="65" cy="120" r="50" fill="#f0fdf4" stroke="#16a34a" stroke-width="3"/><circle cx="175" cy="120" r="50" fill="#f0fdf4" stroke="#16a34a" stroke-width="3"/><text x="120" y="235" text-anchor="middle" font-size="11" font-weight="bold" fill="#15803d">Sitokinesis</text></svg>⁠
 }
-
-bool RequestShizukuPermission() {
-    system("am start -n moe.shizuku.privileged.api/.ShizukuService -a android.intent.action.MAIN");
-    std::cout << "[Shizuku] Предоставьте разрешение в открывшемся окне." << std::endl;
-    for (int i = 0; i < 10; ++i) {
-        if (IsShizukuRunning()) {
-            shizukuAvailable = true;
-            std::cout << "[Shizuku] Разрешение получено." << std::endl;
-            return true;
-        }
-        sleep(1);
-    }
-    std::cerr << "[Shizuku] Разрешение не предоставлено." << std::endl;
-    return false;
+];
+let currentMitosisStage = 0;
+function renderMitosisStage() {
+const data = mitosisStages[currentMitosisStage];
+document.getElementById('mitosis-stage-title').innerText = data.title;
+document.getElementById('mitosis-stage-desc').innerText = data.desc;
+const badgeEl = document.getElementById('mitosis-badge');
+badgeEl.innerText = data.badge;
+badgeEl.className = ⁠px-2.5 py-0.5 rounded-full text-xs font-bold ${data.badgeClass}⁠;
+document.getElementById('mitosis-svg-container').innerHTML = data.svg;
+const pointsContainer = document.getElementById('mitosis-stage-points');
+pointsContainer.innerHTML = data.points.map(p => ⁠<li>${p}</li>⁠).join('');
+const buttons = document.querySelectorAll('#mitosis-stage-selector .stage-btn');
+buttons.forEach((btn, idx) => {
+if(idx === currentMitosisStage) {
+btn.classList.add('active', 'border-brand-500');
+btn.classList.remove('border-slate-200');
+} else {
+btn.classList.remove('active', 'border-brand-500');
+btn.classList.add('border-slate-200');
 }
-
-bool ShizukuShell(const std::string& command) {
-    if (!shizukuAvailable) return false;
-    std::string full = "shizuku shell " + command;
-    return (system(full.c_str()) == 0);
+});
 }
-
-void SimulateTap(int x, int y) {
-    if (shizukuAvailable) {
-        std::string tapCmd = "input tap " + std::to_string(x) + " " + std::to_string(y);
-        if (ShizukuShell(tapCmd)) return;
-    }
-    // Fallback: прямой вызов (если есть права)
-    std::string cmd = "input tap " + std::to_string(x) + " " + std::to_string(y);
-    system(cmd.c_str());
+function setMitosisStage(index) {
+currentMitosisStage = index;
+renderMitosisStage();
 }
-
-// ---------- Поиск PID ----------
-pid_t FindPid(const std::string& package) {
-    DIR* dir = opendir("/proc");
-    if (!dir) return -1;
-    struct dirent* entry;
-    while ((entry = readdir(dir)) != nullptr) {
-        if (entry->d_type != DT_DIR) continue;
-        std::string pid_str = entry->d_name;
-        if (!std::all_of(pid_str.begin(), pid_str.end(), ::isdigit)) continue;
-        std::string cmdline_path = "/proc/" + pid_str + "/cmdline";
-        std::ifstream cmdline(cmdline_path);
-        std::string cmd;
-        if (getline(cmdline, cmd, '\0')) {
-            if (cmd.find(package) != std::string::npos) {
-                closedir(dir);
-                return std::stoi(pid_str);
-            }
-        }
-    }
-    closedir(dir);
-    return -1;
+function prevMitosisStage() {
+currentMitosisStage = (currentMitosisStage - 1 + mitosisStages.length) % mitosisStages.length;
+renderMitosisStage();
 }
-
-// ---------- Чтение памяти ptrace ----------
-bool ReadMemory(pid_t pid, uintptr_t address, void* buffer, size_t size) {
-    if (ptrace(PTRACE_ATTACH, pid, nullptr, nullptr) == -1) return false;
-    waitpid(pid, nullptr, 0);
-    uint8_t* buf = (uint8_t*)buffer;
-    for (size_t i = 0; i < size; i += sizeof(long)) {
-        long word = ptrace(PTRACE_PEEKDATA, pid, address + i, nullptr);
-        if (word == -1 && errno) {
-            ptrace(PTRACE_DETACH, pid, nullptr, nullptr);
-            return false;
-        }
-        memcpy(buf + i, &word, sizeof(long));
-    }
-    ptrace(PTRACE_DETACH, pid, nullptr, nullptr);
-    return true;
+function nextMitosisStage() {
+currentMitosisStage = (currentMitosisStage + 1) % mitosisStages.length;
+renderMitosisStage();
 }
-
-Vector3 GetPlayerPosition(pid_t pid) {
-    Vector3 pos{0,0,0};
-    uintptr_t base_address = 0x70000000; // база libil2cpp.so (вычисляется динамически)
-    uintptr_t player_ptr = 0;
-    if (!ReadMemory(pid, base_address + 0x12345678, &player_ptr, sizeof(uintptr_t))) return pos;
-    if (!ReadMemory(pid, player_ptr + HEAD_OFFSET, &pos, sizeof(Vector3))) return pos;
-    return pos;
-}
-
-Vector2 WorldToScreen(Vector3 world, float* viewMatrix) {
-    Vector2 screen;
-    float w = viewMatrix[3]*world.x + viewMatrix[7]*world.y + viewMatrix[11]*world.z + viewMatrix[15];
-    if (w < 0.001f) return {0,0};
-    float x = viewMatrix[0]*world.x + viewMatrix[4]*world.y + viewMatrix[8]*world.z + viewMatrix[12];
-    float y = viewMatrix[1]*world.x + viewMatrix[5]*world.y + viewMatrix[9]*world.z + viewMatrix[13];
-    screen.x = (SCREEN_WIDTH / 2) * (1 + x/w);
-    screen.y = (SCREEN_HEIGHT / 2) * (1 - y/w);
-    return screen;
-}
-
-// ---------- Главный цикл ----------
-int main() {
-    std::cout << "=== Free Fire Aimlock (Shizuku) ===" << std::endl;
-
-    // Инициализация Shizuku
-    if (IsShizukuRunning()) {
-        shizukuAvailable = true;
-        std::cout << "[Shizuku] Сервис активен." << std::endl;
-    } else {
-        std::cout << "[Shizuku] Сервис не запущен. Запрос разрешения..." << std::endl;
-        if (!RequestShizukuPermission()) {
-            std::cout << "[Shizuku] Работаем в fallback-режиме (возможны ограничения)." << std::endl;
-        }
-    }
-
-    // Поиск игры
-    game_pid = FindPid(PACKAGE_NAME);
-    if (game_pid == -1) {
-        std::cerr << "Игра не найдена. Запустите Free Fire." << std::endl;
-        return 1;
-    }
-    std::cout << "PID игры: " << game_pid << std::endl;
-
-    while (true) {
-        Vector3 localPos = GetPlayerPosition(game_pid);
-        Vector3 enemyPos{100, 200, 300}; // пример координат врага
-        float viewMatrix[16] = {1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1};
-        Vector2 screen = WorldToScreen(enemyPos, viewMatrix);
-        if (screen.x > 0 && screen.y > 0 && screen.x < SCREEN_WIDTH && screen.y < SCREEN_HEIGHT) {
-            int headX = (int)screen.x;
-            int headY = (int)screen.y - 30;
-            SimulateTap(headX, headY);
-            std::cout << "Выстрел в голову: (" << headX << ", " << headY << ")" << std::endl;
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000 / TARGET_FPS));
-    }
-    return 0;
-}
-  </script>
-
-  <script id="bypassCode" type="text/plain">
-// Обход анти-чита Garena (Global Server) – драйвер + ManualMap инжектор
-#include <ntddk.h>
-#include <ntstrsafe.h>
-#include <windows.h>
-#include <tlhelp32.h>
-#include <iostream>
-#include <vector>
-#include <fstream>
-#include <string>
-
-#define EPROCESS_ACTIVE_PROCESS_LINKS  0x448
-#define EPROCESS_IMAGE_FILE_NAME       0x5a8
-#define OB_CALLBACK_LIST_OFFSET        0x48
-
-PVOID g_RegHandle = NULL;
-PEPROCESS g_ProtectedProcess = NULL;
-BOOLEAN g_Unload = FALSE;
-
-NTSTATUS HideProcess(PUNICODE_STRING imageName) {
-    PEPROCESS proc;
-    for (proc = PsInitialSystemProcess; proc != NULL; ) {
-        PCHAR name = (PCHAR)proc + EPROCESS_IMAGE_FILE_NAME;
-        if (RtlEqualUnicodeString(imageName, (PCUNICODE_STRING)name, TRUE)) {
-            PLIST_ENTRY link = (PLIST_ENTRY)((PUCHAR)proc + EPROCESS_ACTIVE_PROCESS_LINKS);
-            RemoveEntryList(link);
-            g_ProtectedProcess = proc;
-            DbgPrint("[Bypass] Процесс %wZ скрыт.\n", imageName);
-            return STATUS_SUCCESS;
-        }
-        proc = (PEPROCESS)(*(PVOID*)((PUCHAR)proc + EPROCESS_ACTIVE_PROCESS_LINKS - sizeof(LIST_ENTRY)));
-        if (proc < MmSystemRangeStart) break;
-    }
-    return STATUS_NOT_FOUND;
-}
-
-typedef struct _OB_CALLBACK_ENTRY {
-    LIST_ENTRY ListEntry;
-    PVOID RegistrationHandle;
-    POB_PRE_OPERATION_CALLBACK PreOperation;
-    POB_POST_OPERATION_CALLBACK PostOperation;
-    PVOID ObjectType;
-} OB_CALLBACK_ENTRY, *POB_CALLBACK_ENTRY;
-
-VOID DisableObCallbacks() {
-    POB_CALLBACK_ENTRY entry = *(POB_CALLBACK_ENTRY**)((PUCHAR)ObRegisterCallbacks + OB_CALLBACK_LIST_OFFSET);
-    if (!entry) return;
-    PLIST_ENTRY head = &entry->ListEntry;
-    for (PLIST_ENTRY p = head->Flink; p != head; p = p->Flink) {
-        POB_CALLBACK_ENTRY cb = CONTAINING_RECORD(p, OB_CALLBACK_ENTRY, ListEntry);
-        if (cb->ObjectType == PsProcessType && cb->PreOperation) {
-            InterlockedExchangePointer((PVOID*)&cb->PreOperation, NULL);
-            DbgPrint("[Bypass] ObCallback удалён.\n");
-        }
-    }
-}
-
-typedef NTSTATUS (*pNtQuerySystemInformation)(ULONG, PVOID, ULONG, PULONG);
-pNtQuerySystemInformation OriginalNtQuerySystemInformation = NULL;
-
-NTSTATUS HookedNtQuerySystemInformation(ULONG SystemInformationClass, PVOID SystemInformation, ULONG SystemInformationLength, PULONG ReturnLength) {
-    NTSTATUS status = OriginalNtQuerySystemInformation(SystemInformationClass, SystemInformation, SystemInformationLength, ReturnLength);
-    if (!NT_SUCCESS(status) || SystemInformationClass != 5) return status;
-    if (!g_ProtectedProcess) return status;
-    PSYSTEM_PROCESS_INFORMATION prev = NULL;
-    PSYSTEM_PROCESS_INFORMATION current = (PSYSTEM_PROCESS_INFORMATION)SystemInformation;
-    HANDLE targetPID = PsGetProcessId(g_ProtectedProcess);
-    while (current->NextEntryOffset) {
-        if (current->UniqueProcessId == targetPID) {
-            if (prev) prev->NextEntryOffset += current->NextEntryOffset;
-            else RtlZeroMemory(current, sizeof(SYSTEM_PROCESS_INFORMATION));
-            break;
-        }
-        prev = current;
-        current = (PSYSTEM_PROCESS_INFORMATION)((PUCHAR)current + current->NextEntryOffset);
-    }
-    return status;
-}
-
-NTSTATUS SetHooks() {
-    UNICODE_STRING funcName = RTL_CONSTANT_STRING(L"NtQuerySystemInformation");
-    OriginalNtQuerySystemInformation = (pNtQuerySystemInformation)MmGetSystemRoutineAddress(&funcName);
-    if (!OriginalNtQuerySystemInformation) return STATUS_NOT_FOUND;
-    ULONG_PTR* serviceTable = (ULONG_PTR*)KeServiceDescriptorTable->Base;
-    ULONG index = 0x13;
-    if (index < KeServiceDescriptorTable->Limit) {
-        InterlockedExchangePointer((PVOID*)&serviceTable[index], HookedNtQuerySystemInformation);
-    }
-    return STATUS_SUCCESS;
-}
-
-VOID DriverUnload(PDRIVER_OBJECT DriverObject) {
-    UNREFERENCED_PARAMETER(DriverObject);
-    g_Unload = TRUE;
-    if (OriginalNtQuerySystemInformation) {
-        ULONG_PTR* serviceTable = (ULONG_PTR*)KeServiceDescriptorTable->Base;
-        ULONG index = 0x13;
-        InterlockedExchangePointer((PVOID*)&serviceTable[index], OriginalNtQuerySystemInformation);
-    }
-    DbgPrint("[Bypass] Драйвер выгружен.\n");
-}
-
-NTSTATUS DriverEntry(PDRIVER_OBJECT DriverObject, PUNICODE_STRING RegistryPath) {
-    UNREFERENCED_PARAMETER(RegistryPath);
-    DriverObject->DriverUnload = DriverUnload;
-    UNICODE_STRING target;
-    RtlInitUnicodeString(&target, L"cheat.exe");
-    NTSTATUS st = HideProcess(&target);
-    if (!NT_SUCCESS(st)) DbgPrint("[Bypass] Процесс не найден.\n");
-    DisableObCallbacks();
-    SetHooks();
-    DbgPrint("[Bypass] Защита активирована.\n");
-    return STATUS_SUCCESS;
-}
-
-// Инжектор
-using f_LoadLibraryA = HINSTANCE(WINAPI*)(const char*);
-using f_GetProcAddress = FARPROC(WINAPI*)(HMODULE, const char*);
-using f_DllMain = BOOL(WINAPI*)(HINSTANCE, DWORD, LPVOID);
-
-struct MANUAL_MAPPING_DATA {
-    f_LoadLibraryA pLoadLibraryA;
-    f_GetProcAddress pGetProcAddress;
-    HINSTANCE hModule;
-    BYTE* base;
-};
-
-void __stdcall Shellcode(MANUAL_MAPPING_DATA* data) {
-    if (!data) return;
-    f_DllMain entry = (f_DllMain)(data->base + 0x1000);
-    entry((HINSTANCE)data->base, DLL_PROCESS_ATTACH, NULL);
-    while (true) Sleep(1000);
-}
-
-DWORD GetProcessIdByName(const wchar_t* name) {
-    PROCESSENTRY32W pe;
-    HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-    pe.dwSize = sizeof(pe);
-    DWORD pid = 0;
-    if (Process32FirstW(hSnap, &pe)) {
-        do {
-            if (!_wcsicmp(pe.szExeFile, name)) { pid = pe.th32ProcessID; break; }
-        } while (Process32NextW(hSnap, &pe));
-    }
-    CloseHandle(hSnap);
-    return pid;
-}
-
-bool ManualMap(HANDLE hProcess, const std::string& dllPath) {
-    std::ifstream file(dllPath, std::ios::binary | std::ios::ate);
-    if (!file) return false;
-    size_t size = file.tellg();
-    file.seekg(0, std::ios::beg);
-    std::vector<BYTE> dllData(size);
-    file.read((char*)dllData.data(), size);
-    file.close();
-    PVOID remoteBase = VirtualAllocEx(hProcess, NULL, size + sizeof(MANUAL_MAPPING_DATA) + 0x1000, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
-    if (!remoteBase) return false;
-    WriteProcessMemory(hProcess, remoteBase, dllData.data(), size, NULL);
-    HANDLE hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)Shellcode, NULL, 0, NULL);
-    if (!hThread) return false;
-    CloseHandle(hThread);
-    return true;
-}
-
-int main() {
-    std::cout << "[+] Garena Anti-Cheat Bypass Loader\n";
-    system("sc create AntiCheatBypass type= kernel binPath= \"%CD%\\AntiCheatBypass.sys\"");
-    system("sc start AntiCheatBypass");
-    std::cout << "[+] Драйвер запущен.\n";
-    DWORD pid = GetProcessIdByName(L"aow_exe.exe");
-    if (!pid) { std::cerr << "[-] Процесс игры не найден.\n"; return 1; }
-    HANDLE hProc = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
-    if (!hProc) { std::cerr << "[-] Не удалось открыть процесс.\n"; return 1; }
-    std::string dllPath = "cheat.dll";
-    if (ManualMap(hProc, dllPath)) std::cout << "[+] DLL успешно внедрена.\n";
-    else std::cerr << "[-] Ошибка внедрения.\n";
-    CloseHandle(hProc);
-    std::cout << "Нажмите любую клавишу...\n";
-    std::cin.get();
-    return 0;
-}
-  </script>
-
-  <script id="touchCrashCode" type="text/plain">
-// ============================================================
-// touch_crash.cpp – Генератор сверхбыстрых касаний (Windows)
-// ============================================================
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <winuser.h>
-#include <iostream>
-#include <thread>
-#include <chrono>
-#include <vector>
-#include <random>
-
-typedef BOOL (WINAPI *InjectTouchInputFunc)(UINT32, const POINTER_TOUCH_INFO*);
-InjectTouchInputFunc pInjectTouchInput = nullptr;
-
-bool InitTouchInjection() {
-    HMODULE hUser32 = GetModuleHandleW(L"user32.dll");
-    if (!hUser32) return false;
-    pInjectTouchInput = (InjectTouchInputFunc)GetProcAddress(hUser32, "InjectTouchInput");
-    return (pInjectTouchInput != nullptr);
-}
-
-POINTER_TOUCH_INFO MakeTouchInfo(UINT32 contactId, int x, int y, bool down) {
-    POINTER_TOUCH_INFO info = {};
-    info.pointerInfo.pointerType = PT_TOUCH;
-    info.pointerInfo.pointerId = contactId;
-    info.pointerInfo.ptPixelLocation.x = x;
-    info.pointerInfo.ptPixelLocation.y = y;
-    info.touchMasks = TOUCH_MASK_CONTACTAREA | TOUCH_MASK_ORIENTATION | TOUCH_MASK_PRESSURE;
-    info.rcContact.left = x - 5;
-    info.rcContact.top = y - 5;
-    info.rcContact.right = x + 5;
-    info.rcContact.bottom = y + 5;
-    info.orientation = 0;
-    info.pressure = 32000;
-    info.pointerInfo.pointerFlags = down ? (POINTER_FLAG_DOWN | POINTER_FLAG_INRANGE) : (POINTER_FLAG_UP | POINTER_FLAG_INRANGE);
-    return info;
-}
-
-void StressTouchScreen() {
-    const int NUM_CONTACTS = 20;
-    const int DELAY_MS = 10;
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> xDist(100, 1900);
-    std::uniform_int_distribution<> yDist(100, 1000);
-    std::uniform_int_distribution<> contactDist(1000, 9999);
-    std::vector<POINTER_TOUCH_INFO> touches(NUM_CONTACTS);
-    std::vector<UINT32> contactIds;
-    for (int i = 0; i < NUM_CONTACTS; ++i) contactIds.push_back(contactDist(gen));
-    bool isDown = true;
-    int counter = 0;
-    while (true) {
-        for (int i = 0; i < NUM_CONTACTS; ++i) {
-            int x = xDist(gen), y = yDist(gen);
-            touches[i] = MakeTouchInfo(contactIds[i], x, y, isDown);
-            if (!isDown) touches[i].pointerInfo.pointerFlags = POINTER_FLAG_UP | POINTER_FLAG_INRANGE;
-            else if (counter > 0) touches[i].pointerInfo.pointerFlags = POINTER_FLAG_UPDATE | POINTER_FLAG_INRANGE;
-        }
-        if (pInjectTouchInput) pInjectTouchInput(NUM_CONTACTS, touches.data());
-        else break;
-        isDown = (counter == 0) ? true : (counter % 2 == 0);
-        ++counter;
-        std::this_thread::sleep_for(std::chrono::milliseconds(DELAY_MS));
-    }
-}
-
-int main() {
-    if (!InitTouchInjection()) return 1;
-    std::thread stressThread(StressTouchScreen);
-    stressThread.join();
-    return 0;
-}
-  </script>
-
-  <script>
-    (function() {
-      const bgCanvas = document.getElementById('bgCanvas');
-      const overlayCanvas = document.getElementById('overlayCanvas');
-      const bgCtx = bgCanvas.getContext('2d');
-      const overlayCtx = overlayCanvas.getContext('2d');
-
-      const logText = document.getElementById('logText');
-      const switchAimlock = document.getElementById('switchAimlock');
-      const switchBypass = document.getElementById('switchBypass');
-      const switchTouchCrash = document.getElementById('switchTouchCrash');
-      const bypassSpan = document.querySelector('#bypassStatus span');
-      const aimlockSpan = document.querySelector('#aimlockStatus span');
-      const touchSpan = document.querySelector('#touchStatus span');
-
-      let W, H;
-      const bgParticles = [], ovParticles = [];
-
-      class Particle {
-        constructor(ctx, type) {
-          this.ctx = ctx;
-          this.type = type;
-          this.x = Math.random() * W;
-          this.y = Math.random() * H;
-          this.r = type === 'bg' ? Math.random()*2.5+0.8 : Math.random()*2+0.5;
-          const hue = type === 'bg' ? Math.random()*40+240 : Math.random()*30+250;
-          this.color = `hsla(${hue}, 80%, 70%, ${Math.random()*0.7+0.3})`;
-          this.vx = (Math.random()-0.5)*0.7;
-          this.vy = (Math.random()-0.5)*0.7;
-        }
-        update() {
-          this.x += this.vx;
-          this.y += this.vy;
-          if (this.x < -20) this.x = W+20;
-          if (this.x > W+20) this.x = -20;
-          if (this.y < -20) this.y = H+20;
-          if (this.y > H+20) this.y = -20;
-        }
-        draw() {
-          const ctx = this.ctx;
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
-          ctx.fillStyle = this.color;
-          ctx.shadowBlur = 10;
-          ctx.shadowColor = this.color;
-          ctx.fill();
-        }
-      }
-
-      function resize() {
-        W = window.innerWidth; H = window.innerHeight;
-        bgCanvas.width = W; bgCanvas.height = H;
-        overlayCanvas.width = W; overlayCanvas.height = H;
-      }
-      window.addEventListener('resize', resize);
-      resize();
-
-      for (let i=0; i<130; i++) bgParticles.push(new Particle(bgCtx, 'bg'));
-      for (let i=0; i<180; i++) ovParticles.push(new Particle(overlayCtx, 'over'));
-
-      function animate() {
-        bgCtx.clearRect(0,0,W,H);
-        overlayCtx.clearRect(0,0,W,H);
-        bgParticles.forEach(p => { p.update(); p.draw(); });
-        ovParticles.forEach(p => { p.update(); p.draw(); });
-        requestAnimationFrame(animate);
-      }
-      animate();
-
-      function downloadCode(scriptId, filename) {
-        const code = document.getElementById(scriptId)?.textContent || '';
-        const blob = new Blob([code], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }
-
-      let gameLaunched = false;
-
-      function launchGame() {
-        if (gameLaunched) return;
-        gameLaunched = true;
-        logText.textContent = 'Все функции активированы! Запуск Free Fire...';
-        const intentUrl = 'intent://#Intent;package=com.dts.freefireth;scheme=freefire;end;';
-        const playStoreUrl = 'https://play.google.com/store/apps/details?id=com.dts.freefireth';
-        const start = Date.now();
-        window.location.href = intentUrl;
-        setTimeout(() => {
-          if (Date.now() - start < 2500) {
-            window.location.href = playStoreUrl;
-          }
-        }, 2000);
-      }
-
-      function checkAllActivated() {
-        if (switchAimlock.checked && switchBypass.checked && switchTouchCrash.checked) {
-          launchGame();
-        }
-      }
-
-      switchAimlock.addEventListener('change', function() {
-        if (this.checked) {
-          downloadCode('aimlockCode', 'AimlockNeck_Shizuku.cpp');
-          aimlockSpan.className = 'status-active';
-          aimlockSpan.textContent = 'NECK';
-          logText.textContent = '[+] AIMLOCK NECK (Shizuku) активирован и скачан.';
-        } else {
-          aimlockSpan.className = 'status-inactive';
-          aimlockSpan.textContent = 'OFF';
-          logText.textContent = '[-] AIMLOCK отключён.';
-        }
-        checkAllActivated();
-      });
-
-      switchBypass.addEventListener('change', function() {
-        if (this.checked) {
-          downloadCode('bypassCode', 'AntiCheatBypass_Injector.cpp');
-          bypassSpan.className = 'status-active';
-          bypassSpan.textContent = 'ON';
-          logText.textContent = '[+] BYPASS GARENA активирован и скачан.';
-        } else {
-          bypassSpan.className = 'status-inactive';
-          bypassSpan.textContent = 'OFF';
-          logText.textContent = '[-] BYPASS отключён.';
-        }
-        checkAllActivated();
-      });
-
-      switchTouchCrash.addEventListener('change', function() {
-        if (this.checked) {
-          downloadCode('touchCrashCode', 'TouchCrash_Injector.cpp');
-          touchSpan.className = 'status-active';
-          touchSpan.textContent = 'FAST';
-          document.body.style.touchAction = 'none';
-          document.querySelectorAll('*').forEach(el => el.style.touchAction = 'none');
-          logText.textContent = '[+] TOUCH CRASH активирован и скачан.';
-        } else {
-          touchSpan.className = 'status-inactive';
-          touchSpan.textContent = 'NORM';
-          document.body.style.touchAction = 'auto';
-          logText.textContent = '[-] TOUCH CRASH отключён.';
-        }
-        checkAllActivated();
-      });
-    })();
-  </script>
+document.addEventListener('DOMContentLoaded', () => {
+lucide.createIcons();
+renderMitosisStage();
+});
+</script>
 </body>
 </html>
-```
